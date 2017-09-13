@@ -1,4 +1,2 @@
 # EventAtendersChecklist
 EventAtendersChecklist
-
-Marcin
