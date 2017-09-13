@@ -2,3 +2,4 @@
 EventAtendersChecklist
 
 test
+test2
