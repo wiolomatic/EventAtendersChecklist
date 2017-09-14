@@ -22,10 +22,12 @@
 *.log
 *.vspscc
 *.vssscc
-.builds
+*.builds
 *.pidb
 *.svclog
 *.scc
+EventAtendersChecklist/EventAtendersChecklist/obj/
+EventAtendersChecklist/EventAtendersChecklist/bin/
 .vs/
 # SQL Server files
 *.mdf
