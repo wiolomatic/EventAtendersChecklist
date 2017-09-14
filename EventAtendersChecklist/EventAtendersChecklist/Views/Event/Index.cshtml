@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Import event";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.1/xlsx.full.min.js"></script>
+        <script src="http://oss.sheetjs.com/js-xlsx/jszip.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+        <script src="~/Scripts/app.js"></script>
+    </head>
+    <body ng-app="MyApp">
+        <div ng-controller="MyController" class="container" style="margin-top:50px;">
+            <div class="form-inline">
+                <input type="file" name="file" class="form-control"
+                       onchange="angular.element(this).scope().UploadFile(this.files)" />
+                <input type="button" value="Import" class="btn btn-success" ng-disabled="!SelectedFileForUpload"
+                       ng-click="ParseExcelDataAndSave()" />
+                <br />
+                <span style="color:red">
+                    {{Message}}
+                </span>
+            </div>
+        </div>
+    </body>
+</html>
