@@ -1,0 +1,33 @@
+# binaries and cache
+*.dll
+*.cache
+*.suo
+*.user
+*.sln.docstates
+*.userprefs
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+.vs/
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
