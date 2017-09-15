@@ -53,7 +53,7 @@ app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
                 $scope.Message = "Failed";
             }
         }, function (error) {
-            $scope.Message = "Error";
+            $scope.Message = "Error" + error;
         })
     }
 }])

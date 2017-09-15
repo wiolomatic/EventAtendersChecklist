@@ -1,0 +1,47 @@
+﻿@model IEnumerable<EventAtendersChecklist.Models.AttendersViewModel>
+
+@{
+    ViewBag.Title = "Export";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="container">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Attender ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr style="background-color: #fadce1">
+                        <td>@item.Id</td>
+                        <td>@item.FristName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.Email</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr style="background-color: #cbcbfc">
+                    <td>lol</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Model != null)
+    {
+        <input type="button" class="btn btn-success pull-right" value="Export to Excel" onclick="location.href = '@Url.Action("ExportToExcel","Home")'" />
+    }
+</div>
