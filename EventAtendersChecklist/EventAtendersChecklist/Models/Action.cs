@@ -11,7 +11,8 @@ namespace EventAtendersChecklist.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<ActionGroup> ActionGroups { get; set; }
+        public virtual ICollection<ActionGroup> ActionGroups { get; set; }
+        public virtual ICollection<EmployeeEventAssignment> EmployeeEventAssigments { get; set; }
 
     }
 }
