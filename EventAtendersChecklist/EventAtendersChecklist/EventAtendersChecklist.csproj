@@ -53,6 +53,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -190,12 +192,52 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EmployeeEventAssignmentsController.cs" />
+    <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\eacContext.cs" />
+    <Compile Include="Data\Attender.cs">
+      <DependentUpon>dbModelContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Checkbox.cs">
+      <DependentUpon>dbModelContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\dbModelContext.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\dbModelContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\dbModelContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Event.cs">
+      <DependentUpon>dbModelContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Header.cs">
+      <DependentUpon>dbModelContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709181102338_initial.cs" />
+    <Compile Include="Migrations\201709181102338_initial.Designer.cs">
+      <DependentUpon>201709181102338_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ActionGroup.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\Action.cs" />
+    <Compile Include="Models\EmployeeEventAssignment.cs" />
+    <Compile Include="Models\Event.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -204,6 +246,16 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Data\dbModelContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbModelContext.edmx</DependentUpon>
+      <LastGenOutput>dbModelContext.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Data\dbModelContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbModelContext.edmx</DependentUpon>
+      <LastGenOutput>dbModelContext.cs</LastGenOutput>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -212,6 +264,13 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EntityDeploy Include="Data\dbModelContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>dbModelContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Data\dbModelContext.edmx.diagram">
+      <DependentUpon>dbModelContext.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -259,6 +318,16 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Employees\Edit.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\EmployeeEventAssignments\Create.cshtml" />
+    <Content Include="Views\EmployeeEventAssignments\Delete.cshtml" />
+    <Content Include="Views\EmployeeEventAssignments\Details.cshtml" />
+    <Content Include="Views\EmployeeEventAssignments\Edit.cshtml" />
+    <Content Include="Views\EmployeeEventAssignments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -275,6 +344,14 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201709181102338_initial.resx">
+      <DependentUpon>201709181102338_initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
