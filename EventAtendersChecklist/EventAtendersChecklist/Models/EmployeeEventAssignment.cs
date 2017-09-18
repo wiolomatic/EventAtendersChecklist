@@ -11,9 +11,13 @@ namespace EventAtendersChecklist.Models
         {
 
         }
-        public int Id { get; set; }
-        public int EmpoyeeId { get; set; }
+
+        public int ActionId { get; set; }
+        public bool ActionValue { get; set; }
+        public int EmployeeId { get; set; }
         public int EventId { get; set; }
+        public int Id { get; set; }
+        public virtual Action Action { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual Event Event { get; set; }
 

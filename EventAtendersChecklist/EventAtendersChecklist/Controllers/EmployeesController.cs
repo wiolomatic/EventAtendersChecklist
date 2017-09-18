@@ -18,6 +18,18 @@ namespace EventAtendersChecklist.Controllers
         // GET: Employees
         public ActionResult Index()
         {
+            var actionNames = db.ActionGroups.Include(x => x.Action).Include(x => x.Event)
+               .Where(x => x.EventId == 1)
+               .Select(x => x.Action)
+               .Select(x => x.Name).ToList();
+
+            var extion = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                .Where(x => x.EventId == 1 & x.ActionId == 1)
+                .Select(x => x.Employee).ToList();
+
+            var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.Action).ToList();
+            var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.EventId == 1 & x.ActionId == 1).Select(x => x.ActionValue);
+
             return View(db.Employees.ToList());
         }
 
