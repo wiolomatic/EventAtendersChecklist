@@ -11,118 +11,116 @@ using EventAtendersChecklist.Models;
 
 namespace EventAtendersChecklist.Controllers
 {
-    public class EmployeesController : Controller
+    public class ActionGroupsController : Controller
     {
         private eacContext db = new eacContext();
 
-        // GET: Employees
+        // GET: ActionGroups
         public ActionResult Index()
         {
-            var actionNames = db.ActionGroups.Include(x => x.ActionNames).Include(x => x.Event)
-               .Where(x => x.EventId == 1)
-               .Select(x => x.ActionNames).ToList();
-
-            var extion = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == 1 & x.ActionId == 1)
-                .Select(x => x.Employee).ToList();
-
-            var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionNames).Where(x=>x.EventId == 1).ToList();
-            var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.EventId == 1 & x.ActionId == 1).Select(x => x.ActionValue);
-
-            return View(db.Employees.ToList());
+            var actionGroups = db.ActionGroups.Include(a => a.ActionNames).Include(a => a.Event);
+            return View(actionGroups.ToList());
         }
 
-        // GET: Employees/Details/5
+        // GET: ActionGroups/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            ActionGroup actionGroup = db.ActionGroups.Find(id);
+            if (actionGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(actionGroup);
         }
 
-        // GET: Employees/Create
+        // GET: ActionGroups/Create
         public ActionResult Create()
         {
+            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name");
+            ViewBag.EventId = new SelectList(db.Events, "Id", "Name");
             return View();
         }
 
-        // POST: Employees/Create
+        // POST: ActionGroups/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
+        public ActionResult Create([Bind(Include = "Id,ActionId,EventId")] ActionGroup actionGroup)
         {
             if (ModelState.IsValid)
             {
-                db.Employees.Add(employee);
+                db.ActionGroups.Add(actionGroup);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(employee);
+            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name", actionGroup.ActionId);
+            ViewBag.EventId = new SelectList(db.Events, "Id", "Name", actionGroup.EventId);
+            return View(actionGroup);
         }
 
-        // GET: Employees/Edit/5
+        // GET: ActionGroups/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            ActionGroup actionGroup = db.ActionGroups.Find(id);
+            if (actionGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name", actionGroup.ActionId);
+            ViewBag.EventId = new SelectList(db.Events, "Id", "Name", actionGroup.EventId);
+            return View(actionGroup);
         }
 
-        // POST: Employees/Edit/5
+        // POST: ActionGroups/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
+        public ActionResult Edit([Bind(Include = "Id,ActionId,EventId")] ActionGroup actionGroup)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(employee).State = EntityState.Modified;
+                db.Entry(actionGroup).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(employee);
+            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name", actionGroup.ActionId);
+            ViewBag.EventId = new SelectList(db.Events, "Id", "Name", actionGroup.EventId);
+            return View(actionGroup);
         }
 
-        // GET: Employees/Delete/5
+        // GET: ActionGroups/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            ActionGroup actionGroup = db.ActionGroups.Find(id);
+            if (actionGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(actionGroup);
         }
 
-        // POST: Employees/Delete/5
+        // POST: ActionGroups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Employee employee = db.Employees.Find(id);
-            db.Employees.Remove(employee);
+            ActionGroup actionGroup = db.ActionGroups.Find(id);
+            db.ActionGroups.Remove(actionGroup);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

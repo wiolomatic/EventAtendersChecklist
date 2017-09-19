@@ -15,7 +15,7 @@ namespace EventAtendersChecklist.DAL
             }
 
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Models.Action> Actions { get; set; }
+        public DbSet<ActionName> ActionNames { get; set; }
         public DbSet<ActionGroup> ActionGroups { get; set; }
         public DbSet<EmployeeEventAssignment> EmployeeEventAssignments { get; set; }
         public DbSet<Event> Events { get; set; }

@@ -2,11 +2,12 @@
 
 namespace EventAtendersChecklist.Models
 {
-    public class Action
+    public class ActionName
     {
-        public Action()
+        public ActionName()
         {
             this.ActionGroups = new HashSet<ActionGroup>();
+            this.EmployeeEventAssigments = new HashSet<EmployeeEventAssignment>();
         }
 
         public int Id { get; set; }

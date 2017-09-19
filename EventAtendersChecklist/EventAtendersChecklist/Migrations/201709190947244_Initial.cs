@@ -14,15 +14,16 @@ namespace EventAtendersChecklist.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         ActionId = c.Int(nullable: false),
                         EventId = c.Int(nullable: false),
+                        ActionNames_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Actions", t => t.ActionId, cascadeDelete: true)
+                .ForeignKey("dbo.ActionNames", t => t.ActionNames_Id)
                 .ForeignKey("dbo.Events", t => t.EventId, cascadeDelete: true)
-                .Index(t => t.ActionId)
-                .Index(t => t.EventId);
+                .Index(t => t.EventId)
+                .Index(t => t.ActionNames_Id);
             
             CreateTable(
-                "dbo.Actions",
+                "dbo.ActionNames",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -39,14 +40,15 @@ namespace EventAtendersChecklist.Migrations
                         ActionValue = c.Boolean(nullable: false),
                         EmployeeId = c.Int(nullable: false),
                         EventId = c.Int(nullable: false),
+                        ActionNames_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Actions", t => t.ActionId, cascadeDelete: true)
+                .ForeignKey("dbo.ActionNames", t => t.ActionNames_Id)
                 .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: true)
                 .ForeignKey("dbo.Events", t => t.EventId, cascadeDelete: true)
-                .Index(t => t.ActionId)
                 .Index(t => t.EmployeeId)
-                .Index(t => t.EventId);
+                .Index(t => t.EventId)
+                .Index(t => t.ActionNames_Id);
             
             CreateTable(
                 "dbo.Employees",
@@ -77,17 +79,17 @@ namespace EventAtendersChecklist.Migrations
             DropForeignKey("dbo.EmployeeEventAssignments", "EventId", "dbo.Events");
             DropForeignKey("dbo.ActionGroups", "EventId", "dbo.Events");
             DropForeignKey("dbo.EmployeeEventAssignments", "EmployeeId", "dbo.Employees");
-            DropForeignKey("dbo.EmployeeEventAssignments", "ActionId", "dbo.Actions");
-            DropForeignKey("dbo.ActionGroups", "ActionId", "dbo.Actions");
+            DropForeignKey("dbo.EmployeeEventAssignments", "ActionNames_Id", "dbo.ActionNames");
+            DropForeignKey("dbo.ActionGroups", "ActionNames_Id", "dbo.ActionNames");
+            DropIndex("dbo.EmployeeEventAssignments", new[] { "ActionNames_Id" });
             DropIndex("dbo.EmployeeEventAssignments", new[] { "EventId" });
             DropIndex("dbo.EmployeeEventAssignments", new[] { "EmployeeId" });
-            DropIndex("dbo.EmployeeEventAssignments", new[] { "ActionId" });
+            DropIndex("dbo.ActionGroups", new[] { "ActionNames_Id" });
             DropIndex("dbo.ActionGroups", new[] { "EventId" });
-            DropIndex("dbo.ActionGroups", new[] { "ActionId" });
             DropTable("dbo.Events");
             DropTable("dbo.Employees");
             DropTable("dbo.EmployeeEventAssignments");
-            DropTable("dbo.Actions");
+            DropTable("dbo.ActionNames");
             DropTable("dbo.ActionGroups");
         }
     }
