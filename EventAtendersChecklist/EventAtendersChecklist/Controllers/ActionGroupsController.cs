@@ -18,7 +18,7 @@ namespace EventAtendersChecklist.Controllers
         // GET: ActionGroups
         public ActionResult Index()
         {
-            var actionGroups = db.ActionGroups.Include(a => a.ActionNames).Include(a => a.Event);
+            var actionGroups = db.ActionGroups.Include(a => a.ActionDictionary).Include(a => a.Event);
             return View(actionGroups.ToList());
         }
 
@@ -40,7 +40,7 @@ namespace EventAtendersChecklist.Controllers
         // GET: ActionGroups/Create
         public ActionResult Create()
         {
-            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name");
+            ViewBag.ActionDictionaryId = new SelectList(db.ActionDictionary, "Id", "Name");
             ViewBag.EventId = new SelectList(db.Events, "Id", "Name");
             return View();
         }
@@ -50,7 +50,7 @@ namespace EventAtendersChecklist.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ActionId,EventId")] ActionGroup actionGroup)
+        public ActionResult Create([Bind(Include = "Id,ActionDictionaryId,EventId")] ActionGroup actionGroup)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace EventAtendersChecklist.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name", actionGroup.ActionId);
+            ViewBag.ActionDictionaryId = new SelectList(db.ActionDictionary, "Id", "Name", actionGroup.ActionDictionaryId);
             ViewBag.EventId = new SelectList(db.Events, "Id", "Name", actionGroup.EventId);
             return View(actionGroup);
         }
@@ -76,7 +76,7 @@ namespace EventAtendersChecklist.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name", actionGroup.ActionId);
+            ViewBag.ActionDictionaryId = new SelectList(db.ActionDictionary, "Id", "Name", actionGroup.ActionDictionaryId);
             ViewBag.EventId = new SelectList(db.Events, "Id", "Name", actionGroup.EventId);
             return View(actionGroup);
         }
@@ -86,7 +86,7 @@ namespace EventAtendersChecklist.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ActionId,EventId")] ActionGroup actionGroup)
+        public ActionResult Edit([Bind(Include = "Id,ActionDictionaryId,EventId")] ActionGroup actionGroup)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace EventAtendersChecklist.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ActionId = new SelectList(db.ActionNames, "Id", "Name", actionGroup.ActionId);
+            ViewBag.ActionDictionaryId = new SelectList(db.ActionDictionary, "Id", "Name", actionGroup.ActionDictionaryId);
             ViewBag.EventId = new SelectList(db.Events, "Id", "Name", actionGroup.EventId);
             return View(actionGroup);
         }

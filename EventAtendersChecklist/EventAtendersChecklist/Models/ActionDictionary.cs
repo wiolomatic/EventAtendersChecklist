@@ -2,9 +2,9 @@
 
 namespace EventAtendersChecklist.Models
 {
-    public class ActionName
+    public class ActionDictionary
     {
-        public ActionName()
+        public ActionDictionary()
         {
             this.ActionGroups = new HashSet<ActionGroup>();
             this.EmployeeEventAssigments = new HashSet<EmployeeEventAssignment>();

@@ -65,37 +65,37 @@ namespace EventAtendersChecklist.Migrations
             context.EmployeeEventAssignments.AddOrUpdate(eea => eea.Id,
 
                 //Event 1
-                new Models.EmployeeEventAssignment { Id = 1, EventId = 1, EmployeeId = 1, ActionId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 2, EventId = 1, EmployeeId = 2, ActionId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 3, EventId = 1, EmployeeId = 3, ActionId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 4, EventId = 1, EmployeeId = 4, ActionId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 1, EventId = 1, EmployeeId = 1, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 2, EventId = 1, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 3, EventId = 1, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 4, EventId = 1, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = true },
 
                 // Event 2
-                new Models.EmployeeEventAssignment { Id = 5, EventId = 2, EmployeeId = 2, ActionId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 6, EventId = 2, EmployeeId = 3, ActionId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 7, EventId = 2, EmployeeId = 4, ActionId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 8, EventId = 2, EmployeeId = 2, ActionId = 2, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 9, EventId = 2, EmployeeId = 3, ActionId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 10, EventId = 2, EmployeeId = 4, ActionId = 2, ActionValue = true }
+                new Models.EmployeeEventAssignment { Id = 5, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 6, EventId = 2, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 7, EventId = 2, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 8, EventId = 2, EmployeeId = 2, ActionDictionaryId = 2, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 9, EventId = 2, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 10, EventId = 2, EmployeeId = 4, ActionDictionaryId = 2, ActionValue = true }
             );
 
             // New action
-            context.ActionNames.AddOrUpdate(a => a.Id,
-                new Models.ActionName { Id = 1, Name = "Avilable" },
-                new Models.ActionName { Id = 2, Name = "T-Shirt" },
-                new Models.ActionName { Id = 3, Name = "Coach" });
+            context.ActionDictionary.AddOrUpdate(a => a.Id,
+                new Models.ActionDictionary { Id = 1, Name = "Avilable" },
+                new Models.ActionDictionary { Id = 2, Name = "T-Shirt" },
+                new Models.ActionDictionary { Id = 3, Name = "Coach" });
 
 
             // New action assigment
             context.ActionGroups.AddOrUpdate(a => a.Id,
                 // Event 1
-                new Models.ActionGroup { Id = 1, EventId = 1, ActionId = 1 },
-                new Models.ActionGroup { Id = 2, EventId = 1, ActionId = 2 },
-                new Models.ActionGroup { Id = 3, EventId = 1, ActionId = 3 },
+                new Models.ActionGroup { Id = 1, EventId = 1, ActionDictionaryId = 1 },
+                new Models.ActionGroup { Id = 2, EventId = 1, ActionDictionaryId = 2 },
+                new Models.ActionGroup { Id = 3, EventId = 1, ActionDictionaryId = 3 },
 
                 // Event 2
-                new Models.ActionGroup { Id = 4, EventId = 2, ActionId = 1 },
-                new Models.ActionGroup { Id = 5, EventId = 2, ActionId = 3 });
+                new Models.ActionGroup { Id = 4, EventId = 2, ActionDictionaryId = 1 },
+                new Models.ActionGroup { Id = 5, EventId = 2, ActionDictionaryId = 3 });
         }
     }
 }

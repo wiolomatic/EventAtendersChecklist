@@ -42,18 +42,19 @@ namespace EventAtendersChecklist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id & x.ActionId == 1)
+                .Where(x => x.EventId == id & x.ActionDictionaryId == 1)
                 .Select(x => x.Employee).ToList();
 
-            var listOfActions = db.ActionGroups.Include(x => x.ActionNames).Include(x => x.Event)
+            var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == id)
-               .Select(x => x.ActionNames).ToList();
+               .Select(x => x.ActionDictionary).ToList();
+            var EmployeeEventAssignmentsList = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == id).ToList();
+
+
             var list = new TestView();
             list.EmployeeList = employ;
             list.ActionNameList = listOfActions;
-
-            var values = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionNames).Where(x => x.EventId == id).ToList();
-            
+            list.EmployeeEventAsignmentList = EmployeeEventAssignmentsList;
 
             if (list == null)
             {

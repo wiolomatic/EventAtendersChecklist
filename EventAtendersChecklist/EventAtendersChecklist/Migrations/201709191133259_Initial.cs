@@ -8,22 +8,7 @@ namespace EventAtendersChecklist.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.ActionGroups",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        ActionId = c.Int(nullable: false),
-                        EventId = c.Int(nullable: false),
-                        ActionNames_Id = c.Int(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.ActionNames", t => t.ActionNames_Id)
-                .ForeignKey("dbo.Events", t => t.EventId, cascadeDelete: true)
-                .Index(t => t.EventId)
-                .Index(t => t.ActionNames_Id);
-            
-            CreateTable(
-                "dbo.ActionNames",
+                "dbo.ActionDictionaries",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -32,34 +17,18 @@ namespace EventAtendersChecklist.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.EmployeeEventAssignments",
+                "dbo.ActionGroups",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        ActionId = c.Int(nullable: false),
-                        ActionValue = c.Boolean(nullable: false),
-                        EmployeeId = c.Int(nullable: false),
+                        ActionDictionaryId = c.Int(nullable: false),
                         EventId = c.Int(nullable: false),
-                        ActionNames_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.ActionNames", t => t.ActionNames_Id)
-                .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: true)
+                .ForeignKey("dbo.ActionDictionaries", t => t.ActionDictionaryId, cascadeDelete: true)
                 .ForeignKey("dbo.Events", t => t.EventId, cascadeDelete: true)
-                .Index(t => t.EmployeeId)
-                .Index(t => t.EventId)
-                .Index(t => t.ActionNames_Id);
-            
-            CreateTable(
-                "dbo.Employees",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        FirstName = c.String(),
-                        LastName = c.String(),
-                        Email = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
+                .Index(t => t.ActionDictionaryId)
+                .Index(t => t.EventId);
             
             CreateTable(
                 "dbo.Events",
@@ -72,25 +41,54 @@ namespace EventAtendersChecklist.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
+            CreateTable(
+                "dbo.EmployeeEventAssignments",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ActionDictionaryId = c.Int(nullable: false),
+                        ActionValue = c.Boolean(nullable: false),
+                        EmployeeId = c.Int(nullable: false),
+                        EventId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.ActionDictionaries", t => t.ActionDictionaryId, cascadeDelete: true)
+                .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: true)
+                .ForeignKey("dbo.Events", t => t.EventId, cascadeDelete: true)
+                .Index(t => t.ActionDictionaryId)
+                .Index(t => t.EmployeeId)
+                .Index(t => t.EventId);
+            
+            CreateTable(
+                "dbo.Employees",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        FirstName = c.String(),
+                        LastName = c.String(),
+                        Email = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.EmployeeEventAssignments", "EventId", "dbo.Events");
-            DropForeignKey("dbo.ActionGroups", "EventId", "dbo.Events");
             DropForeignKey("dbo.EmployeeEventAssignments", "EmployeeId", "dbo.Employees");
-            DropForeignKey("dbo.EmployeeEventAssignments", "ActionNames_Id", "dbo.ActionNames");
-            DropForeignKey("dbo.ActionGroups", "ActionNames_Id", "dbo.ActionNames");
-            DropIndex("dbo.EmployeeEventAssignments", new[] { "ActionNames_Id" });
+            DropForeignKey("dbo.EmployeeEventAssignments", "ActionDictionaryId", "dbo.ActionDictionaries");
+            DropForeignKey("dbo.ActionGroups", "EventId", "dbo.Events");
+            DropForeignKey("dbo.ActionGroups", "ActionDictionaryId", "dbo.ActionDictionaries");
             DropIndex("dbo.EmployeeEventAssignments", new[] { "EventId" });
             DropIndex("dbo.EmployeeEventAssignments", new[] { "EmployeeId" });
-            DropIndex("dbo.ActionGroups", new[] { "ActionNames_Id" });
+            DropIndex("dbo.EmployeeEventAssignments", new[] { "ActionDictionaryId" });
             DropIndex("dbo.ActionGroups", new[] { "EventId" });
-            DropTable("dbo.Events");
+            DropIndex("dbo.ActionGroups", new[] { "ActionDictionaryId" });
             DropTable("dbo.Employees");
             DropTable("dbo.EmployeeEventAssignments");
-            DropTable("dbo.ActionNames");
+            DropTable("dbo.Events");
             DropTable("dbo.ActionGroups");
+            DropTable("dbo.ActionDictionaries");
         }
     }
 }
