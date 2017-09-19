@@ -13,7 +13,7 @@ namespace EventAtendersChecklist.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201709190947244_Initial"; }
+            get { return "201709191133259_Initial"; }
         }
         
         string IMigrationMetadata.Source

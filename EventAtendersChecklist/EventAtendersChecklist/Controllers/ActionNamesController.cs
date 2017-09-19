@@ -11,24 +11,24 @@ using EventAtendersChecklist.Models;
 
 namespace EventAtendersChecklist.Controllers
 {
-    public class ActionNamesController : Controller
+    public class ActionDictionaryController : Controller
     {
         private eacContext db = new eacContext();
 
-        // GET: ActionNames
+        // GET: ActionDictionary
         public ActionResult Index()
         {
-            return View(db.ActionNames.ToList());
+            return View(db.ActionDictionary.ToList());
         }
 
-        // GET: ActionNames/Details/5
+        // GET: ActionDictionary/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ActionName actionName = db.ActionNames.Find(id);
+            ActionDictionary actionName = db.ActionDictionary.Find(id);
             if (actionName == null)
             {
                 return HttpNotFound();
@@ -36,22 +36,22 @@ namespace EventAtendersChecklist.Controllers
             return View(actionName);
         }
 
-        // GET: ActionNames/Create
+        // GET: ActionDictionary/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ActionNames/Create
+        // POST: ActionDictionary/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] ActionName actionName)
+        public ActionResult Create([Bind(Include = "Id,Name")] ActionDictionary actionName)
         {
             if (ModelState.IsValid)
             {
-                db.ActionNames.Add(actionName);
+                db.ActionDictionary.Add(actionName);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -59,14 +59,14 @@ namespace EventAtendersChecklist.Controllers
             return View(actionName);
         }
 
-        // GET: ActionNames/Edit/5
+        // GET: ActionDictionary/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ActionName actionName = db.ActionNames.Find(id);
+            ActionDictionary actionName = db.ActionDictionary.Find(id);
             if (actionName == null)
             {
                 return HttpNotFound();
@@ -74,12 +74,12 @@ namespace EventAtendersChecklist.Controllers
             return View(actionName);
         }
 
-        // POST: ActionNames/Edit/5
+        // POST: ActionDictionary/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] ActionName actionName)
+        public ActionResult Edit([Bind(Include = "Id,Name")] ActionDictionary actionName)
         {
             if (ModelState.IsValid)
             {
@@ -90,14 +90,14 @@ namespace EventAtendersChecklist.Controllers
             return View(actionName);
         }
 
-        // GET: ActionNames/Delete/5
+        // GET: ActionDictionary/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ActionName actionName = db.ActionNames.Find(id);
+            ActionDictionary actionName = db.ActionDictionary.Find(id);
             if (actionName == null)
             {
                 return HttpNotFound();
@@ -105,13 +105,13 @@ namespace EventAtendersChecklist.Controllers
             return View(actionName);
         }
 
-        // POST: ActionNames/Delete/5
+        // POST: ActionDictionary/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ActionName actionName = db.ActionNames.Find(id);
-            db.ActionNames.Remove(actionName);
+            ActionDictionary actionName = db.ActionDictionary.Find(id);
+            db.ActionDictionary.Remove(actionName);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

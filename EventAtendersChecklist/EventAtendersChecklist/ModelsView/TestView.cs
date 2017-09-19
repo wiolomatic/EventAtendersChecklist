@@ -8,8 +8,8 @@ namespace EventAtendersChecklist.ModelsView
 {
     public class TestView
     {
-        
-            public List<Employee> EmployeeList { get; set; }
-            public List<ActionName> ActionNameList { get; set; }
+        public List<Employee> EmployeeList { get; set; }
+        public List<ActionDictionary> ActionNameList { get; set; }
+        public List<EmployeeEventAssignment> EmployeeEventAsignmentList { get; set; }
     }
 }

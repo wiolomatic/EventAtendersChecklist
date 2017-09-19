@@ -12,9 +12,9 @@ namespace EventAtendersChecklist.Models
         }
 
         public int Id { get; set; }
-        public int ActionId { get; set; }
+        public int ActionDictionaryId { get; set; }
         public int EventId { get; set; }
-        public virtual ActionName ActionNames { get; set; }
+        public virtual ActionDictionary ActionDictionary { get; set; }
         public virtual Event Event { get; set; }
     }
 }
