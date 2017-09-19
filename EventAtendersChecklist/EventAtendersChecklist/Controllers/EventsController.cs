@@ -1,128 +1,143 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using EventAtendersChecklist.DAL;
 using EventAtendersChecklist.Models;
+using EventAtendersChecklist.ModelsView;
 
 namespace EventAtendersChecklist.Controllers
 {
-    public class EmployeesController : Controller
+    public class EventsController : Controller
     {
         private eacContext db = new eacContext();
 
-        // GET: Employees
+        // GET: Events
         public ActionResult Index()
         {
-            var actionNames = db.ActionGroups.Include(x => x.ActionNames).Include(x => x.Event)
-               .Where(x => x.EventId == 1)
-               .Select(x => x.ActionNames).ToList();
-
-            var extion = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == 1 & x.ActionId == 1)
-                .Select(x => x.Employee).ToList();
-
-            var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionNames).Where(x=>x.EventId == 1).ToList();
-            var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.EventId == 1 & x.ActionId == 1).Select(x => x.ActionValue);
-
-            return View(db.Employees.ToList());
+            return View(db.Events.ToList());
         }
 
-        // GET: Employees/Details/5
+        // GET: Events/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            Event @event = db.Events.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(@event);
         }
 
-        // GET: Employees/Create
+        // GET: Events/Show/5
+        public ActionResult Show(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                .Where(x => x.EventId == id & x.ActionId == 1)
+                .Select(x => x.Employee).ToList();
+
+            var listOfActions = db.ActionGroups.Include(x => x.ActionNames).Include(x => x.Event)
+               .Where(x => x.EventId == id)
+               .Select(x => x.ActionNames).ToList();
+            var list = new TestView();
+            list.EmployeeList = employ;
+            list.ActionNameList = listOfActions;
+
+            var values = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionNames).Where(x => x.EventId == id).ToList();
+            
+
+            if (list == null)
+            {
+                return HttpNotFound();
+            }
+            return View(list);
+        }
+
+        // GET: Events/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Employees/Create
+        // POST: Events/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
+        public ActionResult Create([Bind(Include = "Id,Name,StartDate,EndDate")] Event @event)
         {
             if (ModelState.IsValid)
             {
-                db.Employees.Add(employee);
+                db.Events.Add(@event);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(employee);
+            return View(@event);
         }
 
-        // GET: Employees/Edit/5
+        // GET: Events/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            Event @event = db.Events.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(@event);
         }
 
-        // POST: Employees/Edit/5
+        // POST: Events/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
+        public ActionResult Edit([Bind(Include = "Id,Name,StartDate,EndDate")] Event @event)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(employee).State = EntityState.Modified;
+                db.Entry(@event).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(employee);
+            return View(@event);
         }
 
-        // GET: Employees/Delete/5
+        // GET: Events/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            Event @event = db.Events.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(@event);
         }
 
-        // POST: Employees/Delete/5
+        // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Employee employee = db.Employees.Find(id);
-            db.Employees.Remove(employee);
+            Event @event = db.Events.Find(id);
+            db.Events.Remove(@event);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -192,23 +192,27 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActionGroupsController.cs" />
+    <Compile Include="Controllers\ActionNamesController.cs" />
     <Compile Include="Controllers\EmployeeEventAssignmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\eacContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201709181403250_Initial.cs" />
-    <Compile Include="Migrations\201709181403250_Initial.Designer.cs">
-      <DependentUpon>201709181403250_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201709190947244_Initial.cs" />
+    <Compile Include="Migrations\201709190947244_Initial.Designer.cs">
+      <DependentUpon>201709190947244_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelsView\TestView.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActionGroup.cs" />
     <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Action.cs" />
+    <Compile Include="Models\ActionName.cs" />
     <Compile Include="Models\EmployeeEventAssignment.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -284,6 +288,22 @@
     <Content Include="Views\EmployeeEventAssignments\Details.cshtml" />
     <Content Include="Views\EmployeeEventAssignments\Edit.cshtml" />
     <Content Include="Views\EmployeeEventAssignments\Index.cshtml" />
+    <Content Include="Views\ActionNames\Create.cshtml" />
+    <Content Include="Views\ActionNames\Delete.cshtml" />
+    <Content Include="Views\ActionNames\Details.cshtml" />
+    <Content Include="Views\ActionNames\Edit.cshtml" />
+    <Content Include="Views\ActionNames\Index.cshtml" />
+    <Content Include="Views\ActionGroups\Create.cshtml" />
+    <Content Include="Views\ActionGroups\Delete.cshtml" />
+    <Content Include="Views\ActionGroups\Details.cshtml" />
+    <Content Include="Views\ActionGroups\Edit.cshtml" />
+    <Content Include="Views\ActionGroups\Index.cshtml" />
+    <Content Include="Views\Events\Create.cshtml" />
+    <Content Include="Views\Events\Delete.cshtml" />
+    <Content Include="Views\Events\Details.cshtml" />
+    <Content Include="Views\Events\Edit.cshtml" />
+    <Content Include="Views\Events\Index.cshtml" />
+    <Content Include="Views\Events\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -305,8 +325,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709181403250_Initial.resx">
-      <DependentUpon>201709181403250_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201709190947244_Initial.resx">
+      <DependentUpon>201709190947244_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

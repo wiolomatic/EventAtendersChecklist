@@ -80,10 +80,10 @@ namespace EventAtendersChecklist.Migrations
             );
 
             // New action
-            context.Actions.AddOrUpdate(a => a.Id,
-                new Models.Action { Id = 1, Name = "Avilable" },
-                new Models.Action { Id = 2, Name = "T-Shirt" },
-                new Models.Action { Id = 3, Name = "Coach" });
+            context.ActionNames.AddOrUpdate(a => a.Id,
+                new Models.ActionName { Id = 1, Name = "Avilable" },
+                new Models.ActionName { Id = 2, Name = "T-Shirt" },
+                new Models.ActionName { Id = 3, Name = "Coach" });
 
 
             // New action assigment

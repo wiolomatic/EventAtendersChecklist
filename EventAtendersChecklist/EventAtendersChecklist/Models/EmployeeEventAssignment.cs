@@ -9,7 +9,6 @@ namespace EventAtendersChecklist.Models
     {
         public EmployeeEventAssignment()
         {
-
         }
 
         public int ActionId { get; set; }
@@ -17,7 +16,7 @@ namespace EventAtendersChecklist.Models
         public int EmployeeId { get; set; }
         public int EventId { get; set; }
         public int Id { get; set; }
-        public virtual Action Action { get; set; }
+        public virtual ActionName ActionNames { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual Event Event { get; set; }
 
