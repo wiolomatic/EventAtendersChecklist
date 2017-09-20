@@ -59,16 +59,6 @@ namespace EventAtendersChecklist.Controllers
             return View(actionDictionary);
         }
 
-        public ActionResult AddNewAndAttachedToEvent()
-        {
-            return View();
-        }
-
-        public ActionResult AddNewAndAttachedToEvent([Bind(Include = "Id,ActionDictionaryId,EventId")] ActionGroup actionGroup)
-        {
-            return View();
-        }
-
         // GET: ActionDictionaries/Edit/5
         public ActionResult Edit(int? id)
         {
