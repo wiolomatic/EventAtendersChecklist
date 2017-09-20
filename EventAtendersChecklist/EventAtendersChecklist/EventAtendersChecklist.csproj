@@ -296,11 +296,6 @@
     <Content Include="Views\EmployeeEventAssignments\Details.cshtml" />
     <Content Include="Views\EmployeeEventAssignments\Edit.cshtml" />
     <Content Include="Views\EmployeeEventAssignments\Index.cshtml" />
-    <Content Include="Views\ActionNames\Create.cshtml" />
-    <Content Include="Views\ActionNames\Delete.cshtml" />
-    <Content Include="Views\ActionNames\Details.cshtml" />
-    <Content Include="Views\ActionNames\Edit.cshtml" />
-    <Content Include="Views\ActionNames\Index.cshtml" />
     <Content Include="Views\ActionGroups\Create.cshtml" />
     <Content Include="Views\ActionGroups\Delete.cshtml" />
     <Content Include="Views\ActionGroups\Details.cshtml" />
