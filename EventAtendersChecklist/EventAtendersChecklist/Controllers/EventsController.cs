@@ -42,8 +42,9 @@ namespace EventAtendersChecklist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id & x.ActionDictionaryId == 1)
-                .Select(x => x.Employee).ToList();
+                .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
+            var employActionsValues = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                .Where(x => x.EventId == id).ToList();
 
             var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == id)
@@ -51,10 +52,25 @@ namespace EventAtendersChecklist.Controllers
             var EmployeeEventAssignmentsList = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == id).ToList();
 
 
-            var list = new TestView();
-            list.EmployeeList = employ;
-            list.ActionNameList = listOfActions;
-            list.EmployeeEventAsignmentList = EmployeeEventAssignmentsList;
+            var list = new TestView()
+            {
+                actionDictionaryList = listOfActions,
+                eventAttenderList = from e in employ
+                                select new EventAttender()
+                                {
+                                    FirstName = e.Employee.FirstName,
+                                    AttenderId = e.EmployeeId,
+                                    LastName = e.Employee.LastName,
+                                    Email = e.Employee.Email,
+                                    Actions = from ea in e.Employee.EmployeeEventAssignments
+                                              select new ActionValue()
+                                              {
+                                                  ActionId = ea.ActionDictionaryId,
+                                                  Value = ea.ActionValue
+                                              }                                  
+                                }
+            };
+
 
             if (list == null)
             {
