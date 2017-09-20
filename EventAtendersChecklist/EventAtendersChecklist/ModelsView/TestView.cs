@@ -5,8 +5,8 @@ namespace EventAtendersChecklist.ModelsView
 {
     public class TestView
     {
-        public ICollection<ActionDictionary> actionDictionaryList { get; set; }
-        public IEnumerable<EventAttender> eventAttenderList { get; set; }
+        public IEnumerable<ActionDictionary> ActionDictionaryList { get; set; }
+        public IEnumerable<EventAttender> EventAttenderList { get; set; }
     }
     public class EventAttender
     {
@@ -19,6 +19,7 @@ namespace EventAtendersChecklist.ModelsView
 
     public class ActionValue
     {
+        public string ActionName { get; set; }
         public int ActionId { get; set; }
         public bool Value { get; set; }
     }

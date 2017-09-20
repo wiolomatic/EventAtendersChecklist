@@ -54,19 +54,20 @@ namespace EventAtendersChecklist.Controllers
 
             var list = new TestView()
             {
-                actionDictionaryList = listOfActions,
-                eventAttenderList = from e in employ
-                                select new EventAttender()
-                                {
-                                    FirstName = e.Employee.FirstName,
-                                    AttenderId = e.EmployeeId,
-                                    LastName = e.Employee.LastName,
-                                    Email = e.Employee.Email,
-                                    Actions = from ea in e.Employee.EmployeeEventAssignments
-                                              select new ActionValue()
-                                              {
-                                                  ActionId = ea.ActionDictionaryId,
-                                                  Value = ea.ActionValue
+                ActionDictionaryList = listOfActions,
+                EventAttenderList = from e in employ
+                                    select new EventAttender()
+                                    {
+                                        FirstName = e.Employee.FirstName,
+                                        AttenderId = e.EmployeeId,
+                                        LastName = e.Employee.LastName,
+                                        Email = e.Employee.Email,
+                                        Actions = from ea in e.Employee.EmployeeEventAssignments
+                                                  select new ActionValue()
+                                                  {
+                                                   ActionId = ea.ActionDictionaryId,
+                                                   ActionName = ea.ActionDictionary.Name,
+                                                   Value = ea.ActionValue
                                               }                                  
                                 }
             };
