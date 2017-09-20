@@ -7,6 +7,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div>
+    <h4>Show event list</h4>
+    <hr />
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+</div>
+
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
     columns.Add(x => x.AttenderId, true);
@@ -18,16 +26,9 @@
         .Titled(item.Name)
         .Encoded(false)
         .Sanitized(false)
-        .RenderValueAs(o => Html.CheckBox("checkbox", o.Actions.Where(x => x.ActionId == item.Id).Select(x => x.Value)));
+        .RenderValueAs(o => Html.CheckBox("checkbox" + o.AttenderId++, o.Actions.Where(x => x.ActionId == item.Id).Select(x => x.Value)));
     }
-}).WithPaging(20).Selectable(true);
-<div>
-    <h4>Show event list</h4>
-    <hr />
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-</div>
+}).WithPaging(20)
 <p>
    @Html.ActionLink("Back to List", "Index")
 </p>
