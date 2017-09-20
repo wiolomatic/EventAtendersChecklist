@@ -11,112 +11,117 @@ using EventAtendersChecklist.Models;
 
 namespace EventAtendersChecklist.Controllers
 {
-    public class EmployeeEventAssignmentsController : Controller
+    public class ActionDictionariesController : Controller
     {
         private eacContext db = new eacContext();
 
-        // GET: EmployeeEventAssignments
+        // GET: ActionDictionaries
         public ActionResult Index()
         {
-            var employeeEventAssignments = db.EmployeeEventAssignments.Include(e => e.Event);
-            return View(employeeEventAssignments.ToList());
+            return View(db.ActionDictionary.ToList());
         }
 
-        // GET: EmployeeEventAssignments/Details/5
+        // GET: ActionDictionaries/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmployeeEventAssignment employeeEventAssignment = db.EmployeeEventAssignments.Find(id);
-            if (employeeEventAssignment == null)
+            ActionDictionary actionDictionary = db.ActionDictionary.Find(id);
+            if (actionDictionary == null)
             {
                 return HttpNotFound();
             }
-            return View(employeeEventAssignment);
+            return View(actionDictionary);
         }
 
-        // GET: EmployeeEventAssignments/Create
+        // GET: ActionDictionaries/Create
         public ActionResult Create()
         {
-            ViewBag.EventId = new SelectList(db.Events, "Id", "Name");
             return View();
         }
 
-        // POST: EmployeeEventAssignments/Create
+        // POST: ActionDictionaries/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,EmpoyeeId,EventId")] EmployeeEventAssignment employeeEventAssignment)
+        public ActionResult Create([Bind(Include = "Id,Name")] ActionDictionary actionDictionary)
         {
             if (ModelState.IsValid)
             {
-                db.EmployeeEventAssignments.Add(employeeEventAssignment);
+                db.ActionDictionary.Add(actionDictionary);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EventId = new SelectList(db.Events, "Id", "Name", employeeEventAssignment.EventId);
-            return View(employeeEventAssignment);
+            return View(actionDictionary);
         }
 
-        // GET: EmployeeEventAssignments/Edit/5
+        public ActionResult AddNewAndAttachedToEvent()
+        {
+            return View();
+        }
+
+        public ActionResult AddNewAndAttachedToEvent([Bind(Include = "Id,ActionDictionaryId,EventId")] ActionGroup actionGroup)
+        {
+            return View();
+        }
+
+        // GET: ActionDictionaries/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmployeeEventAssignment employeeEventAssignment = db.EmployeeEventAssignments.Find(id);
-            if (employeeEventAssignment == null)
+            ActionDictionary actionDictionary = db.ActionDictionary.Find(id);
+            if (actionDictionary == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.EventId = new SelectList(db.Events, "Id", "Name", employeeEventAssignment.EventId);
-            return View(employeeEventAssignment);
+            return View(actionDictionary);
         }
 
-        // POST: EmployeeEventAssignments/Edit/5
+        // POST: ActionDictionaries/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,EmpoyeeId,EventId")] EmployeeEventAssignment employeeEventAssignment)
+        public ActionResult Edit([Bind(Include = "Id,Name")] ActionDictionary actionDictionary)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(employeeEventAssignment).State = EntityState.Modified;
+                db.Entry(actionDictionary).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EventId = new SelectList(db.Events, "Id", "Name", employeeEventAssignment.EventId);
-            return View(employeeEventAssignment);
+            return View(actionDictionary);
         }
 
-        // GET: EmployeeEventAssignments/Delete/5
+        // GET: ActionDictionaries/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EmployeeEventAssignment employeeEventAssignment = db.EmployeeEventAssignments.Find(id);
-            if (employeeEventAssignment == null)
+            ActionDictionary actionDictionary = db.ActionDictionary.Find(id);
+            if (actionDictionary == null)
             {
                 return HttpNotFound();
             }
-            return View(employeeEventAssignment);
+            return View(actionDictionary);
         }
 
-        // POST: EmployeeEventAssignments/Delete/5
+        // POST: ActionDictionaries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            EmployeeEventAssignment employeeEventAssignment = db.EmployeeEventAssignments.Find(id);
-            db.EmployeeEventAssignments.Remove(employeeEventAssignment);
+            ActionDictionary actionDictionary = db.ActionDictionary.Find(id);
+            db.ActionDictionary.Remove(actionDictionary);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
