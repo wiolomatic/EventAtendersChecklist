@@ -43,14 +43,13 @@ namespace EventAtendersChecklist.Controllers
             }
             var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                 .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
-            var employActionsValues = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+
+            var test = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                 .Where(x => x.EventId == id).ToList();
 
             var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == id)
                .Select(x => x.ActionDictionary).ToList();
-            var EmployeeEventAssignmentsList = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == id).ToList();
-
 
             var list = new TestView()
             {
@@ -62,7 +61,7 @@ namespace EventAtendersChecklist.Controllers
                                         AttenderId = e.EmployeeId,
                                         LastName = e.Employee.LastName,
                                         Email = e.Employee.Email,
-                                        Actions = from ea in e.Employee.EmployeeEventAssignments
+                                        Actions = from ea in test.Where(x => x.EmployeeId == e.EmployeeId)
                                                   select new ActionValue()
                                                   {
                                                    ActionId = ea.ActionDictionaryId,
