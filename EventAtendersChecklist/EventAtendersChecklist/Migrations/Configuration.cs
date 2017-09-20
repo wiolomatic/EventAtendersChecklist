@@ -79,12 +79,12 @@ namespace EventAtendersChecklist.Migrations
                 new Models.EmployeeEventAssignment { Id = 12, EventId = 1, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = true },
 
                 // Event 2
-                new Models.EmployeeEventAssignment { Id = 5, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 6, EventId = 2, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 7, EventId = 2, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 8, EventId = 2, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 9, EventId = 2, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 10, EventId = 2, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = false }
+                new Models.EmployeeEventAssignment { Id = 13, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 14, EventId = 2, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 15, EventId = 2, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 16, EventId = 2, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 17, EventId = 2, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 18, EventId = 2, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = true }
             );
 
             // New action
