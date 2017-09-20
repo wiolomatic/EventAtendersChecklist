@@ -27,7 +27,7 @@ namespace EventAtendersChecklist.Controllers
                 .Select(x => x.Employee).ToList();
 
             var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x=>x.EventId == 1).ToList();
-            var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.ActionDictionaryId == 1).Select(x => x.ActionValue.ToString());
+            var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.ActionDictionaryId == 1).Select(x => x.ActionValue);
 
             return View(db.Employees.ToList());
         }
