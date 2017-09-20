@@ -193,9 +193,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ActionGroupsController.cs" />
-    <Compile Include="Controllers\ActionNamesController.cs" />
-    <Compile Include="Controllers\EmployeeEventAssignmentsController.cs" />
+    <Compile Include="Controllers\ActionDictionariesController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -305,6 +303,12 @@
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
     <Content Include="Views\Events\Show.cshtml" />
+    <Content Include="Views\ActionDictionaries\Create.cshtml" />
+    <Content Include="Views\ActionDictionaries\Delete.cshtml" />
+    <Content Include="Views\ActionDictionaries\Details.cshtml" />
+    <Content Include="Views\ActionDictionaries\Edit.cshtml" />
+    <Content Include="Views\ActionDictionaries\Index.cshtml" />
+    <Content Include="Views\ActionDictionaries\AddNewAndAttachedToEvent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
