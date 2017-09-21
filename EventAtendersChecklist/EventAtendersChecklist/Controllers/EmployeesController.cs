@@ -1,19 +1,29 @@
-﻿using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web.Mvc;
-using EventAtendersChecklist.DAL;
-using EventAtendersChecklist.Models;
-using EventAtendersChecklist.ModelsView;
-
-namespace EventAtendersChecklist.Controllers
+﻿namespace EventAtendersChecklist.Controllers
 {
+    using EventAtendersChecklist.DAL;
+    using EventAtendersChecklist.Models;
+    using EventAtendersChecklist.ModelsView;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Net;
+    using System.Web.Mvc;
+
+    /// <summary>
+    /// Defines the <see cref="EmployeesController" />
+    /// </summary>
     public class EmployeesController : Controller
     {
+        /// <summary>
+        /// Defines the db
+        /// </summary>
         private eacContext db = new eacContext();
 
         // GET: Employees
+        /// <summary>
+        /// The Index
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
             var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
@@ -24,13 +34,18 @@ namespace EventAtendersChecklist.Controllers
                 .Where(x => x.EventId == 1 & x.ActionDictionaryId == 1)
                 .Select(x => x.Employee).ToList();
 
-            var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x=>x.EventId == 1).ToList();
+            var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == 1).ToList();
             var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.ActionDictionaryId == 1).Select(x => x.ActionValue);
 
             return View(db.Employees.ToList());
         }
 
         // GET: Employees/Details/5
+        /// <summary>
+        /// The Details
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -46,6 +61,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Employees/AddToEvent/5
+        /// <summary>
+        /// The AddToEvent
+        /// </summary>
+        /// <param name="id">The <see cref="int"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult AddToEvent(int id)
         {
             AddEmployeeToEventViewModel employee = new AddEmployeeToEventViewModel()
@@ -60,6 +80,11 @@ namespace EventAtendersChecklist.Controllers
             return View(employee);
         }
 
+        /// <summary>
+        /// The AddToEvent
+        /// </summary>
+        /// <param name="employee">The <see cref="AddEmployeeToEventViewModel"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddToEvent(AddEmployeeToEventViewModel employee)
@@ -96,6 +121,10 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Employees/Create
+        /// <summary>
+        /// The Create
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Create()
         {
             return View();
@@ -104,6 +133,11 @@ namespace EventAtendersChecklist.Controllers
         // POST: Employees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// The Create
+        /// </summary>
+        /// <param name="employee">The <see cref="Employee"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
@@ -119,6 +153,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Employees/Edit/5
+        /// <summary>
+        /// The Edit
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -136,6 +175,11 @@ namespace EventAtendersChecklist.Controllers
         // POST: Employees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// The Edit
+        /// </summary>
+        /// <param name="employee">The <see cref="Employee"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
@@ -150,6 +194,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Employees/Delete/5
+        /// <summary>
+        /// The Delete
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -165,6 +214,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // POST: Employees/Delete/5
+        /// <summary>
+        /// The DeleteConfirmed
+        /// </summary>
+        /// <param name="id">The <see cref="int"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -175,6 +229,10 @@ namespace EventAtendersChecklist.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
+        /// <param name="disposing">The <see cref="bool"/></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
