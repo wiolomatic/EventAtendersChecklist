@@ -1,17 +1,24 @@
 namespace EventAtendersChecklist.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
+    /// <summary>
+    /// Defines the <see cref="Configuration" />
+    /// </summary>
     internal sealed class Configuration : DbMigrationsConfiguration<EventAtendersChecklist.DAL.eacContext>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Configuration"/> class.
+        /// </summary>
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
+        /// <summary>
+        /// The Seed
+        /// </summary>
+        /// <param name="context">The <see cref="EventAtendersChecklist.DAL.eacContext"/></param>
         protected override void Seed(EventAtendersChecklist.DAL.eacContext context)
         {
             //  This method will be called after migrating to the latest version.
