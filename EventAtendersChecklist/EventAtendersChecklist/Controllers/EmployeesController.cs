@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using EventAtendersChecklist.DAL;
 using EventAtendersChecklist.Models;
+using EventAtendersChecklist.ModelsView;
 
 namespace EventAtendersChecklist.Controllers
 {
@@ -43,6 +41,56 @@ namespace EventAtendersChecklist.Controllers
             if (employee == null)
             {
                 return HttpNotFound();
+            }
+            return View(employee);
+        }
+
+        // GET: Employees/AddToEvent/5
+        public ActionResult AddToEvent(int id)
+        {
+            AddEmployeeToEventViewModel employee = new AddEmployeeToEventViewModel()
+            {
+                EventId = id,
+                _employee = new Employee()
+            };
+            if (employee == null)
+            {
+                return HttpNotFound();
+            }
+            return View(employee);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddToEvent(AddEmployeeToEventViewModel employee)
+        {
+            if (ModelState.IsValid)
+            {
+                var eventId = employee.EventId;
+                db.Employees.Add(new Employee
+                {
+                    FirstName = employee._employee.FirstName,
+                    LastName = employee._employee.LastName,
+                    Email = employee._employee.Email
+                });
+                db.SaveChanges();
+                var id = db.Employees.Where(x => x.Email == employee._employee.Email)
+                    .Select(x => x.Id)
+                    .ToList()
+                    .First();
+                var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
+                foreach (var item in actionsInEvent)
+                {
+                    db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                    {
+                        EventId = eventId,
+                        EmployeeId = id,
+                        ActionDictionaryId = item.ActionDictionaryId,
+                        ActionValue = false
+                    });
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Show", "Events", new { id = employee.EventId });
             }
             return View(employee);
         }
