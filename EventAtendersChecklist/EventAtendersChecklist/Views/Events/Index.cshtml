@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<EventAtendersChecklist.Models.Event>
-
+@using GridMvc.Html;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,38 +10,19 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndDate)
-        </td>
-        <td>
-            @Html.ActionLink("Show", "Show", new { id = item.Id }) |
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
-</table>
+@Html.Grid(Model).Columns(collumn => {
+    collumn.Add(x => x.Id, true);
+    collumn.Add(x => x.Name).Titled("Event").Sortable(true);
+    collumn.Add(x => x.StartDate).Titled("Start Date").Sortable(true)
+                .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending); ;
+    collumn.Add(x=> x.EndDate).Titled("End Date").Sortable(true).Filterable(true);
+    collumn.Add().Sanitized(false).Encoded(false)
+                .RenderValueAs(model => Html.ActionLink("Show", "Show", new { id = model.Id }, null).ToHtmlString());
+    collumn.Add().Sanitized(false).Encoded(false)
+                .RenderValueAs(model => Html.ActionLink("Edit", "Edit", new { id = model.Id }, null).ToHtmlString());
+    collumn.Add().Sanitized(false).Encoded(false)
+                .RenderValueAs(model => Html.ActionLink("Details", "Details", new { id = model.Id }, null).ToHtmlString());
+    collumn.Add().Sanitized(false).Encoded(false)
+                .RenderValueAs(model => Html.ActionLink("Delete", "Delete", new { id = model.Id }, null).ToHtmlString());
+}).WithPaging(10)
