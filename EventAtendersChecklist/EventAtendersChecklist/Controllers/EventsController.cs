@@ -64,7 +64,7 @@
             var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                 .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
 
-            var test = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                 .Where(x => x.EventId == id).ToList();
 
             var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
@@ -82,7 +82,7 @@
                                         AttenderId = e.EmployeeId,
                                         LastName = e.Employee.LastName,
                                         Email = e.Employee.Email,
-                                        Actions = from ea in test.Where(x => x.EmployeeId == e.EmployeeId)
+                                        Actions = from ea in actions.Where(x => x.EmployeeId == e.EmployeeId)
                                                   select new ActionValue()
                                                   {
                                                       ActionId = ea.ActionDictionaryId,
