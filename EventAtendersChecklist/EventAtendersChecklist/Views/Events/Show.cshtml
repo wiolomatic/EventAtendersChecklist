@@ -26,6 +26,7 @@
         .Titled(item.Name)
         .Encoded(false)
         .Sanitized(false)
+        .Sortable(true)
         .RenderValueAs(o => Html.CheckBox("checkbox" + o.AttenderId++, o.Actions.Where(x => x.ActionId == item.Id).Select(x => x.Value).First()));
     }
 }).WithPaging(20)
