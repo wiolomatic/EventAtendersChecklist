@@ -1,45 +1,66 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using EventAtendersChecklist.Models;
-
-namespace EventAtendersChecklist.Controllers
+﻿namespace EventAtendersChecklist.Controllers
 {
+    using EventAtendersChecklist.Models;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.Owin;
+    using Microsoft.Owin.Security;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+
+    /// <summary>
+    /// Defines the <see cref="AccountController" />
+    /// </summary>
     [Authorize]
     public class AccountController : Controller
     {
+        /// <summary>
+        /// Defines the _signInManager
+        /// </summary>
         private ApplicationSignInManager _signInManager;
+
+        /// <summary>
+        /// Defines the _userManager
+        /// </summary>
         private ApplicationUserManager _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        /// <param name="userManager">The <see cref="ApplicationUserManager"/></param>
+        /// <param name="signInManager">The <see cref="ApplicationSignInManager"/></param>
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
 
+        /// <summary>
+        /// Gets or sets the SignInManager
+        /// </summary>
         public ApplicationSignInManager SignInManager
         {
             get
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the UserManager
+        /// </summary>
         public ApplicationUserManager UserManager
         {
             get
@@ -54,6 +75,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/Login
+        /// <summary>
+        /// The Login
+        /// </summary>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -63,6 +89,12 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/Login
+        /// <summary>
+        /// The Login
+        /// </summary>
+        /// <param name="model">The <see cref="LoginViewModel"/></param>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -93,6 +125,13 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/VerifyCode
+        /// <summary>
+        /// The VerifyCode
+        /// </summary>
+        /// <param name="provider">The <see cref="string"/></param>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <param name="rememberMe">The <see cref="bool"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
@@ -106,6 +145,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/VerifyCode
+        /// <summary>
+        /// The VerifyCode
+        /// </summary>
+        /// <param name="model">The <see cref="VerifyCodeViewModel"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -120,7 +164,7 @@ namespace EventAtendersChecklist.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -136,6 +180,10 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/Register
+        /// <summary>
+        /// The Register
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -144,6 +192,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/Register
+        /// <summary>
+        /// The Register
+        /// </summary>
+        /// <param name="model">The <see cref="RegisterViewModel"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -157,8 +210,8 @@ namespace EventAtendersChecklist.Controllers
                 if (result.Succeeded)
                 {
                     UserManager.AddToRole(UserManager.FindByName(model.Email).Id, model.Role);
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -176,6 +229,12 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ConfirmEmail
+        /// <summary>
+        /// The ConfirmEmail
+        /// </summary>
+        /// <param name="userId">The <see cref="string"/></param>
+        /// <param name="code">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -189,6 +248,10 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ForgotPassword
+        /// <summary>
+        /// The ForgotPassword
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
@@ -197,6 +260,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/ForgotPassword
+        /// <summary>
+        /// The ForgotPassword
+        /// </summary>
+        /// <param name="model">The <see cref="ForgotPasswordViewModel"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -225,6 +293,10 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ForgotPasswordConfirmation
+        /// <summary>
+        /// The ForgotPasswordConfirmation
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
@@ -233,6 +305,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ResetPassword
+        /// <summary>
+        /// The ResetPassword
+        /// </summary>
+        /// <param name="code">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
@@ -241,6 +318,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/ResetPassword
+        /// <summary>
+        /// The ResetPassword
+        /// </summary>
+        /// <param name="model">The <see cref="ResetPasswordViewModel"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -267,6 +349,10 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ResetPasswordConfirmation
+        /// <summary>
+        /// The ResetPasswordConfirmation
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
@@ -275,6 +361,12 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/ExternalLogin
+        /// <summary>
+        /// The ExternalLogin
+        /// </summary>
+        /// <param name="provider">The <see cref="string"/></param>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -286,6 +378,12 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/SendCode
+        /// <summary>
+        /// The SendCode
+        /// </summary>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <param name="rememberMe">The <see cref="bool"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
@@ -301,6 +399,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/SendCode
+        /// <summary>
+        /// The SendCode
+        /// </summary>
+        /// <param name="model">The <see cref="SendCodeViewModel"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -321,6 +424,11 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
+        /// <summary>
+        /// The ExternalLoginCallback
+        /// </summary>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -351,6 +459,12 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/ExternalLoginConfirmation
+        /// <summary>
+        /// The ExternalLoginConfirmation
+        /// </summary>
+        /// <param name="model">The <see cref="ExternalLoginConfirmationViewModel"/></param>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -389,6 +503,10 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // POST: /Account/LogOff
+        /// <summary>
+        /// The LogOff
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -399,12 +517,20 @@ namespace EventAtendersChecklist.Controllers
 
         //
         // GET: /Account/ExternalLoginFailure
+        /// <summary>
+        /// The ExternalLoginFailure
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
+        /// <param name="disposing">The <see cref="bool"/></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -425,10 +551,15 @@ namespace EventAtendersChecklist.Controllers
             base.Dispose(disposing);
         }
 
-        #region Helpers
         // Used for XSRF protection when adding external logins
+        // Used for XSRF protection when adding external logins        /// <summary>
+        /// Defines the XsrfKey
+        /// </summary>
         private const string XsrfKey = "XsrfId";
 
+        /// <summary>
+        /// Gets the AuthenticationManager
+        /// </summary>
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -437,6 +568,10 @@ namespace EventAtendersChecklist.Controllers
             }
         }
 
+        /// <summary>
+        /// The AddErrors
+        /// </summary>
+        /// <param name="result">The <see cref="IdentityResult"/></param>
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -445,6 +580,11 @@ namespace EventAtendersChecklist.Controllers
             }
         }
 
+        /// <summary>
+        /// The RedirectToLocal
+        /// </summary>
+        /// <param name="returnUrl">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -454,13 +594,27 @@ namespace EventAtendersChecklist.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Defines the <see cref="ChallengeResult" />
+        /// </summary>
         internal class ChallengeResult : HttpUnauthorizedResult
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ChallengeResult"/> class.
+            /// </summary>
+            /// <param name="provider">The <see cref="string"/></param>
+            /// <param name="redirectUri">The <see cref="string"/></param>
             public ChallengeResult(string provider, string redirectUri)
                 : this(provider, redirectUri, null)
             {
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ChallengeResult"/> class.
+            /// </summary>
+            /// <param name="provider">The <see cref="string"/></param>
+            /// <param name="redirectUri">The <see cref="string"/></param>
+            /// <param name="userId">The <see cref="string"/></param>
             public ChallengeResult(string provider, string redirectUri, string userId)
             {
                 LoginProvider = provider;
@@ -468,10 +622,25 @@ namespace EventAtendersChecklist.Controllers
                 UserId = userId;
             }
 
+            /// <summary>
+            /// Gets or sets the LoginProvider
+            /// </summary>
             public string LoginProvider { get; set; }
+
+            /// <summary>
+            /// Gets or sets the RedirectUri
+            /// </summary>
             public string RedirectUri { get; set; }
+
+            /// <summary>
+            /// Gets or sets the UserId
+            /// </summary>
             public string UserId { get; set; }
 
+            /// <summary>
+            /// The ExecuteResult
+            /// </summary>
+            /// <param name="context">The <see cref="ControllerContext"/></param>
             public override void ExecuteResult(ControllerContext context)
             {
                 var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
@@ -482,6 +651,5 @@ namespace EventAtendersChecklist.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
-        #endregion
     }
 }

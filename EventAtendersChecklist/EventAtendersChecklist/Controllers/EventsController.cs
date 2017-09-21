@@ -1,25 +1,40 @@
-﻿using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web.Mvc;
-using EventAtendersChecklist.DAL;
-using EventAtendersChecklist.Models;
-using EventAtendersChecklist.ModelsView;
-
-namespace EventAtendersChecklist.Controllers
+﻿namespace EventAtendersChecklist.Controllers
 {
+    using EventAtendersChecklist.DAL;
+    using EventAtendersChecklist.Models;
+    using EventAtendersChecklist.ModelsView;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Net;
+    using System.Web.Mvc;
+
+    /// <summary>
+    /// Defines the <see cref="EventsController" />
+    /// </summary>
     public class EventsController : Controller
     {
+        /// <summary>
+        /// Defines the db
+        /// </summary>
         private eacContext db = new eacContext();
 
         // GET: Events
+        /// <summary>
+        /// The Index
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
             return View(db.Events.ToList().OrderBy(x => x.StartDate));
         }
 
         // GET: Events/Details/5
+        /// <summary>
+        /// The Details
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,6 +50,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Events/Show/5
+        /// <summary>
+        /// The Show
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Show(int? id)
         {
             if (id == null)
@@ -64,11 +84,11 @@ namespace EventAtendersChecklist.Controllers
                                         Actions = from ea in test.Where(x => x.EmployeeId == e.EmployeeId)
                                                   select new ActionValue()
                                                   {
-                                                   ActionId = ea.ActionDictionaryId,
-                                                   ActionName = ea.ActionDictionary.Name,
-                                                   Value = ea.ActionValue
-                                              }                                  
-                                }
+                                                      ActionId = ea.ActionDictionaryId,
+                                                      ActionName = ea.ActionDictionary.Name,
+                                                      Value = ea.ActionValue
+                                                  }
+                                    }
             };
 
 
@@ -80,6 +100,10 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Events/Create
+        /// <summary>
+        /// The Create
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Create()
         {
             return View();
@@ -88,6 +112,11 @@ namespace EventAtendersChecklist.Controllers
         // POST: Events/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// The Create
+        /// </summary>
+        /// <param name="@event">The <see cref="Event"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,StartDate,EndDate")] Event @event)
@@ -103,6 +132,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Events/Edit/5
+        /// <summary>
+        /// The Edit
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -120,6 +154,11 @@ namespace EventAtendersChecklist.Controllers
         // POST: Events/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// The Edit
+        /// </summary>
+        /// <param name="@event">The <see cref="Event"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,StartDate,EndDate")] Event @event)
@@ -134,6 +173,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // GET: Events/Delete/5
+        /// <summary>
+        /// The Delete
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -149,6 +193,11 @@ namespace EventAtendersChecklist.Controllers
         }
 
         // POST: Events/Delete/5
+        /// <summary>
+        /// The DeleteConfirmed
+        /// </summary>
+        /// <param name="id">The <see cref="int"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -159,6 +208,10 @@ namespace EventAtendersChecklist.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
+        /// <param name="disposing">The <see cref="bool"/></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
