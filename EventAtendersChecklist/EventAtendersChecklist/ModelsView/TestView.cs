@@ -5,6 +5,7 @@ namespace EventAtendersChecklist.ModelsView
 {
     public class TestView
     {
+        public int? EventId { get; set; }
         public IEnumerable<ActionDictionary> ActionDictionaryList { get; set; }
         public IEnumerable<EventAttender> EventAttenderList { get; set; }
     }

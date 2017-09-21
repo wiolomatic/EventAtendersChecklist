@@ -53,6 +53,7 @@ namespace EventAtendersChecklist.Controllers
 
             var list = new TestView()
             {
+                EventId = id,
                 ActionDictionaryList = listOfActions,
                 EventAttenderList = from e in employ
                                     select new EventAttender()
