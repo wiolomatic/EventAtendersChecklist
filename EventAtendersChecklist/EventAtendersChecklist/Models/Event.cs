@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// Defines the <see cref="Event" />
@@ -15,6 +16,8 @@
         {
             this.EmployeeEventAssignments = new HashSet<EmployeeEventAssignment>();
             this.ActionGroups = new HashSet<ActionGroup>();
+            this.StartDate = new DateTime();
+            this.EndDate = new DateTime();
             this.StartDate = DateTime.Now;
             this.EndDate = DateTime.Now;
         }
@@ -26,8 +29,8 @@
         /// <param name="EndTime">The <see cref="DateTime"/></param>
         public Event(DateTime StartDate, DateTime EndTime)
         {
-            this.EmployeeEventAssignments = new HashSet<EmployeeEventAssignment>();
-            this.ActionGroups = new HashSet<ActionGroup>();
+            this.StartDate = new DateTime();
+            this.EndDate = new DateTime();
             this.StartDate = StartDate;
             this.EndDate = EndTime;
         }
@@ -40,16 +43,21 @@
         /// <summary>
         /// Gets or sets the Name
         /// </summary>
+        [Required(ErrorMessage = "Name is Requirde")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the StartDate
         /// </summary>
+        [Required(ErrorMessage = "Start Date is Requirde")]
+        [DataType(DataType.DateTime)]
         public DateTime StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the EndDate
         /// </summary>
+        [Required(ErrorMessage = "End Date is Requirde")]
+        [DataType(DataType.DateTime)]
         public DateTime EndDate { get; set; }
 
         /// <summary>

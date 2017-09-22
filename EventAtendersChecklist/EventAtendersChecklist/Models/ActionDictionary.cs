@@ -1,6 +1,7 @@
 ﻿namespace EventAtendersChecklist.Models
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// Defines the <see cref="ActionDictionary" />
@@ -24,6 +25,7 @@
         /// <summary>
         /// Gets or sets the Name
         /// </summary>
+        [Required(ErrorMessage = "Name of Action is Requirde")]
         public string Name { get; set; }
 
         /// <summary>
