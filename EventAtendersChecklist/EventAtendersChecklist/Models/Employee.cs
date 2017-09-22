@@ -24,16 +24,23 @@ namespace EventAtendersChecklist.Models
         /// <summary>
         /// Gets or sets the FirstName
         /// </summary>
+        [Required(ErrorMessage = "First Name is Requirde")]
         public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the LastName
         /// </summary>
+        [Required(ErrorMessage = "Last Name is Requirde")]
         public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the Email
         /// </summary>
+        [Required(ErrorMessage = "Email is Requirde")]
+        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                            @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                            @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
+                            ErrorMessage = "Email is not valid")]
         public string Email { get; set; }
 
         /// <summary>
