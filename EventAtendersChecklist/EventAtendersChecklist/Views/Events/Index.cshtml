@@ -10,6 +10,24 @@
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
 </p>
+<a class="btn btn-success" data-toggle="modal" data-target=".bootstrapmodal">
+    <span class="glyphicon glyphicon-eye-open"></span> View</a>
+<div class="modal fade bootstrapmodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Hello
+            </div>
+            <div class="modal-body">
+                body
+            </div>
+            <div class="modal-footer">
+                footer
+            </div>
+        </div>
+
+    </div>
+</div>
 
 @Html.Grid(Model).Columns(collumn => {
     collumn.Add(x => x.Id, true);
