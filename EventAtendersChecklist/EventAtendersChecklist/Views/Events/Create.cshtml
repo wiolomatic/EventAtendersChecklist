@@ -4,7 +4,6 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>Create</h2>
 
 @using (Html.BeginForm()) 
@@ -50,6 +49,9 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+<script src="../Scripts/moment.js" language="javascript" type="text/javascript"></script>
+<script src="../Scripts/bootstrap-datetimepicker.js" language="javascript" type="text/javascript"></script>
+<link href="../Content/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript">
       $(function () {
