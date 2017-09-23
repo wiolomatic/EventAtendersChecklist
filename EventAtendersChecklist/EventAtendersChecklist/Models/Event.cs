@@ -1,5 +1,6 @@
 ﻿namespace EventAtendersChecklist.Models
 {
+    using EventAtendersChecklist.DAL;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -51,6 +52,7 @@
         /// </summary>
         [Required(ErrorMessage = "Start Date is Requirde")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{DD:MM:YYYY}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
         /// <summary>
@@ -58,6 +60,7 @@
         /// </summary>
         [Required(ErrorMessage = "End Date is Requirde")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{DD:MM:YYYY HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
         /// <summary>
