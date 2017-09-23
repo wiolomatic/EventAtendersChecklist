@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace EventAtendersChecklist.Models
+﻿namespace EventAtendersChecklist.Models
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// Defines the <see cref="Employee" />
