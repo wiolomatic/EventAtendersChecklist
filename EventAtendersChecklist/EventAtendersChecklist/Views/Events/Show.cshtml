@@ -18,7 +18,12 @@
 
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
-    columns.Add(x => x.AttenderId, true);
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash" 
+                                     data-toggle="modal" data-target="#MyModal" 
+                                     onclick="ConfirmDelete(@Model.EventId, @o.AttenderId)"></button>);
     columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
     columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
     columns.Add(x => x.Email).Titled("Email").Sortable(true);
@@ -37,3 +42,50 @@
 <p>
    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
 </p>
+
+<input type="hidden" id="hiddenEmployeeId" />
+<input type="hidden" id="hiddenEventId" />
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-header">Delete Attendee</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Are you sure? You want to delete this.</h4>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancle</a>
+                <a href="#" class="btn btn-danger" onclick="DeleteEmployee()">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var ConfirmDelete = function (EventId, employeeId)
+    {
+        $("#hiddenEmployeeId").val(employeeId);
+        $("#hiddenEventId").val(EventId);
+
+        $("MyModal").modal('Show');        
+    }
+
+    var DeleteEmployee = function () {
+        var empId = $("#hiddenEmployeeId").val();
+        var eventId = $("#hiddenEventId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/Events/DeleteEmployee",
+            data: {
+                EmployeeId: empId,
+                EventId: eventId
+            },
+            success: function (result) {
+                $("#MyModal").hide();
+                location.reload();
+            }
+        })
+    }
+</script>
