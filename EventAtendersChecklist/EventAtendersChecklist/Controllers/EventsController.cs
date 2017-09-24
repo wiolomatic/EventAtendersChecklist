@@ -3,10 +3,13 @@
     using EventAtendersChecklist.DAL;
     using EventAtendersChecklist.Models;
     using EventAtendersChecklist.ModelsView;
+    using OfficeOpenXml;
     using System.Data;
     using System.Data.Entity;
+    using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Web;
     using System.Web.Mvc;
 
     /// <summary>
@@ -223,6 +226,38 @@
                 result = true;
             }
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ImportExcelFile(int id)
+        {
+            Event @event = db.Events.Find(id);
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+            return View(@event);
+        }
+
+        [HttpPost]
+        public ActionResult ReadExcel(HttpPostedFileBase upload, int? eventId)
+        {
+            if(upload == null)
+            {
+                ViewBag.Message = "File could not be empty.";
+                return View(string.Format("../Events/ImportExcelFile/{0}", eventId));
+            }
+            else if (Path.GetExtension(upload.FileName) == ".xlsx" || Path.GetExtension(upload.FileName) == ".xls")
+            {
+                ExcelPackage package = new ExcelPackage(upload.InputStream);
+                var lol = EmployeeToDatabase.ToDataBase(package);
+                ViewBag.Message = "Success";
+                return View(string.Format("../Events/Show/", eventId));
+            }
+            else
+            {
+                ViewBag.Message = "Wrong file extension";
+                return View(string.Format("../Events/ImportExcelFile/{0}", eventId));
+            }
         }
 
         /// <summary>

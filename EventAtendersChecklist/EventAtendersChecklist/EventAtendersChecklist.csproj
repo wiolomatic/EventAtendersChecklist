@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="GridMvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
       <Private>True</Private>
@@ -218,6 +221,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelsView\AddActionToEventViewModel.cs" />
     <Compile Include="ModelsView\AddEmployeeToEventViewModel.cs" />
+    <Compile Include="ModelsView\EmployeeToDatabase.cs" />
+    <Compile Include="ModelsView\ListOfAttendeesFromExcel.cs" />
     <Compile Include="ModelsView\ListOfAttendeesWithActions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActionGroup.cs" />
@@ -352,7 +357,9 @@
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -363,8 +370,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -417,6 +422,7 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Employees\AddToEvent.cshtml" />
     <Content Include="Views\ActionDictionaries\AddActionToEvent.cshtml" />
+    <Content Include="Views\Events\ImportExcelFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
