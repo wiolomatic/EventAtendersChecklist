@@ -211,6 +211,10 @@
     <Compile Include="Migrations\201709191133259_Initial.Designer.cs">
       <DependentUpon>201709191133259_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709241713268_Add Proper Migration.cs" />
+    <Compile Include="Migrations\201709241713268_Add Proper Migration.Designer.cs">
+      <DependentUpon>201709241713268_Add Proper Migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelsView\AddActionToEventViewModel.cs" />
     <Compile Include="ModelsView\AddEmployeeToEventViewModel.cs" />
@@ -427,6 +431,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201709191133259_Initial.resx">
       <DependentUpon>201709191133259_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709241713268_Add Proper Migration.resx">
+      <DependentUpon>201709241713268_Add Proper Migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
