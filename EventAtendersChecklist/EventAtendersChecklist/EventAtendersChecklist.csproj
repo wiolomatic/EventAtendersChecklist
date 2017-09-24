@@ -212,8 +212,9 @@
       <DependentUpon>201709191133259_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelsView\AddActionToEventViewModel.cs" />
     <Compile Include="ModelsView\AddEmployeeToEventViewModel.cs" />
-    <Compile Include="ModelsView\TestView.cs" />
+    <Compile Include="ModelsView\ListOfAttendeesWithActions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActionGroup.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -408,10 +409,10 @@
     <Content Include="Views\ActionDictionaries\Details.cshtml" />
     <Content Include="Views\ActionDictionaries\Edit.cshtml" />
     <Content Include="Views\ActionDictionaries\Index.cshtml" />
-    <Content Include="Views\ActionDictionaries\AddNewAndAttachedToEvent.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Employees\AddToEvent.cshtml" />
+    <Content Include="Views\ActionDictionaries\AddActionToEvent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
