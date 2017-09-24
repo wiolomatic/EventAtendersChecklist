@@ -209,6 +209,22 @@
             return RedirectToAction("Index");
         }
 
+        public JsonResult DeleteEmployee(int EmployeeId, int EventId)
+        {
+            var listOfId = db.EmployeeEventAssignments
+                .Where(x => x.EmployeeId == EmployeeId & x.EventId == EventId)
+                .Select(x => x.Id).ToList();
+            var result = false;
+            foreach (var item in listOfId)
+            {
+                EmployeeEventAssignment employeeEventAssignment = db.EmployeeEventAssignments.Find(item);
+                db.EmployeeEventAssignments.Remove(employeeEventAssignment);
+                db.SaveChanges();
+                result = true;
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// The Dispose
         /// </summary>
