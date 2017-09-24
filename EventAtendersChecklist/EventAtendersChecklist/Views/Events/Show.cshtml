@@ -1,4 +1,4 @@
-﻿@model EventAtendersChecklist.ModelsView.TestView
+﻿@model EventAtendersChecklist.ModelsView.ListOfAttendeesWithActions
 
 @using GridMvc.Html;
 
@@ -12,6 +12,7 @@
     <hr />
     <p>
         @Html.ActionLink("Add New Attendee", "AddToEvent", "Employees", new { id = Model.EventId }, new { @class = "btn btn-success" })
+        @Html.ActionLink("Add New Action", "AddActionToEvent", "ActionDictionaries", new { id = Model.EventId }, new { @class = "btn btn-success" })
     </p>
 </div>
 
