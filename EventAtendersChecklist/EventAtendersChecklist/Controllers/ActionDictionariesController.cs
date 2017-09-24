@@ -2,6 +2,7 @@
 {
     using EventAtendersChecklist.DAL;
     using EventAtendersChecklist.Models;
+    using EventAtendersChecklist.ModelsView;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
@@ -77,6 +78,92 @@
             }
 
             return View(actionDictionary);
+        }
+
+        /// <summary>
+        /// The AddActionToEvent
+        /// </summary>
+        /// <param name="id">The <see cref="int"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
+        public ActionResult AddActionToEvent(int id)
+        {
+            AddActionToEventViewModel actionModel = new AddActionToEventViewModel()
+            {
+                EventID = id,
+                ActionDictionaryProp = new ActionDictionary()
+            };
+
+            if (actionModel == null)
+            {
+                return HttpNotFound();
+            }
+            return View(actionModel);
+        }
+
+        /// <summary>
+        /// The AddActionToEvent
+        /// </summary>
+        /// <param name="actionModel">The <see cref="AddActionToEventViewModel"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddActionToEvent(AddActionToEventViewModel actionModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var eventId = actionModel.EventID;
+                var name = actionModel.ActionDictionaryProp.Name;
+
+                //Add Action to Database if doesnt exist
+                var exist = db.ActionDictionary.Where(x => x.Name == name).Count();
+                if (exist == 0)
+                {
+                    db.ActionDictionary.Add(new ActionDictionary
+                    {
+                        Name = actionModel.ActionDictionaryProp.Name
+                    });
+                    db.SaveChanges();
+                }
+
+                //Get Action Id from Database
+                var actionId = db.ActionDictionary.Where(x => x.Name == actionModel.ActionDictionaryProp.Name)
+                    .Select(x => x.Id)
+                    .ToList()
+                    .First();
+
+                // Add correct actionGroup if doesnt exist
+                var exist2 = db.ActionGroups.Where(x => x.EventId == eventId & x.ActionDictionaryId == actionId).Count();
+                if (exist2 == 0)
+                {
+                    db.ActionGroups.Add(new ActionGroup
+                    {
+                        EventId = eventId,
+                        ActionDictionaryId = actionId
+                    });
+                }
+                else
+                {
+                    return RedirectToAction("Show", "Events", new { id = eventId });
+                }
+                var attendeeInEventList = db.EmployeeEventAssignments
+                    .Where(x => x.EventId == 1)
+                    .GroupBy(x => x.EmployeeId)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
+                foreach (var item in attendeeInEventList)
+                {
+                    db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                    {
+                        EventId = eventId,
+                        EmployeeId = item.EmployeeId,
+                        ActionDictionaryId = actionId,
+                        ActionValue = false
+                    });
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Show", "Events", new { id = eventId });
+            }
+            return View(actionModel);
         }
 
         // GET: ActionDictionaries/Edit/5

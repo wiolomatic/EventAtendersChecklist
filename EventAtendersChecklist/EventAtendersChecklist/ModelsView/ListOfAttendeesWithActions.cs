@@ -5,9 +5,9 @@
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// Defines the <see cref="TestView" />
+    /// Defines the <see cref="ListOfAttendeesWithActions" />
     /// </summary>
-    public class TestView
+    public class ListOfAttendeesWithActions
     {
         public int? EventId { get; set; }
         /// Gets or sets the ActionDictionaryList

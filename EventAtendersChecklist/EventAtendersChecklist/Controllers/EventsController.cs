@@ -71,7 +71,7 @@
                .Where(x => x.EventId == id)
                .Select(x => x.ActionDictionary).ToList();
 
-            var list = new TestView()
+            var list = new ListOfAttendeesWithActions()
             {
                 EventId = id,
                 ActionDictionaryList = listOfActions,
