@@ -24,6 +24,7 @@
         /// The Index
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
+        
         public ActionResult Index()
         {
             var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
