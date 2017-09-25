@@ -154,6 +154,7 @@ namespace EventAtendersChecklist.Controllers
                 var context = new ApplicationDbContext();
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
                     UserManager.AddToRole(UserManager.FindByName(model.Email).Id, model.Role);
