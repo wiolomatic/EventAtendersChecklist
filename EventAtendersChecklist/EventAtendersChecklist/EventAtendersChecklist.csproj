@@ -422,6 +422,7 @@
     <Content Include="Views\Employees\AddToEvent.cshtml" />
     <Content Include="Views\ActionDictionaries\AddActionToEvent.cshtml" />
     <Content Include="Views\Events\ImportExcelFile.cshtml" />
+    <Content Include="Views\Events\ReadExcel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

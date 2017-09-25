@@ -146,7 +146,7 @@
                     return RedirectToAction("Show", "Events", new { id = eventId });
                 }
                 var attendeeInEventList = db.EmployeeEventAssignments
-                    .Where(x => x.EventId == 1)
+                    .Where(x => x.EventId == eventId)
                     .GroupBy(x => x.EmployeeId)
                     .Select(x => x.FirstOrDefault())
                     .ToList();

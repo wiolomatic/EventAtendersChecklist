@@ -22,6 +22,11 @@
         /// </summary>
         private eacContext db = new eacContext();
 
+        /// <summary>
+        /// Defines the EventId
+        /// </summary>
+        private static int EventId = new int();
+
         // GET: Events
         /// <summary>
         /// The Index
@@ -241,44 +246,38 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult ImportExcelFile(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
-            if (@event == null)
-            {
-                return HttpNotFound();
-            }
-            return View(@event);
+            EventId = (int)id;
+            return View();
         }
 
         /// <summary>
         /// The ReadExcel
         /// </summary>
         /// <param name="upload">The <see cref="HttpPostedFileBase"/></param>
-        /// <param name="eventId">The <see cref="int?"/></param>
+        /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
-        public ActionResult ReadExcel(HttpPostedFileBase upload, int id)
+        public ActionResult ReadExcel(HttpPostedFileBase upload)
         {
             if (upload == null)
             {
                 ViewBag.Message = "File could not be empty.";
-                return View(string.Format("../Events/ImportExcelFile/{0}", id));
+                return View(string.Format("../Events/ImportExcelFile/{0}", EventId));
             }
             else if (Path.GetExtension(upload.FileName) == ".xlsx" || Path.GetExtension(upload.FileName) == ".xls")
             {
                 ExcelPackage package = new ExcelPackage(upload.InputStream);
                 var lol = EmployeeToDatabase.ToDataBase(package);
-                AddToDatabase(lol, id);
-                ViewBag.Message = "Success";
-                return View(string.Format("../Events/Show/", id));
+                AddToDatabase(lol);
+                return RedirectToAction("Show", "Events", new { id = EventId });
             }
             else
             {
-                ViewBag.Message = "Wrong file extension";
-                return View(string.Format("../Events/ImportExcelFile/{0}", id));
+                return RedirectToAction("Show", "Events", new { id = EventId });
             }
         }
 
@@ -287,37 +286,42 @@
         /// </summary>
         /// <param name="loafe">The <see cref="ListOfAttendeesFromExcel"/></param>
         /// <param name="id">The <see cref="int?"/></param>
-        private void AddToDatabase(ListOfAttendeesFromExcel loafe, int id)
+        private ActionResult AddToDatabase(ListOfAttendeesFromExcel loafe)
         {
-            int eventId = (int)id;
+            int eventId = EventId;
 
             //Add attendees to database
             foreach (var item in loafe.ListOfEmployee)
             {
-                db.Employees.Add(new Employee
+                if (db.Employees.Where(x => x.Email == item.Email).Count() == 0)
                 {
-                    FirstName = item.FirstName,
-                    LastName = item.LastName,
-                    Email = item.Email
-                });
-                db.SaveChanges();
-
+                    db.Employees.Add(new Employee
+                    {
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        Email = item.Email
+                    });
+                    db.SaveChanges();
+                }
                 var idEmployee = db.Employees.Where(x => x.Email == item.Email)
                     .Select(x => x.Id)
                     .ToList()
                     .First();
 
-                var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
-                foreach (var actionInEvent in actionsInEvent)
+                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee).Count() == 0)
                 {
-                    db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                    var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
+                    foreach (var actionInEvent in actionsInEvent)
                     {
-                        EventId = eventId,
-                        EmployeeId = idEmployee,
-                        ActionDictionaryId = actionInEvent.ActionDictionaryId,
-                        ActionValue = false
-                    });
-                    db.SaveChanges();
+                        db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                        {
+                            EventId = eventId,
+                            EmployeeId = idEmployee,
+                            ActionDictionaryId = actionInEvent.ActionDictionaryId,
+                            ActionValue = false
+                        });
+                        db.SaveChanges();
+                    }
                 }
             }
 
@@ -353,12 +357,9 @@
                         ActionDictionaryId = actionId
                     });
                 }
-                else
-                {
-                    //return RedirectToAction("Show", "Events", new { id = eventId });
-                }
+
                 var attendeeInEventList = db.EmployeeEventAssignments
-                    .Where(x => x.EventId == 1)
+                    .Where(x => x.EventId == eventId)
                     .GroupBy(x => x.EmployeeId)
                     .Select(x => x.FirstOrDefault())
                     .ToList();
@@ -373,8 +374,8 @@
                     });
                     db.SaveChanges();
                 }
-                //return RedirectToAction("Show", "Events", new { id = eventId });
             }
+            return RedirectToAction("Show", "Events", new { id = eventId });
         }
 
         /// <summary>

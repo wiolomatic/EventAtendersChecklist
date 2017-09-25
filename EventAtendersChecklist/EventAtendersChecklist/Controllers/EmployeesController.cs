@@ -103,17 +103,21 @@
                     .Select(x => x.Id)
                     .ToList()
                     .First();
-                var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
-                foreach (var item in actionsInEvent)
+
+                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == id).Count() == 0)
                 {
-                    db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                    var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
+                    foreach (var item in actionsInEvent)
                     {
-                        EventId = eventId,
-                        EmployeeId = id,
-                        ActionDictionaryId = item.ActionDictionaryId,
-                        ActionValue = false
-                    });
-                    db.SaveChanges();
+                        db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                        {
+                            EventId = eventId,
+                            EmployeeId = id,
+                            ActionDictionaryId = item.ActionDictionaryId,
+                            ActionValue = false
+                        });
+                        db.SaveChanges();
+                    }
                 }
                 return RedirectToAction("Show", "Events", new { id = employee.EventId });
             }

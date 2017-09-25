@@ -1,12 +1,11 @@
-﻿@model EventAtendersChecklist.Models.Event
-@{
+﻿@{
     ViewBag.Title = "ReadExcelUsingEpplus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Read Excel Using Epplus</h2>
 
-@using (Html.BeginForm("ReadExcel", "Events", FormMethod.Post, new { enctype = "multipart/form-data", id = @Model.Id }))
+@using (Html.BeginForm("ReadExcel", "Events", FormMethod.Post, new { enctype = "multipart/form-data"}))
 {
     <div class="form-group">
         <input type="file" id="dataFile" name="upload" />
