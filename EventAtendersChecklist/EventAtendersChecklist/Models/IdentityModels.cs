@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using EventAtendersChecklist.Migrations;
+using EventAtendersChecklist.Migrations.ApplicationDbContext;
 
 namespace EventAtendersChecklist.Models
 {
@@ -22,42 +23,12 @@ namespace EventAtendersChecklist.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("DefaultConnection", throwIfV1Schema: true)
         {
 
-            //Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration2>());
-            var context = new ApplicationDbContext();
-            if (!context.Roles.AnyAsync())
-            {
-                var roleStoreHR = new RoleStore<IdentityRole>(context);
-                var roleManagerHR = new RoleManager<IdentityRole>(roleStoreHR);
-                var roleHR = new IdentityRole
-                {
-                    Name = "HR"
-                };
-                roleManagerHR.Create(roleHR);
-                var roleStoreTL = new RoleStore<IdentityRole>(context);
-                var roleManagerTL = new RoleManager<IdentityRole>(roleStoreTL);
-                var roleTL = new IdentityRole
-                {
-                    Name = "TL"
-                };
-                roleManagerTL.Create(roleTL);
-            }
-
-            if (!context.Users.Any())
-            {
-                var userStore = new UserStore<ApplicationUser>(context);
-                var userManager = new ApplicationUserManager(userStore);
-
-                var user = new ApplicationUser
-                {
-                    Email = "admin@admin.com",
-                    UserName = "admin@admin.com"
-                };
-                userManager.Create(user, "Admin12#");
-                userManager.AddToRole(user.Id, "HR");
-            }
+            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration2>());
+           // var context = new ApplicationDbContext();
+            
 
         }
 

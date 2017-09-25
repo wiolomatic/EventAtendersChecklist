@@ -1,4 +1,4 @@
-namespace EventAtendersChecklist.Migrations
+namespace EventAtendersChecklist.Migrations.eacContext
 {
     using System;
     using System.Data.Entity;
@@ -10,22 +10,11 @@ namespace EventAtendersChecklist.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Migrations\eacContext";
         }
 
         protected override void Seed(EventAtendersChecklist.DAL.eacContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
             context.Employees.AddOrUpdate(employee => employee.Id,
                 new Models.Employee
                 {
@@ -104,6 +93,7 @@ namespace EventAtendersChecklist.Migrations
                 // Event 2
                 new Models.ActionGroup { Id = 4, EventId = 2, ActionDictionaryId = 1 },
                 new Models.ActionGroup { Id = 5, EventId = 2, ActionDictionaryId = 3 });
-        }
+        
+    }
     }
 }

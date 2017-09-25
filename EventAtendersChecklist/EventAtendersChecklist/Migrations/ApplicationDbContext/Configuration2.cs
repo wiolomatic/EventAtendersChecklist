@@ -1,4 +1,4 @@
-namespace EventAtendersChecklist.Migrations
+namespace EventAtendersChecklist.Migrations.ApplicationDbContext
 {
     using EventAtendersChecklist.Models;
     using Microsoft.AspNet.Identity;
@@ -8,16 +8,15 @@ namespace EventAtendersChecklist.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration2 : DbMigrationsConfiguration<ApplicationDbContext>
+    internal sealed class Configuration2 : DbMigrationsConfiguration<EventAtendersChecklist.Models.ApplicationDbContext>
     {
         public Configuration2()
         {
-            //var contx = new ApplicationDbContext();
-            //Seed(contx);
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Migrations\ApplicationDbContext";
         }
 
-        protected override void Seed(ApplicationDbContext context)
+        protected override void Seed(EventAtendersChecklist.Models.ApplicationDbContext context)
         {
             if (!context.Roles.Any())
             {
