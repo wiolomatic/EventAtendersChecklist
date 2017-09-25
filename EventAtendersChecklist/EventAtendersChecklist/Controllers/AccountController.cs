@@ -184,7 +184,7 @@
         /// The Register
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize(Roles = "HR")]
         public ActionResult Register()
         {
             return View();
@@ -198,7 +198,7 @@
         /// <param name="model">The <see cref="RegisterViewModel"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "HR")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
