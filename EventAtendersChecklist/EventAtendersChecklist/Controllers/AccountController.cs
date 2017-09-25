@@ -184,7 +184,7 @@
         /// The Register
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize(Roles = "HR")]
         public ActionResult Register()
         {
             return View();
@@ -198,7 +198,7 @@
         /// <param name="model">The <see cref="RegisterViewModel"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "HR")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -210,7 +210,7 @@
                 if (result.Succeeded)
                 {
                     UserManager.AddToRole(UserManager.FindByName(model.Email).Id, model.Role);
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
