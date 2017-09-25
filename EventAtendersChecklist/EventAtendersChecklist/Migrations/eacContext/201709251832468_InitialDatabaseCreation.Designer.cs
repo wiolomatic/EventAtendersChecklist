@@ -13,7 +13,7 @@ namespace EventAtendersChecklist.Migrations.eacContext
         
         string IMigrationMetadata.Id
         {
-            get { return "201709251027331_InitialDatabaseCreation"; }
+            get { return "201709251832468_InitialDatabaseCreation"; }
         }
         
         string IMigrationMetadata.Source

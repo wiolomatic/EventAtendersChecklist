@@ -208,14 +208,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\ApplicationDbContext\201709251026469_InitialDatabaseCreation.cs" />
-    <Compile Include="Migrations\ApplicationDbContext\201709251026469_InitialDatabaseCreation.Designer.cs">
-      <DependentUpon>201709251026469_InitialDatabaseCreation.cs</DependentUpon>
+    <Compile Include="Migrations\ApplicationDbContext\201709251832108_InitialDatabaseCreation.cs" />
+    <Compile Include="Migrations\ApplicationDbContext\201709251832108_InitialDatabaseCreation.Designer.cs">
+      <DependentUpon>201709251832108_InitialDatabaseCreation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\ApplicationDbContext\Configuration2.cs" />
-    <Compile Include="Migrations\eacContext\201709251027331_InitialDatabaseCreation.cs" />
-    <Compile Include="Migrations\eacContext\201709251027331_InitialDatabaseCreation.Designer.cs">
-      <DependentUpon>201709251027331_InitialDatabaseCreation.cs</DependentUpon>
+    <Compile Include="Migrations\ApplicationDbContext\Configuration.cs" />
+    <Compile Include="Migrations\eacContext\201709251832468_InitialDatabaseCreation.cs" />
+    <Compile Include="Migrations\eacContext\201709251832468_InitialDatabaseCreation.Designer.cs">
+      <DependentUpon>201709251832468_InitialDatabaseCreation.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\eacContext\Configuration.cs" />
     <Compile Include="ModelsView\AddActionToEventViewModel.cs" />
@@ -435,11 +435,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\ApplicationDbContext\201709251026469_InitialDatabaseCreation.resx">
-      <DependentUpon>201709251026469_InitialDatabaseCreation.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\ApplicationDbContext\201709251832108_InitialDatabaseCreation.resx">
+      <DependentUpon>201709251832108_InitialDatabaseCreation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\eacContext\201709251027331_InitialDatabaseCreation.resx">
-      <DependentUpon>201709251027331_InitialDatabaseCreation.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\eacContext\201709251832468_InitialDatabaseCreation.resx">
+      <DependentUpon>201709251832468_InitialDatabaseCreation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

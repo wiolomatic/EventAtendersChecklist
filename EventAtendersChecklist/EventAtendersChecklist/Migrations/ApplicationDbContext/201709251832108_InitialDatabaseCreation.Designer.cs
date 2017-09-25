@@ -13,7 +13,7 @@ namespace EventAtendersChecklist.Migrations.ApplicationDbContext
         
         string IMigrationMetadata.Id
         {
-            get { return "201709251026469_InitialDatabaseCreation"; }
+            get { return "201709251832108_InitialDatabaseCreation"; }
         }
         
         string IMigrationMetadata.Source

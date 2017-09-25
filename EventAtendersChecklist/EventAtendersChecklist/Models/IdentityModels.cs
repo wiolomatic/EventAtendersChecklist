@@ -39,7 +39,7 @@
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: true)
         {
-            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration2>());
+            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
 
         /// <summary>
