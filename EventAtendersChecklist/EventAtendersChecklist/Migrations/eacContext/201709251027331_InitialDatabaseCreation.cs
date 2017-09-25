@@ -1,9 +1,9 @@
-namespace EventAtendersChecklist.Migrations
+namespace EventAtendersChecklist.Migrations.eacContext
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddProperMigration : DbMigration
+    public partial class InitialDatabaseCreation : DbMigration
     {
         public override void Up()
         {

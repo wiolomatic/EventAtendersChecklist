@@ -1,9 +1,12 @@
 ﻿namespace EventAtendersChecklist.Models
 {
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
+    using System.Data.Entity;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
+    using EventAtendersChecklist.Migrations;
+    using EventAtendersChecklist.Migrations.ApplicationDbContext;
 
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     /// <summary>
@@ -34,8 +37,9 @@
         /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
         /// </summary>
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("DefaultConnection", throwIfV1Schema: true)
         {
+            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration2>());
         }
 
         /// <summary>

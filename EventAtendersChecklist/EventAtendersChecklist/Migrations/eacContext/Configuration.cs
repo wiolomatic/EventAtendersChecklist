@@ -1,38 +1,20 @@
-namespace EventAtendersChecklist.Migrations
+﻿namespace EventAtendersChecklist.Migrations.eacContext
 {
+    using System;
+    using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using System.Linq;
 
-    /// <summary>
-    /// Defines the <see cref="Configuration" />
-    /// </summary>
     internal sealed class Configuration : DbMigrationsConfiguration<EventAtendersChecklist.DAL.eacContext>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Configuration"/> class.
-        /// </summary>
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Migrations\eacContext";
         }
 
-        /// <summary>
-        /// The Seed
-        /// </summary>
-        /// <param name="context">The <see cref="EventAtendersChecklist.DAL.eacContext"/></param>
         protected override void Seed(EventAtendersChecklist.DAL.eacContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
             context.Employees.AddOrUpdate(employee => employee.Id,
                 new Models.Employee
                 {
@@ -72,26 +54,26 @@ namespace EventAtendersChecklist.Migrations
             context.EmployeeEventAssignments.AddOrUpdate(eea => eea.Id,
 
                 //Event 1
-                new Models.EmployeeEventAssignment { Id = 1, EventId = 1, EmployeeId = 1, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 1, EventId = 1, EmployeeId = 1, ActionDictionaryId = 1, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 2, EventId = 1, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 3, EventId = 1, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 3, EventId = 1, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 4, EventId = 1, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 5, EventId = 1, EmployeeId = 1, ActionDictionaryId = 2, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 6, EventId = 1, EmployeeId = 2, ActionDictionaryId = 2, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 6, EventId = 1, EmployeeId = 2, ActionDictionaryId = 2, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 7, EventId = 1, EmployeeId = 3, ActionDictionaryId = 2, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 8, EventId = 1, EmployeeId = 4, ActionDictionaryId = 2, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 9, EventId = 1, EmployeeId = 1, ActionDictionaryId = 3, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 8, EventId = 1, EmployeeId = 4, ActionDictionaryId = 2, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 9, EventId = 1, EmployeeId = 1, ActionDictionaryId = 3, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 10, EventId = 1, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 11, EventId = 1, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 12, EventId = 1, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 12, EventId = 1, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = false },
 
                 // Event 2
-                new Models.EmployeeEventAssignment { Id = 13, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 14, EventId = 2, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 15, EventId = 2, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 16, EventId = 2, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = true },
-                new Models.EmployeeEventAssignment { Id = 17, EventId = 2, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 18, EventId = 2, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = true }
+                new Models.EmployeeEventAssignment { Id = 5, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 6, EventId = 2, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 7, EventId = 2, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 8, EventId = 2, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 9, EventId = 2, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 10, EventId = 2, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = false }
             );
 
             // New action
@@ -111,6 +93,7 @@ namespace EventAtendersChecklist.Migrations
                 // Event 2
                 new Models.ActionGroup { Id = 4, EventId = 2, ActionDictionaryId = 1 },
                 new Models.ActionGroup { Id = 5, EventId = 2, ActionDictionaryId = 3 });
+
         }
     }
 }
