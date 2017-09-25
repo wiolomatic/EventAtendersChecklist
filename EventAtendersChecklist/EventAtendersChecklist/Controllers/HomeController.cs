@@ -15,27 +15,5 @@
         {
             return View();
         }
-
-        /// <summary>
-        /// The About
-        /// </summary>
-        /// <returns>The <see cref="ActionResult"/></returns>
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        /// <summary>
-        /// The Contact
-        /// </summary>
-        /// <returns>The <see cref="ActionResult"/></returns>
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

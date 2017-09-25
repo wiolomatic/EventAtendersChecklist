@@ -3,10 +3,13 @@
     using EventAtendersChecklist.DAL;
     using EventAtendersChecklist.Models;
     using EventAtendersChecklist.ModelsView;
+    using OfficeOpenXml;
     using System.Data;
     using System.Data.Entity;
+    using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Web;
     using System.Web.Mvc;
 
     /// <summary>
@@ -18,6 +21,11 @@
         /// Defines the db
         /// </summary>
         private eacContext db = new eacContext();
+
+        /// <summary>
+        /// Defines the EventId
+        /// </summary>
+        private static int EventId = new int();
 
         // GET: Events
         /// <summary>
@@ -209,6 +217,12 @@
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// The DeleteEmployee
+        /// </summary>
+        /// <param name="EmployeeId">The <see cref="int"/></param>
+        /// <param name="EventId">The <see cref="int"/></param>
+        /// <returns>The <see cref="JsonResult"/></returns>
         public JsonResult DeleteEmployee(int EmployeeId, int EventId)
         {
             var listOfId = db.EmployeeEventAssignments
@@ -223,6 +237,145 @@
                 result = true;
             }
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// The ImportExcelFile
+        /// </summary>
+        /// <param name="id">The <see cref="int"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
+        public ActionResult ImportExcelFile(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            EventId = (int)id;
+            return View();
+        }
+
+        /// <summary>
+        /// The ReadExcel
+        /// </summary>
+        /// <param name="upload">The <see cref="HttpPostedFileBase"/></param>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
+        [HttpPost]
+        public ActionResult ReadExcel(HttpPostedFileBase upload)
+        {
+            if (upload == null)
+            {
+                ViewBag.Message = "File could not be empty.";
+                return View(string.Format("../Events/ImportExcelFile/{0}", EventId));
+            }
+            else if (Path.GetExtension(upload.FileName) == ".xlsx" || Path.GetExtension(upload.FileName) == ".xls")
+            {
+                ExcelPackage package = new ExcelPackage(upload.InputStream);
+                var lol = EmployeeToDatabase.ToDataBase(package);
+                AddToDatabase(lol);
+                return RedirectToAction("Show", "Events", new { id = EventId });
+            }
+            else
+            {
+                return RedirectToAction("Show", "Events", new { id = EventId });
+            }
+        }
+
+        /// <summary>
+        /// The AddToDatabase
+        /// </summary>
+        /// <param name="loafe">The <see cref="ListOfAttendeesFromExcel"/></param>
+        /// <param name="id">The <see cref="int?"/></param>
+        private ActionResult AddToDatabase(ListOfAttendeesFromExcel loafe)
+        {
+            int eventId = EventId;
+
+            //Add attendees to database
+            foreach (var item in loafe.ListOfEmployee)
+            {
+                if (db.Employees.Where(x => x.Email == item.Email).Count() == 0)
+                {
+                    db.Employees.Add(new Employee
+                    {
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        Email = item.Email
+                    });
+                    db.SaveChanges();
+                }
+                var idEmployee = db.Employees.Where(x => x.Email == item.Email)
+                    .Select(x => x.Id)
+                    .ToList()
+                    .First();
+
+                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee).Count() == 0)
+                {
+                    var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
+                    foreach (var actionInEvent in actionsInEvent)
+                    {
+                        db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                        {
+                            EventId = eventId,
+                            EmployeeId = idEmployee,
+                            ActionDictionaryId = actionInEvent.ActionDictionaryId,
+                            ActionValue = false
+                        });
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+            // Add all actions to Attendees
+            foreach (var item in loafe.ListOfActionDictionary)
+            {
+                var name = item.Name;
+
+                //Add Action to Database if doesnt exist
+                var exist = db.ActionDictionary.Where(x => x.Name == name).Count();
+                if (exist == 0)
+                {
+                    db.ActionDictionary.Add(new ActionDictionary
+                    {
+                        Name = name
+                    });
+                    db.SaveChanges();
+                }
+
+                //Get Action Id from Database
+                var actionId = db.ActionDictionary.Where(x => x.Name == name)
+                    .Select(x => x.Id)
+                    .ToList()
+                    .First();
+
+                // Add correct actionGroup if doesnt exist
+                var exist2 = db.ActionGroups.Where(x => x.EventId == eventId & x.ActionDictionaryId == actionId).Count();
+                if (exist2 == 0)
+                {
+                    db.ActionGroups.Add(new ActionGroup
+                    {
+                        EventId = eventId,
+                        ActionDictionaryId = actionId
+                    });
+                }
+
+                var attendeeInEventList = db.EmployeeEventAssignments
+                    .Where(x => x.EventId == eventId)
+                    .GroupBy(x => x.EmployeeId)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
+                foreach (var item2 in attendeeInEventList)
+                {
+                    db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                    {
+                        EventId = eventId,
+                        EmployeeId = item2.EmployeeId,
+                        ActionDictionaryId = actionId,
+                        ActionValue = false
+                    });
+                    db.SaveChanges();
+                }
+            }
+            return RedirectToAction("Show", "Events", new { id = eventId });
         }
 
         /// <summary>
