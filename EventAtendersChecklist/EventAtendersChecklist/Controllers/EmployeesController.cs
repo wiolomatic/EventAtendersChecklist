@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using EventAtendersChecklist.DataAccess;
 
     /// <summary>
     /// Defines the <see cref="EmployeesController" />
@@ -26,7 +27,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
-            var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
+            /*var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == 1)
                .Select(x => x.ActionDictionary).ToList();
 
@@ -36,8 +37,20 @@
 
             var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == 1).ToList();
             var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.ActionDictionaryId == 1).Select(x => x.ActionValue);
+            
+            return PartialView("_EmployeesList", db.Employees.ToList());*/
+            return View();
+        }
 
-            return View(db.Employees.ToList());
+        public ActionResult Update()
+        {
+            return View();
+        }
+
+        public ActionResult GetEmployees()
+        {
+            EmployeesRepository mr = new EmployeesRepository();
+            return PartialView("_EmployeesList", mr.GetAllEmployees());
         }
 
         // GET: Employees/Details/5
