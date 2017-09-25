@@ -4,8 +4,10 @@
     using EventAtendersChecklist.Models;
     using EventAtendersChecklist.ModelsView;
     using OfficeOpenXml;
+    using System;
     using System.Data;
     using System.Data.Entity;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -377,6 +379,96 @@
             }
             return RedirectToAction("Show", "Events", new { id = eventId });
         }
+
+        public void ExportToExcel(int? id)
+        {
+            string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
+
+            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                .Where(x => x.EventId == id).ToList();
+
+            var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
+               .Where(x => x.EventId == id)
+               .Select(x => x.ActionDictionary).ToList();
+
+            var list = new ListOfAttendeesWithActions()
+            {
+                EventId = id,
+                ActionDictionaryList = listOfActions,
+                EventAttenderList = from e in employ
+                                    select new EventAttender()
+                                    {
+                                        FirstName = e.Employee.FirstName,
+                                        AttenderId = e.EmployeeId,
+                                        LastName = e.Employee.LastName,
+                                        Email = e.Employee.Email,
+                                        Actions = from ea in actions.Where(x => x.EmployeeId == e.EmployeeId)
+                                                  select new ActionValue()
+                                                  {
+                                                      ActionId = ea.ActionDictionaryId,
+                                                      ActionName = ea.ActionDictionary.Name,
+                                                      Value = ea.ActionValue
+                                                  }
+                                    }
+            };
+
+            ExcelPackage pck = new ExcelPackage();
+            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Report");
+
+            ws.Cells["A2"].Value = "Report";
+            ws.Cells["B2"].Value = "Report1";
+
+            ws.Cells["A3"].Value = "Data";
+            ws.Cells["B3"].Value = string.Format("{0:dd MMMM yyyy} at {0:H: mm tt}", DateTimeOffset.Now);
+
+            ws.Cells["A6"].Value = "Attender ID";
+            ws.Cells["B6"].Value = "First Name";
+            ws.Cells["C6"].Value = "Last Name";
+            ws.Cells["E6"].Value = "Email";
+            int alphabetIndex = 5;
+            foreach (var item in list.ActionDictionaryList)
+            {
+                ws.Cells[string.Format("{0}6", alphabet[alphabetIndex])].Value = item.Name;
+                alphabetIndex++;
+            }
+
+            if (list != null)
+            {
+                int rowStart = 7;
+                foreach (var attendee in list.EventAttenderList)
+                {
+                    alphabetIndex = 5;
+                    ws.Row(rowStart).Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    ws.Row(rowStart).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(string.Format("#fadce1")));
+                    ws.Cells[string.Format("B{0}", rowStart)].Value = attendee.FirstName;
+                    ws.Cells[string.Format("C{0}", rowStart)].Value = attendee.LastName;
+                    ws.Cells[string.Format("D{0}", rowStart)].Value = attendee.Email;
+                    foreach (var actionForAttendee in attendee.Actions)
+                    {
+                        if(actionForAttendee.Value == true)
+                        {
+                            ws.Cells[string.Format("{0}{1}", alphabetIndex, rowStart)].Value = "1";
+                        }
+                        else
+                        {
+                            ws.Cells[string.Format("{0}{1}", alphabetIndex, rowStart)].Value = "0";
+                        }
+                        alphabetIndex++;
+                    }
+                    rowStart++;
+                }
+                ws.Cells["A:AG"].AutoFitColumns();
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment: filename=" + "ExcelReport.xlsx");
+                Response.BinaryWrite(pck.GetAsByteArray());
+                Response.End();
+            }
+
+        }
+
 
         /// <summary>
         /// The Dispose
