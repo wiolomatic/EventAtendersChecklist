@@ -27,6 +27,7 @@
         public string ReturnUrl { get; set; }
     }
 
+
     /// <summary>
     /// Defines the <see cref="SendCodeViewModel" />
     /// </summary>
@@ -53,9 +54,26 @@
         public bool RememberMe { get; set; }
     }
 
+    public class UM
+    {
+        //Model
+        public List<ApplicationUser> users { get; set; }
+        public List<UserModelList> dane { get; set; }
+    }
+    public class UserModelList
+    {
+        public string IdUsera { get; set; }
+        public string NazwaUsera { get; set; }
+        public string IdRoli { get; set; }
+        public string NazwaRoli { get; set; }
+        public string Email { get; set; }
+
+    }
+
     /// <summary>
     /// Defines the <see cref="VerifyCodeViewModel" />
     /// </summary>
+    /// 
     public class VerifyCodeViewModel
     {
         /// <summary>

@@ -4,6 +4,7 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
@@ -122,6 +123,39 @@
                     return View(model);
             }
         }
+
+        public async Task<ActionResult> UM(UM model)
+        {
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+
+            model.users = new List<ApplicationUser>();
+            model.dane = new List<UserModelList>();
+            model.users = UserManager.Users.ToList();
+            UserModelList tymczasowy = new UserModelList();
+            //string mod;
+            //var roleHR = new IdentityRole();
+            foreach (var x in model.users)
+            {
+                tymczasowy.NazwaRoli = UserManager.GetRoles(x.Id).First();
+                tymczasowy.IdRoli = "";
+                tymczasowy.IdUsera = x.Id;
+                tymczasowy.NazwaUsera = x.UserName;
+                tymczasowy.Email = x.Email;
+                model.dane.Add(tymczasowy);
+                //x.Roles.First();
+                //UserManager.GetRoles(x.Id).First();
+                // model.role.Add(UserManager.GetRoles(x.Id).First());
+                //x.Roles.First().RoleId;
+                //model.dane.Add();
+
+            }
+
+            return View(model);
+        }
+
 
         //
         // GET: /Account/VerifyCode
