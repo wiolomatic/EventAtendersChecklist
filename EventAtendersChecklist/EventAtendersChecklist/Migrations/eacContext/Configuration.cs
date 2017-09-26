@@ -54,24 +54,24 @@
             context.EmployeeEventAssignments.AddOrUpdate(eea => eea.Id,
 
                 //Event 1
-                new Models.EmployeeEventAssignment { Id = 1, EventId = 1, EmployeeId = 1, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 2, EventId = 1, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 3, EventId = 1, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 4, EventId = 1, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 5, EventId = 1, EmployeeId = 1, ActionDictionaryId = 2, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 1, EventId = 1, EmployeeId = 1, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 2, EventId = 1, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 3, EventId = 1, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 4, EventId = 1, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 5, EventId = 1, EmployeeId = 1, ActionDictionaryId = 2, ActionValue = true },
                 new Models.EmployeeEventAssignment { Id = 6, EventId = 1, EmployeeId = 2, ActionDictionaryId = 2, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 7, EventId = 1, EmployeeId = 3, ActionDictionaryId = 2, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 8, EventId = 1, EmployeeId = 4, ActionDictionaryId = 2, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 8, EventId = 1, EmployeeId = 4, ActionDictionaryId = 2, ActionValue = true },
                 new Models.EmployeeEventAssignment { Id = 9, EventId = 1, EmployeeId = 1, ActionDictionaryId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 10, EventId = 1, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 11, EventId = 1, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 10, EventId = 1, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = true },
+                new Models.EmployeeEventAssignment { Id = 11, EventId = 1, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = true },
                 new Models.EmployeeEventAssignment { Id = 12, EventId = 1, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = false },
 
                 // Event 2
-                new Models.EmployeeEventAssignment { Id = 5, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 5, EventId = 2, EmployeeId = 2, ActionDictionaryId = 1, ActionValue = true },
                 new Models.EmployeeEventAssignment { Id = 6, EventId = 2, EmployeeId = 3, ActionDictionaryId = 1, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 7, EventId = 2, EmployeeId = 4, ActionDictionaryId = 1, ActionValue = false },
-                new Models.EmployeeEventAssignment { Id = 8, EventId = 2, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = false },
+                new Models.EmployeeEventAssignment { Id = 8, EventId = 2, EmployeeId = 2, ActionDictionaryId = 3, ActionValue = true },
                 new Models.EmployeeEventAssignment { Id = 9, EventId = 2, EmployeeId = 3, ActionDictionaryId = 3, ActionValue = false },
                 new Models.EmployeeEventAssignment { Id = 10, EventId = 2, EmployeeId = 4, ActionDictionaryId = 3, ActionValue = false }
             );

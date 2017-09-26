@@ -212,12 +212,7 @@
     <Compile Include="Migrations\ApplicationDbContext\201709251026469_InitialDatabaseCreation.Designer.cs">
       <DependentUpon>201709251026469_InitialDatabaseCreation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\ApplicationDbContext\201709251315184_InitialDatabaseCreation1.cs" />
-    <Compile Include="Migrations\ApplicationDbContext\201709251315184_InitialDatabaseCreation1.Designer.cs">
-      <DependentUpon>201709251315184_InitialDatabaseCreation1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\ApplicationDbContext\Configuration.cs" />
-    <Compile Include="Migrations\ApplicationDbContext\Configuration2.cs" />
     <Compile Include="Migrations\eacContext\201709251027331_InitialDatabaseCreation.cs" />
     <Compile Include="Migrations\eacContext\201709251027331_InitialDatabaseCreation.Designer.cs">
       <DependentUpon>201709251027331_InitialDatabaseCreation.cs</DependentUpon>
@@ -442,9 +437,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\ApplicationDbContext\201709251026469_InitialDatabaseCreation.resx">
       <DependentUpon>201709251026469_InitialDatabaseCreation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\ApplicationDbContext\201709251315184_InitialDatabaseCreation1.resx">
-      <DependentUpon>201709251315184_InitialDatabaseCreation1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\eacContext\201709251027331_InitialDatabaseCreation.resx">
       <DependentUpon>201709251027331_InitialDatabaseCreation.cs</DependentUpon>
