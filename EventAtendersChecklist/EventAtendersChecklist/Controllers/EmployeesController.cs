@@ -8,6 +8,10 @@
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using System.Configuration;
+    using System.Data.SqlClient;
+    using EventAtendersChecklist.SignalR;
+
 
     /// <summary>
     /// Defines the <see cref="EmployeesController" />
@@ -26,7 +30,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
-            var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
+            /*var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == 1)
                .Select(x => x.ActionDictionary).ToList();
 
@@ -37,7 +41,43 @@
             var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == 1).ToList();
             var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.ActionDictionaryId == 1).Select(x => x.ActionValue);
 
-            return View(db.Employees.ToList());
+            return View(db.Employees.ToList()); */
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetEmployees()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                using (SqlCommand sqlcom = new SqlCommand("[TEST]", sqlcon))
+                {
+                    sqlcon.Open();
+                    sqlcom.CommandType = CommandType.StoredProcedure;
+                    sqlcom.Notification = null;
+                    SqlDependency dependancy = new SqlDependency(sqlcom);
+                    dependancy.OnChange += dependancy_OnChange;
+                    var reader = sqlcom.ExecuteReader();
+                    var employees = reader.Cast<IDataRecord>()
+                       .Select(e => new Employee()
+                       {
+                           Id = e.GetInt32(0),
+                           FirstName = e.GetString(1),
+                           LastName = e.GetString(2),
+                           Email = e.GetString(3)
+                       }).ToList();
+                    return PartialView("_EmployeesList", employees);
+                }
+            }
+        }
+
+        void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
+        {
+            if (e.Type == SqlNotificationType.Change)
+            {
+                SignalRHub.NotifyChanges();
+            }
         }
 
         // GET: Employees/Details/5
