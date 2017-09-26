@@ -423,11 +423,10 @@
             ws.Cells["A3"].Value = "Data";
             ws.Cells["B3"].Value = string.Format("{0:dd MMMM yyyy} at {0:H: mm tt}", DateTimeOffset.Now);
 
-            ws.Cells["A6"].Value = "Attender ID";
             ws.Cells["B6"].Value = "First Name";
             ws.Cells["C6"].Value = "Last Name";
-            ws.Cells["E6"].Value = "Email";
-            int alphabetIndex = 5;
+            ws.Cells["D6"].Value = "Email";
+            int alphabetIndex = 4;
             foreach (var item in list.ActionDictionaryList)
             {
                 ws.Cells[string.Format("{0}6", alphabet[alphabetIndex])].Value = item.Name;
@@ -439,7 +438,7 @@
                 int rowStart = 7;
                 foreach (var attendee in list.EventAttenderList)
                 {
-                    alphabetIndex = 5;
+                    alphabetIndex = 4;
                     ws.Row(rowStart).Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                     ws.Row(rowStart).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(string.Format("#fadce1")));
                     ws.Cells[string.Format("B{0}", rowStart)].Value = attendee.FirstName;
@@ -449,11 +448,11 @@
                     {
                         if(actionForAttendee.Value == true)
                         {
-                            ws.Cells[string.Format("{0}{1}", alphabetIndex, rowStart)].Value = "1";
+                            ws.Cells[string.Format("{0}{1}", alphabet[alphabetIndex], rowStart)].Value = 1;
                         }
                         else
                         {
-                            ws.Cells[string.Format("{0}{1}", alphabetIndex, rowStart)].Value = "0";
+                            ws.Cells[string.Format("{0}{1}", alphabet[alphabetIndex], rowStart)].Value = 0;
                         }
                         alphabetIndex++;
                     }
