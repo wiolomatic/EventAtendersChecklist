@@ -39,7 +39,6 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
-            //return PartialView("_EventsList", db.Events.ToList().OrderBy(x => x.StartDate));
             return View();
         }
 
@@ -49,10 +48,10 @@
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
             {
-                using (SqlCommand sqlcom = new SqlCommand("[EVENT]", sqlcon))
+                using (SqlCommand sqlcom = new SqlCommand("SELECT [Id], [Name], [StartDate], [EndDate] FROM dbo.Events", sqlcon))
                 {
                     sqlcon.Open();
-                    sqlcom.CommandType = CommandType.StoredProcedure;
+                    sqlcom.CommandType = CommandType.Text;
                     sqlcom.Notification = null;
                     SqlDependency dependancy = new SqlDependency(sqlcom);
                     dependancy.OnChange += dependancy_OnChange;
@@ -65,7 +64,7 @@
                            StartDate = e.GetDateTime(2),
                            EndDate = e.GetDateTime(3)
                        }).ToList();
-                    return PartialView("_EventsList", events);
+                    return PartialView("_EventsList", events.OrderBy(x=>x.StartDate));
                 }
             }
         }
