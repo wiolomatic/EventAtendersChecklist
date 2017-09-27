@@ -1,0 +1,26 @@
+﻿@model EventAtendersChecklist.ModelsView.ListOfAttendeesWithActions
+@using GridMvc.Html;
+
+@Html.Grid(Model.EventAttenderList).Columns(columns =>
+{
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
+                                     data-toggle="modal" data-target="#MyModal"
+                                     onclick="ConfirmDelete(@Model.EventId, @o.AttenderId)"></button>);
+    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
+    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
+    columns.Add(x => x.Email).Titled("Email").Sortable(true);
+    foreach (var item in Model.ActionDictionaryList)
+    {
+        columns.Add()
+        .Titled(item.Name)
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
+                        .Where(x => x.ActionId == item.Id)
+                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)" }))
+            .Sortable(true);
+    }
+}).WithPaging(10).WithMultipleFilters()

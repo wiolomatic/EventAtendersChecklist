@@ -1,7 +1,5 @@
 ﻿@model EventAtendersChecklist.ModelsView.ListOfAttendeesWithActions
 
-@using GridMvc.Html;
-
 @{
     ViewBag.Title = "Show list";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -26,30 +24,10 @@
         }
     }
 </div>
+<div id="partialContent">
+    @Html.Action("GetEventGrid", "Events")
+</div>
 
-@Html.Grid(Model.EventAttenderList).Columns(columns =>
-{
-    columns.Add()
-        .Encoded(false)
-        .Sanitized(false)
-        .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash" 
-                                     data-toggle="modal" data-target="#MyModal" 
-                                     onclick="ConfirmDelete(@Model.EventId, @o.AttenderId)"></button>);
-    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
-    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
-    columns.Add(x => x.Email).Titled("Email").Sortable(true);
-    foreach (var item in Model.ActionDictionaryList)
-    {
-        columns.Add()
-        .Titled(item.Name)
-        .Encoded(false)
-        .Sanitized(false)
-        .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}",Model.EventId, o.AttenderId, item.Id), o.Actions
-                        .Where(x => x.ActionId == item.Id)
-                        .Select(x => x.Value).First(), new { @onclick="AsertClick(this.id)" }))
-            .Sortable(true);
-    }
-}).WithPaging(10).WithMultipleFilters()
 <p>
    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
 </p>
@@ -73,52 +51,42 @@
         </div>
     </div>
 </div>
-<script>
-    var ConfirmDelete = function (EventId, employeeId)
-    {
-        $("#hiddenEmployeeId").val(employeeId);
-        $("#hiddenEventId").val(EventId);
 
-        $("MyModal").modal('Show');        
-    }
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            var notification = $.connection.signalRHub;
 
-    var DeleteEmployee = function () {
-        var empId = $("#hiddenEmployeeId").val();
-        var eventId = $("#hiddenEventId").val();
+            // Create a function that the hub can call to broadcast messages.
+            notification.client.notifyChanges = function () {
+                getEvents();
+            };
 
-        $.ajax({
-            type: "POST",
-            url: "/Events/DeleteEmployee",
-            data: {
-                EmployeeId: empId,
-                EventId: eventId
-            },
-            success: function (result) {
-                $("#MyModal").hide();
-                location.reload();
-            }
-        })
-    }
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                getEvents();
+            }).fail(function (e) {
+            });
+        });
 
-    function AsertClick(clicked_id) {
-        var val = document.getElementById(clicked_id).checked;
-        var res = clicked_id.split("_");
-        var EventId = String(res[1]);
-        var AttendeeId = String(res[2]);
-        var ActionId = String(res[3]);
-        $.ajax({
-            type: "POST",
-            url: "/Events/ChangeCheckBoxValue",
-            data: {
-                EmployeeId: AttendeeId,
-                EventId: EventId,
-                ActionID: ActionId,
-                value : val
-            },
-            success: function (result) {
-                location.reload();
-            }
-        })
-    }
 
-</script>
+        function getEvents() {
+            $.ajax({
+                url: '/Events/GetEventGrid',
+                cache: false,
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html'
+            }).success(function (result) {
+                $("#partialContent").empty().append(result);
+            }).error(function () {
+
+            });
+        }
+
+
+
+    </script>
+}

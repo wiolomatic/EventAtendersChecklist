@@ -148,6 +148,56 @@
             return View(list);
         }
 
+        [HttpGet]
+        public ActionResult GetEventGrid(int? id)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                using (SqlCommand sqlcom = new SqlCommand("SELECT [ActionValue] FROM dbo.EmployeeEventAssignments WHERE [EventId] = @ID", sqlcon))
+                {
+                    sqlcon.Open();
+                    sqlcom.CommandType = CommandType.Text;
+                    sqlcom.Parameters.AddWithValue("@ID", id);
+                    sqlcom.Notification = null;
+                    SqlDependency dependancy = new SqlDependency(sqlcom);
+                    dependancy.OnChange += dependancy_OnChange;
+                    var reader = sqlcom.ExecuteReader();
+                    var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                        .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
+
+                    var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                        .Where(x => x.EventId == id).ToList();
+
+                    var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
+                       .Where(x => x.EventId == id)
+                       .Select(x => x.ActionDictionary).ToList();
+                    var events = reader.Cast<IDataRecord>()
+                       .Select(x => new ListOfAttendeesWithActions()
+                       {
+                           EventId = id,
+                           ActionDictionaryList = listOfActions,
+                           EventAttenderList = from e in employ
+                                               select new EventAttender()
+                                               {
+                                                   FirstName = e.Employee.FirstName,
+                                                   AttenderId = e.EmployeeId,
+                                                   LastName = e.Employee.LastName,
+                                                   Email = e.Employee.Email,
+                                                   Actions = from ea in actions.Where(z => z.EmployeeId == e.EmployeeId)
+                                                             select new ActionValue()
+                                                             {
+                                                                 ActionId = ea.ActionDictionaryId,
+                                                                 ActionName = ea.ActionDictionary.Name,
+                                                                 Value = ea.ActionValue
+                                                             }
+                                               }
+                       }).ToList().First();
+                    return PartialView("_EventsGrid", events);
+                }
+            }
+        }
+
         // GET: Events/Create
         /// <summary>
         /// The Create
