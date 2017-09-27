@@ -1,28 +1,41 @@
-﻿@model IEnumerable<EventAtendersChecklist.Models.Event>
-@using GridMvc.Html;
-@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@model EventAtendersChecklist.Models.Event
+
+<div id="partialContent">
+    @Html.Action("GetEvents", "Events")
+</div>
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            var notification = $.connection.signalRHub;
+
+            // Create a function that the hub can call to broadcast messages.
+            notification.client.notifyChanges = function () {
+                getEvents();
+            };
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                getEvents();
+            }).fail(function (e) {
+            });
+        });
+
+
+        function getEvents() {
+            $.ajax({
+                url: '/Events/GetEvents',
+                cache : false,
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html'
+            }).success(function (result) {
+                $("#partialContent").empty().append(result);
+            }).error(function () {
+
+            });
+        }
+    </script>
 }
-
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
-</p>
-
-@Html.Grid(Model).Columns(collumn => {
-    collumn.Add(x => x.Id, true);
-    collumn.Add(x => x.Name).Titled("Event").Sortable(true);
-    collumn.Add(x => x.StartDate).Titled("Start Date").Sortable(true)
-                .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending); ;
-    collumn.Add(x=> x.EndDate).Titled("End Date").Sortable(true).Filterable(true);
-    collumn.Add().Sanitized(false).Encoded(false)
-                .RenderValueAs(model => Html.ActionLink("Show", "Show", new { id = model.Id }, new { @class = "btn btn-info" }).ToHtmlString());
-    collumn.Add().Sanitized(false).Encoded(false)
-                .RenderValueAs(model => Html.ActionLink("Edit", "Edit", new { id = model.Id }, new { @class = "btn btn-warning" }).ToHtmlString());
-    collumn.Add().Sanitized(false).Encoded(false)
-                .RenderValueAs(model => Html.ActionLink("Details", "Details", new { id = model.Id }, new { @class = "btn btn-primary" }).ToHtmlString());
-    collumn.Add().Sanitized(false).Encoded(false)
-                .RenderValueAs(model => Html.ActionLink("Delete", "Delete", new { id = model.Id }, new { @class = "btn btn-danger" }).ToHtmlString());
-}).WithPaging(10)
