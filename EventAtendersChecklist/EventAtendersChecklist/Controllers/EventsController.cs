@@ -109,48 +109,18 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
-
-            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id).ToList();
-
-            var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
-               .Where(x => x.EventId == id)
-               .Select(x => x.ActionDictionary).ToList();
-
-            var list = new ListOfAttendeesWithActions()
-            {
-                EventId = id,
-                ActionDictionaryList = listOfActions,
-                EventAttenderList = from e in employ
-                                    select new EventAttender()
-                                    {
-                                        FirstName = e.Employee.FirstName,
-                                        AttenderId = e.EmployeeId,
-                                        LastName = e.Employee.LastName,
-                                        Email = e.Employee.Email,
-                                        Actions = from ea in actions.Where(x => x.EmployeeId == e.EmployeeId)
-                                                  select new ActionValue()
-                                                  {
-                                                      ActionId = ea.ActionDictionaryId,
-                                                      ActionName = ea.ActionDictionary.Name,
-                                                      Value = ea.ActionValue
-                                                  }
-                                    }
-            };
-
-
-            if (list == null)
-            {
-                return HttpNotFound();
-            }
-            return View(list);
+            ViewBag.id = (int)id;
+            return View();
         }
 
         [HttpGet]
         public ActionResult GetEventGrid(int? id)
         {
+            if(id == null)
+            {
+                id = ViewBag.id;
+            }
+
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
             {
