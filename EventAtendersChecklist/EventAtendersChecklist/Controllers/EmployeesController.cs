@@ -30,7 +30,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
-            /*var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
+            var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == 1)
                .Select(x => x.ActionDictionary).ToList();
 
@@ -41,7 +41,6 @@
             var valueFor = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee).Include(x => x.ActionDictionary).Where(x => x.EventId == 1).ToList();
             var ValueForMarcin = valueFor.Where(x => x.Employee.Id == 3 & x.ActionDictionaryId == 1).Select(x => x.ActionValue);
 
-            return View(db.Employees.ToList()); */
             return View();
         }
 
@@ -51,10 +50,10 @@
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
             {
-                using (SqlCommand sqlcom = new SqlCommand("[TEST]", sqlcon))
+                using (SqlCommand sqlcom = new SqlCommand(@"SELECT [Id], [FirstName], [LastName], [Email] FROM dbo.Employees", sqlcon))
                 {
                     sqlcon.Open();
-                    sqlcom.CommandType = CommandType.StoredProcedure;
+                    sqlcom.CommandType = CommandType.Text;
                     sqlcom.Notification = null;
                     SqlDependency dependancy = new SqlDependency(sqlcom);
                     dependancy.OnChange += dependancy_OnChange;
