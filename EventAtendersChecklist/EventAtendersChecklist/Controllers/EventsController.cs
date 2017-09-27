@@ -56,6 +56,7 @@
                     SqlDependency dependancy = new SqlDependency(sqlcom);
                     dependancy.OnChange += dependancy_OnChange;
                     var reader = sqlcom.ExecuteReader();
+
                     var events = reader.Cast<IDataRecord>()
                        .Select(e => new Event()
                        {
@@ -116,15 +117,19 @@
         [HttpGet]
         public ActionResult GetEventGrid(int? id)
         {
-            if(id == null)
-            {
-                id = ViewBag.id;
-            }
-
+            string query = "SELECT EmployeeEventAssignments.EventId, Employees.FirstName, Employees.LastName, Employees.Email, " +
+                "ActionDictionaries.Name, EmployeeEventAssignments.ActionValue " +
+                "FROM [EmployeeEventAssignments] " +
+                "JOIN [Events] " +
+                "ON Events.Id = EmployeeEventAssignments.EventId " +
+                "JOIN [Employees] " +
+                "ON EmployeeEventAssignments.EmployeeId = Employees.Id " +
+                "JOIN [ActionDictionaries] ON EmployeeEventAssignments.ActionDictionaryId = ActionDictionaries.Id " +
+                "WHERE Events.Id = @ID";
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
             {
-                using (SqlCommand sqlcom = new SqlCommand("SELECT [ActionValue] FROM dbo.EmployeeEventAssignments WHERE [EventId] = @ID", sqlcon))
+                using (SqlCommand sqlcom = new SqlCommand(query, sqlcon))
                 {
                     sqlcon.Open();
                     sqlcom.CommandType = CommandType.Text;
@@ -133,37 +138,35 @@
                     SqlDependency dependancy = new SqlDependency(sqlcom);
                     dependancy.OnChange += dependancy_OnChange;
                     var reader = sqlcom.ExecuteReader();
-                    var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                        .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
-
-                    var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                        .Where(x => x.EventId == id).ToList();
-
-                    var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
-                       .Where(x => x.EventId == id)
-                       .Select(x => x.ActionDictionary).ToList();
-                    var events = reader.Cast<IDataRecord>()
-                       .Select(x => new ListOfAttendeesWithActions()
+                    if(reader.HasRows)
+                    {
+                        var events = reader.Cast<IDataRecord>()
+                       .Select(listofAttenders => new ListOfAttendeesWithActions()
                        {
-                           EventId = id,
-                           ActionDictionaryList = listOfActions,
-                           EventAttenderList = from e in employ
-                                               select new EventAttender()
-                                               {
-                                                   FirstName = e.Employee.FirstName,
-                                                   AttenderId = e.EmployeeId,
-                                                   LastName = e.Employee.LastName,
-                                                   Email = e.Employee.Email,
-                                                   Actions = from ea in actions.Where(z => z.EmployeeId == e.EmployeeId)
-                                                             select new ActionValue()
-                                                             {
-                                                                 ActionId = ea.ActionDictionaryId,
-                                                                 ActionName = ea.ActionDictionary.Name,
-                                                                 Value = ea.ActionValue
-                                                             }
-                                               }
+                           EventId = listofAttenders.GetInt32(0),
+                           ActionDictionaryList = from ad in listofAttenders.GetString(4)
+                                                  select new ActionDictionary()
+                                                  {
+                                                      Name = ad.ToString()
+                                                  },
+                           //EventAttenderList = new EventAttender()
+                           //                    {
+                           //                        FirstName = listofAttenders.GetString(1),
+                           //                        AttenderId = listofAttenders.GetInt32(6),
+                           //                        LastName = listofAttenders.GetString(2),
+                           //                        Email = listofAttenders.GetString(3),
+                           //                        Actions = from ea in listofAttenders.GetString(4)
+                           //                                  select new ActionValue()
+                           //                                  {
+                           //                                      ActionId = 0,
+                           //                                      ActionName = "lol",
+                           //                                      Value = false
+                           //                                  }
+                           //                    }
                        }).ToList().First();
-                    return PartialView("_EventsGrid", events);
+                        return PartialView("_EventsGrid", events);
+                    }
+                    return PartialView("_EventsGrid");
                 }
             }
         }
