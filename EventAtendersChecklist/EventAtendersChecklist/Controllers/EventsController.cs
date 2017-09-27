@@ -242,6 +242,29 @@
         }
 
         /// <summary>
+        /// The DeleteEmployee
+        /// </summary>
+        /// <param name="EmployeeId">The <see cref="int"/></param>
+        /// <param name="EventId">The <see cref="int"/></param>
+        /// <returns>The <see cref="JsonResult"/></returns>
+        public JsonResult ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
+        {
+            var listOfId = db.EmployeeEventAssignments
+                .Where(x => x.EmployeeId == EmployeeId & x.EventId == EventId & x.ActionDictionaryId == ActionID)
+                .Select(x => x.Id).ToList();
+            var result = false;
+            foreach (var item in listOfId)
+            {
+                EmployeeEventAssignment employeeEventAssignment = db.EmployeeEventAssignments.Find(item);
+                employeeEventAssignment.ActionValue = value;
+                db.Entry(employeeEventAssignment).State = EntityState.Modified;
+                db.SaveChanges();
+                result = true;
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
         /// The ImportExcelFile
         /// </summary>
         /// <param name="id">The <see cref="int"/></param>
