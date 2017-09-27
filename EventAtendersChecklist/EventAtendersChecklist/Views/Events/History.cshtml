@@ -1,7 +1,8 @@
-﻿@model EventAtendersChecklist.Models.Event
+﻿
+@model EventAtendersChecklist.Models.Event
 
 <div id="partialContent">
-    @Html.Action("GetCurrentEvents", "Events")
+    @Html.Action("GetHistoricalEvents", "Events")
 </div>
 
 @section scripts{
@@ -26,7 +27,7 @@
 
         function getEvents() {
             $.ajax({
-                url: '/Events/GetCurrentEvents',
+                url: '/Events/GetHistoricalEvents',
                 cache : false,
                 contentType: 'application/html ; charset:utf-8',
                 type: 'GET',

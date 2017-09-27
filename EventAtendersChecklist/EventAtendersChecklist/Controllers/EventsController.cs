@@ -16,6 +16,7 @@
     using System.Configuration;
     using System.Data.SqlClient;
     using EventAtendersChecklist.SignalR;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Defines the <see cref="EventsController" />
@@ -43,7 +44,7 @@
         }
 
         [HttpGet]
-        public ActionResult GetEvents()
+        public ActionResult GetCurrentEvents()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
@@ -64,7 +65,59 @@
                            StartDate = e.GetDateTime(2),
                            EndDate = e.GetDateTime(3)
                        }).ToList();
-                    return PartialView("_EventsList", events.OrderBy(x=>x.StartDate));
+
+                    List<Event> currentevents = new List<Event>();
+                    foreach (var i in events)
+                    {
+                        if (i.EndDate.CompareTo(DateTime.Now)>0)
+                        {
+                            currentevents.Add(i);
+                        }
+                    }
+                   
+                    return PartialView("_EventsList", currentevents.OrderBy(x=>x.StartDate));
+                }
+            }
+        }
+
+        public ActionResult History()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetHistoricalEvents()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                using (SqlCommand sqlcom = new SqlCommand("SELECT [Id], [Name], [StartDate], [EndDate] FROM dbo.Events", sqlcon))
+                {
+                    sqlcon.Open();
+                    sqlcom.CommandType = CommandType.Text;
+                    sqlcom.Notification = null;
+                    SqlDependency dependancy = new SqlDependency(sqlcom);
+                    dependancy.OnChange += dependancy_OnChange;
+                    var reader = sqlcom.ExecuteReader();
+                    var events = reader.Cast<IDataRecord>()
+                       .Select(e => new Event()
+                       {
+                           Id = e.GetInt32(0),
+                           Name = e.GetString(1),
+                           StartDate = e.GetDateTime(2),
+                           EndDate = e.GetDateTime(3)
+                       }).ToList();
+
+                    List<Event> historicalevents = new List<Event>();
+                    foreach (var i in events)
+                    {
+                        if (i.EndDate.CompareTo(DateTime.Now) < 0)
+                        {
+                            historicalevents.Add(i);
+                        }
+                    }
+
+                    return PartialView("_EventsHistoricalList", historicalevents.OrderBy(x => x.StartDate));
                 }
             }
         }
@@ -76,6 +129,7 @@
                 SignalRHub.NotifyChanges();
             }
         }
+
 
         // GET: Events/Details/5
         /// <summary>
