@@ -13,6 +13,9 @@
     using System.Net;
     using System.Web;
     using System.Web.Mvc;
+    using System.Configuration;
+    using System.Data.SqlClient;
+    using EventAtendersChecklist.SignalR;
 
     /// <summary>
     /// Defines the <see cref="EventsController" />
@@ -36,7 +39,43 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
-            return View(db.Events.ToList().OrderBy(x => x.StartDate));
+            //return PartialView("_EventsList", db.Events.ToList().OrderBy(x => x.StartDate));
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetEvents()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                using (SqlCommand sqlcom = new SqlCommand("[EVENT]", sqlcon))
+                {
+                    sqlcon.Open();
+                    sqlcom.CommandType = CommandType.StoredProcedure;
+                    sqlcom.Notification = null;
+                    SqlDependency dependancy = new SqlDependency(sqlcom);
+                    dependancy.OnChange += dependancy_OnChange;
+                    var reader = sqlcom.ExecuteReader();
+                    var events = reader.Cast<IDataRecord>()
+                       .Select(e => new Event()
+                       {
+                           Id = e.GetInt32(0),
+                           Name = e.GetString(1),
+                           StartDate = e.GetDateTime(2),
+                           EndDate = e.GetDateTime(3)
+                       }).ToList();
+                    return PartialView("_EventsList", events);
+                }
+            }
+        }
+
+        void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
+        {
+            if (e.Type == SqlNotificationType.Change)
+            {
+                SignalRHub.NotifyChanges();
+            }
         }
 
         // GET: Events/Details/5
