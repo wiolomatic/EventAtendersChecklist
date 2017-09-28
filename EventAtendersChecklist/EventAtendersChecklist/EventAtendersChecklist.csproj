@@ -226,6 +226,7 @@
     <Compile Include="Migrations\eacContext\Configuration.cs" />
     <Compile Include="ModelsView\AddActionToEventViewModel.cs" />
     <Compile Include="ModelsView\AddEmployeeToEventViewModel.cs" />
+    <Compile Include="ModelsView\EmployeeInEventView.cs" />
     <Compile Include="ModelsView\EmployeeToDatabase.cs" />
     <Compile Include="ModelsView\ListOfAttendeesFromExcel.cs" />
     <Compile Include="ModelsView\ListOfAttendeesWithActions.cs" />
