@@ -21,6 +21,7 @@
     /// <summary>
     /// Defines the <see cref="EventsController" />
     /// </summary>
+    [Authorize]
     public class EventsController : Controller
     {
         /// <summary>
