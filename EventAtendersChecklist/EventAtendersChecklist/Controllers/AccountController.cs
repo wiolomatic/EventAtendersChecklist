@@ -4,10 +4,12 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Security;
 
     /// <summary>
     /// Defines the <see cref="AccountController" />
@@ -123,6 +125,276 @@
             }
         }
 
+        public ApplicationUserManager usmen()
+        {
+            return _userManager;
+        }
+
+        [Authorize (Roles="HR")]
+        public ActionResult UM()
+        {
+            UM model = new UM();
+            //model.users = new List<ApplicationUser>();
+            model.dane = new List<UserModelList>();
+            var context = new ApplicationDbContext();
+            var roles = context.Roles.ToList();
+            
+            //model.users = context.Users.ToList();
+            //var allRoles = context.Roles.ToList();
+            //var lol = usmen();
+            //model.users = lol.Users.ToList();
+            model.users = UserManager.Users.ToList();
+            
+            
+            
+            foreach (var x in model.users)
+            {
+                UserModelList tymczasowy = new UserModelList();
+                tymczasowy.NazwaRoli = "";
+                tymczasowy.IdRoli = x.Roles.First().RoleId;
+                foreach (var m in roles)
+                {
+                    if (m.Id == tymczasowy.IdRoli)
+                    {
+                        tymczasowy.NazwaRoli = m.Name;
+                    }
+                }
+                
+                tymczasowy.IdUsera = x.Id;
+                tymczasowy.NazwaUsera = x.UserName;
+                tymczasowy.Email = x.Email;
+                //tymczasowy.Delete = false;
+                model.dane.Add(tymczasowy);
+
+
+            }
+
+            return View(model);
+
+            //return View();
+        }
+        [Authorize(Roles = "HR")]
+        public async Task<ActionResult> UMeditrole(string rola, string user)
+        {
+            ApplicationUser appUser = UserManager.FindById(user);
+
+            var context = new ApplicationDbContext();
+            var roles = context.Roles.ToList();
+            string RoleId = appUser.Roles.First().RoleId;
+            string RoleName = "";
+
+            foreach (var m in roles)
+            {
+                if (m.Id == RoleId)
+                {
+                    RoleName = m.Name;
+                }
+            }
+
+            await UserManager.RemoveFromRoleAsync(appUser.Id, RoleName);
+            await UserManager.AddToRoleAsync(appUser.Id, rola);
+            ViewBag.Info = "User with name "+ appUser.UserName + " has now new role: " + rola;
+            // UserToEdit user = model.edit;
+
+
+            UM model = new UM();
+            //model.users = new List<ApplicationUser>();
+            model.dane = new List<UserModelList>();
+                        //model.users = context.Users.ToList();
+            //var allRoles = context.Roles.ToList();
+            //var lol = usmen();
+            //model.users = lol.Users.ToList();
+            model.users = UserManager.Users.ToList();
+
+
+
+            foreach (var x in model.users)
+            {
+                UserModelList tymczasowy = new UserModelList();
+                tymczasowy.NazwaRoli = "";
+                tymczasowy.IdRoli = x.Roles.First().RoleId;
+                foreach (var m in roles)
+                {
+                    if (m.Id == tymczasowy.IdRoli)
+                    {
+                        tymczasowy.NazwaRoli = m.Name;
+                    }
+                }
+
+                tymczasowy.IdUsera = x.Id;
+                tymczasowy.NazwaUsera = x.UserName;
+                tymczasowy.Email = x.Email;
+                //tymczasowy.Delete = false;
+                model.dane.Add(tymczasowy);
+
+
+            }
+
+
+
+
+            return View("UM", model);
+        }
+        [Authorize(Roles = "HR")]
+        public async Task<ActionResult> UMdeleteUser(string rola, string user)
+        {
+            ApplicationUser appUser = UserManager.FindById(user);
+
+            var context = new ApplicationDbContext();
+            var roles = context.Roles.ToList();
+            string RoleId = appUser.Roles.First().RoleId;
+            string RoleName = "";
+
+            foreach (var m in roles)
+            {
+                if (m.Id == RoleId)
+                {
+                    RoleName = m.Name;
+                }
+            }
+
+            await UserManager.RemoveFromRoleAsync(appUser.Id, RoleName);
+            //await UserManager.AddToRoleAsync(appUser.Id, rola);
+            await UserManager.DeleteAsync(appUser);
+            ViewBag.Info = "User with name " + appUser.UserName + " has been removed permanently.";
+            // UserToEdit user = model.edit;
+
+
+            UM model = new UM();
+            //model.users = new List<ApplicationUser>();
+            model.dane = new List<UserModelList>();
+            //model.users = context.Users.ToList();
+            //var allRoles = context.Roles.ToList();
+            //var lol = usmen();
+            //model.users = lol.Users.ToList();
+            model.users = UserManager.Users.ToList();
+
+
+
+            foreach (var x in model.users)
+            {
+                UserModelList tymczasowy = new UserModelList();
+                tymczasowy.NazwaRoli = "";
+                tymczasowy.IdRoli = x.Roles.First().RoleId;
+                foreach (var m in roles)
+                {
+                    if (m.Id == tymczasowy.IdRoli)
+                    {
+                        tymczasowy.NazwaRoli = m.Name;
+                    }
+                }
+
+                tymczasowy.IdUsera = x.Id;
+                tymczasowy.NazwaUsera = x.UserName;
+                tymczasowy.Email = x.Email;
+                //tymczasowy.Delete = false;
+                model.dane.Add(tymczasowy);
+
+
+            }
+
+
+
+
+            return View("UM", model);
+        }
+
+
+
+        [Authorize(Roles = "HR")]
+        public ActionResult UMedit(string id)
+        {
+            string IdUsera = "";
+            IdUsera = id;
+            ApplicationUser user = UserManager.FindById(IdUsera);
+            //await UserManager.RemoveFromRoleAsync(user.Id, user.Roles.First().ToString());
+            //await UserManager.AddToRoleAsync(user.Id, user.);
+            var context = new ApplicationDbContext();
+            var roles = context.Roles.ToList();
+            string RoleId = user.Roles.First().RoleId;
+            string RoleName="";
+            
+                foreach (var m in roles)
+                {
+                    if (m.Id == RoleId)
+                    {
+                        RoleName = m.Name;
+                    }
+                }
+                
+                ViewBag.userId = IdUsera;
+            ViewBag.UserName = user.UserName;
+            ViewBag.RoleName = RoleName;
+            ViewBag.RoleId = RoleId;
+
+            return View("UMedit");
+        }
+        [Authorize(Roles = "HR")]
+        public ActionResult UMdelete(string id)
+        {
+            string IdUsera = "";
+            IdUsera = id;
+            ApplicationUser appUser = UserManager.FindById(IdUsera);
+            //await UserManager.RemoveFromRoleAsync(user.Id, user.Roles.First().ToString());
+            //await UserManager.AddToRoleAsync(user.Id, user.);
+            var context = new ApplicationDbContext();
+            var roles = context.Roles.ToList();
+            string RoleId = appUser.Roles.First().RoleId;
+            string RoleName = "";
+
+            foreach (var m in roles)
+            {
+                if (m.Id == RoleId)
+                {
+                    RoleName = m.Name;
+                }
+            }
+
+            ViewBag.userId = IdUsera;
+            ViewBag.UserName = appUser.UserName;
+            ViewBag.RoleName = RoleName;
+            ViewBag.RoleId = RoleId;
+            return View("UMdelete");
+        }
+
+        
+
+       
+
+
+        //public async Task<ActionResult> UM(UM model)
+        //{
+        //    //if (id == null)
+        //    //{
+        //    //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    //}
+
+        //    model.users = new List<ApplicationUser>();
+        //    model.dane = new List<UserModelList>();
+        //    model.users = UserManager.Users.ToList();
+        //    UserModelList tymczasowy = new UserModelList();
+        //    //string mod;
+        //    //var roleHR = new IdentityRole();
+        //    foreach (var x in model.users)
+        //    {
+        //        tymczasowy.NazwaRoli = UserManager.GetRoles(x.Id).First();
+        //        tymczasowy.IdRoli = "";
+        //        tymczasowy.IdUsera = x.Id;
+        //        tymczasowy.NazwaUsera = x.UserName;
+        //        tymczasowy.Email = x.Email;
+        //        model.dane.Add(tymczasowy);
+        //        //x.Roles.First();
+        //        //UserManager.GetRoles(x.Id).First();
+        //        // model.role.Add(UserManager.GetRoles(x.Id).First());
+        //        //x.Roles.First().RoleId;
+        //        //model.dane.Add();
+
+        //    }
+
+        //    return View(model);
+        //}
+
+
         //
         // GET: /Account/VerifyCode
         /// <summary>
@@ -218,7 +490,7 @@
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("UM", "Account");
                 }
                 AddErrors(result);
             }

@@ -1,0 +1,24 @@
+﻿
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "UMdelete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+
+
+
+<h4>Remove user </h4>
+<h3><b> @ViewBag.UserName </b> (@ViewBag.RoleName)</h3>
+
+<h4>Do you realy want to delete this user??</h4>
+
+<table>
+    <tr>@Html.ActionLink("Delete", "UMdeleteUser", "Account", new {user = @ViewBag.UserId }, new { @class = "btn btn-success" })</tr>
+    <tr>@Html.ActionLink("Cancel", "UM", "Account", new { @class = "btn btn-danger" })</tr>
+</table>

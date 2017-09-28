@@ -432,6 +432,10 @@
     <Content Include="Views\Events\ReadExcel.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
+    <Content Include="Views\Account\UM.cshtml" />
+    <Content Include="Views\Account\UMeditpage.cshtml" />
+    <Content Include="Views\Account\UMedit.cshtml" />
+    <Content Include="Views\Account\UMdelete.cshtml" />
     <Content Include="Views\Employees\_EmployeesList.cshtml" />
     <Content Include="Views\Events\_EventsList.cshtml" />
     <Content Include="Views\Events\History.cshtml" />
