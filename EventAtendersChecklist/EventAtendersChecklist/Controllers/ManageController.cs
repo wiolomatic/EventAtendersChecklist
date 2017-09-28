@@ -359,6 +359,13 @@
             return View(model);
         }
 
+
+
+        public ActionResult UMeditCP()
+        {
+
+            return RedirectToAction("UMeditCP", "Account");
+        }
         //
         // GET: /Manage/ManageLogins
         /// <summary>

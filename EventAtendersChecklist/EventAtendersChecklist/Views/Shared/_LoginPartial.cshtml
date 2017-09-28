@@ -13,7 +13,11 @@
         {
             if (User.IsInRole("HR"))
             {
-                <li>@Html.ActionLink("Register", "UM", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                if (!User.IsInRole("CP"))
+                {
+                    <li>@Html.ActionLink("Register", "UM", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                }
+
             }
         }
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

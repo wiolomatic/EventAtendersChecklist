@@ -1,0 +1,9 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <ul class="nav navbar-nav">
+        <li>@Html.ActionLink("Change Password", "ChangePassword", "Manage")</li>
+        
+    </ul>
+    @Html.Partial("_LoginPartial")
+}

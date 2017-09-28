@@ -6,6 +6,7 @@
     using Microsoft.Owin.Security;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -151,15 +152,24 @@
             {
                 UserModelList tymczasowy = new UserModelList();
                 tymczasowy.NazwaRoli = "";
-                tymczasowy.IdRoli = x.Roles.First().RoleId;
-                foreach (var m in roles)
+                tymczasowy.IdRoli = "";
+                foreach (var UserRole in x.Roles.ToList())
                 {
-                    if (m.Id == tymczasowy.IdRoli)
+                    foreach (var m in roles)
                     {
-                        tymczasowy.NazwaRoli = m.Name;
+
+                        if (m.Name != "CP")
+                        {
+                            if (m.Id == UserRole.RoleId)
+                            {
+                                tymczasowy.NazwaRoli = m.Name;
+                                tymczasowy.IdRoli = m.Id;
+                            }
+
+                        }
                     }
                 }
-                
+
                 tymczasowy.IdUsera = x.Id;
                 tymczasowy.NazwaUsera = x.UserName;
                 tymczasowy.Email = x.Email;
@@ -173,21 +183,73 @@
 
             //return View();
         }
+
+        public async Task<ActionResult> UMeditCP()
+        {
+            string AppUser = User.Identity.GetUserName();
+            ApplicationUser appUser = UserManager.FindByName(AppUser);
+
+            //var context = new ApplicationDbContext();
+            //var DbRoles = context.Roles.ToList();
+            ////string RoleId = appUser.Roles.First().RoleId;
+            //string RoleName = "";
+            //string RoleId = "";
+            //foreach (var UserRole in appUser.Roles.ToList())
+            //{
+            //    foreach (var m in DbRoles)
+            //    {
+
+            //        if (m.Name == "CP")
+            //        {
+            //            if (m.Id == UserRole.RoleId)
+            //            {
+            //                RoleName = m.Name;
+            //                RoleId = m.Id;
+            //            }
+
+            //        }
+            //    }
+            //}
+
+           var result = await UserManager.RemoveFromRoleAsync(appUser.Id, "CP");
+            ViewBag.UserId = "";
+            if (result.Succeeded)
+            {
+                ViewBag.Info = "Twoje hasło nie jest już tymczasowym";
+                
+               // return RedirectToAction("Index", "Home");
+            }
+
+
+
+
+            return View();
+        }
+
         [Authorize(Roles = "HR")]
         public async Task<ActionResult> UMeditrole(string rola, string user)
         {
             ApplicationUser appUser = UserManager.FindById(user);
 
             var context = new ApplicationDbContext();
-            var roles = context.Roles.ToList();
-            string RoleId = appUser.Roles.First().RoleId;
+            var DbRoles = context.Roles.ToList();
+            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
-
-            foreach (var m in roles)
+            string RoleId = "";
+            foreach (var UserRole in appUser.Roles.ToList())
             {
-                if (m.Id == RoleId)
+                foreach (var m in DbRoles)
                 {
-                    RoleName = m.Name;
+
+                    if (m.Name != "CP")
+                    {
+                        if (m.Id == UserRole.RoleId)
+                        {
+                            RoleName = m.Name;
+                            RoleId = m.Id;
+                        }
+
+                    }
                 }
             }
 
@@ -200,7 +262,10 @@
             UM model = new UM();
             //model.users = new List<ApplicationUser>();
             model.dane = new List<UserModelList>();
-                        //model.users = context.Users.ToList();
+            
+            var roles = context.Roles.ToList();
+
+            //model.users = context.Users.ToList();
             //var allRoles = context.Roles.ToList();
             //var lol = usmen();
             //model.users = lol.Users.ToList();
@@ -212,12 +277,21 @@
             {
                 UserModelList tymczasowy = new UserModelList();
                 tymczasowy.NazwaRoli = "";
-                tymczasowy.IdRoli = x.Roles.First().RoleId;
-                foreach (var m in roles)
+                tymczasowy.IdRoli = "";
+                foreach (var UserRole in x.Roles.ToList())
                 {
-                    if (m.Id == tymczasowy.IdRoli)
+                    foreach (var m in roles)
                     {
-                        tymczasowy.NazwaRoli = m.Name;
+
+                        if (m.Name != "CP")
+                        {
+                            if (m.Id == UserRole.RoleId)
+                            {
+                                tymczasowy.NazwaRoli = m.Name;
+                                tymczasowy.IdRoli = m.Id;
+                            }
+
+                        }
                     }
                 }
 
@@ -241,15 +315,24 @@
             ApplicationUser appUser = UserManager.FindById(user);
 
             var context = new ApplicationDbContext();
-            var roles = context.Roles.ToList();
-            string RoleId = appUser.Roles.First().RoleId;
+            var DbRoles = context.Roles.ToList();
+            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
-
-            foreach (var m in roles)
+            string RoleId = "";
+            foreach (var UserRole in appUser.Roles.ToList())
             {
-                if (m.Id == RoleId)
+                foreach (var m in DbRoles)
                 {
-                    RoleName = m.Name;
+
+                    if (m.Name != "CP")
+                    {
+                        if (m.Id == UserRole.RoleId)
+                        {
+                            RoleName = m.Name;
+                            RoleId = m.Id;
+                        }
+
+                    }
                 }
             }
 
@@ -276,7 +359,7 @@
                 UserModelList tymczasowy = new UserModelList();
                 tymczasowy.NazwaRoli = "";
                 tymczasowy.IdRoli = x.Roles.First().RoleId;
-                foreach (var m in roles)
+                foreach (var m in DbRoles)
                 {
                     if (m.Id == tymczasowy.IdRoli)
                     {
@@ -310,25 +393,35 @@
             //await UserManager.RemoveFromRoleAsync(user.Id, user.Roles.First().ToString());
             //await UserManager.AddToRoleAsync(user.Id, user.);
             var context = new ApplicationDbContext();
-            var roles = context.Roles.ToList();
-            string RoleId = user.Roles.First().RoleId;
-            string RoleName="";
-            
-                foreach (var m in roles)
+            var DbRoles = context.Roles.ToList();
+            //string RoleId = appUser.Roles.First().RoleId;
+            string RoleName = "";
+            string RoleId = "";
+            foreach (var UserRole in user.Roles.ToList())
+            {
+                foreach (var m in DbRoles)
                 {
-                    if (m.Id == RoleId)
+
+                    if (m.Name != "CP")
                     {
-                        RoleName = m.Name;
+                        if (m.Id == UserRole.RoleId)
+                        {
+                            RoleName = m.Name;
+                            RoleId = m.Id;
+                        }
+
                     }
                 }
-                
-                ViewBag.userId = IdUsera;
+            }
+
+            ViewBag.userId = IdUsera;
             ViewBag.UserName = user.UserName;
             ViewBag.RoleName = RoleName;
             ViewBag.RoleId = RoleId;
 
             return View("UMedit");
         }
+        
         [Authorize(Roles = "HR")]
         public ActionResult UMdelete(string id)
         {
@@ -338,17 +431,27 @@
             //await UserManager.RemoveFromRoleAsync(user.Id, user.Roles.First().ToString());
             //await UserManager.AddToRoleAsync(user.Id, user.);
             var context = new ApplicationDbContext();
-            var roles = context.Roles.ToList();
-            string RoleId = appUser.Roles.First().RoleId;
+            var DbRoles = context.Roles.ToList();
+            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
-
-            foreach (var m in roles)
+            string RoleId = "";
+            foreach (var UserRole in appUser.Roles.ToList())
             {
-                if (m.Id == RoleId)
+                foreach (var m in DbRoles)
                 {
-                    RoleName = m.Name;
+                    
+                    if (m.Name != "CP")
+                    {
+                        if(m.Id == UserRole.RoleId)
+                        {
+                        RoleName = m.Name;
+                        RoleId = m.Id;
+                        }
+                        
+                    }
                 }
             }
+
 
             ViewBag.userId = IdUsera;
             ViewBag.UserName = appUser.UserName;
@@ -482,6 +585,7 @@
                 if (result.Succeeded)
                 {
                     UserManager.AddToRole(UserManager.FindByName(model.Email).Id, model.Role);
+                    UserManager.AddToRole(UserManager.FindByName(model.Email).Id, "CP");
                     //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771

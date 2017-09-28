@@ -15,5 +15,15 @@
         {
             return View();
         }
+        public ActionResult ChangePassword()
+        {
+
+            return RedirectToAction("ChangePassword", "Manage");
+        }
+        public ActionResult UMeditCP()
+        {
+
+            return RedirectToAction("UMeditCP", "Account");
+        }
     }
 }

@@ -47,6 +47,14 @@ namespace EventAtendersChecklist.Migrations.ApplicationDbContext
                     Name = "TL"
                 };
                 roleManagerTL.Create(roleTL);
+
+                var roleStoreCP = new RoleStore<IdentityRole>(context);  //Change Password 
+                var roleManagerCP = new RoleManager<IdentityRole>(roleStoreTL);
+                var roleCP = new IdentityRole
+                {
+                    Name = "CP"
+                };
+                roleManagerTL.Create(roleCP);
             }
 
             if (!context.Users.Any())
