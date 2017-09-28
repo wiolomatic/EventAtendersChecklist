@@ -159,6 +159,10 @@
                                 ActionName = eventAttender.GetString(5),
                                 ActionValue = eventAttender.GetBoolean(6)
                             }).ToList();
+
+                        var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                        .Where(x => x.EventId == id).ToList();
+
                         var events = new ListOfAttendeesWithActions()
                         {
                             ActionDictionaryList = eventsSql.Select(x => new ActionDictionary()
@@ -173,12 +177,13 @@
                                 FirstName = x.FirtName,
                                 LastName = x.LastName,
                                 Email = x.Email,
-                                Actions = eventsSql.Select( y => new ActionValue()
-                                {
-                                    ActionId = y.ActionDictionaryId,
-                                    ActionName = y.ActionName,
-                                    Value = y.ActionValue
-                                }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
+                                Actions = actions.Where(z => z.EmployeeId == x.EmployeeId)
+                                    .Select( y => new ActionValue()
+                                    {
+                                        ActionId = y.ActionDictionaryId,
+                                        ActionName = y.ActionDictionary.Name,
+                                        Value = y.ActionValue
+                                    }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
                             }).GroupBy(x => x.AttenderId).Select(x => x.First()).ToList()                         
                         };
                         return PartialView("_EventsGrid", events);
