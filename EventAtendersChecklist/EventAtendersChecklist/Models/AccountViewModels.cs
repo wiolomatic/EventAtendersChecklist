@@ -59,6 +59,15 @@
         //Model
         public List<ApplicationUser> users { get; set; }
         public List<UserModelList> dane { get; set; }
+        public UserToEdit edit { get; set; }
+        public UserToEdit editUser( string Id, string Nazwa)
+        {
+            UserToEdit ue = new UserToEdit();
+            ue.IdUsera = Id;
+            ue.NazwaUsera = Nazwa;
+
+            return ue;
+        }
     }
     public class UserModelList
     {
@@ -68,6 +77,14 @@
         public string NazwaRoli { get; set; }
         public string Email { get; set; }
 
+    }
+    public class UserToEdit
+    {
+        public string IdUsera { get; set; }
+        public string NazwaUsera { get; set; }
+        public string IdRoli { get; set; }
+        public string NazwaRoli { get; set; }
+        public string NowaRola { get; set; }
     }
 
     /// <summary>

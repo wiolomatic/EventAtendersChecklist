@@ -1,0 +1,46 @@
+﻿@model EventAtendersChecklist.Models.UM
+@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "UM";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h4>
+    @ViewBag.Info
+</h4>
+
+<p align="right">@Html.ActionLink("Create user", "Register", "Account", new { @class = "btn btn-success" })</p>
+
+@Html.AntiForgeryToken()
+<h3>User List</h3>
+<table>
+    @foreach (var x in @Model.dane)
+    {
+        if (!User.Identity.GetUserName().Contains(x.NazwaUsera))
+        {
+
+            Model.edit = Model.editUser(x.IdUsera, x.NazwaUsera);
+            <tr>
+                <th style="padding: 10px">
+                    @x.NazwaUsera
+                </th>
+                <th style="padding: 10px">
+                    @x.NazwaRoli
+                </th>
+                <th>
+                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.IdUsera }, new { @class = "btn btn-success" })
+
+                </th>
+                <th>
+                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.IdUsera }, new { @class = "btn btn-success" })
+                </th>
+            </tr>
+        }
+    }
+
+</table>
+
+
+

@@ -1,0 +1,25 @@
+﻿
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "UMedit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+
+
+
+<h4>User role edition </h4>
+<h3><b> @ViewBag.UserName </b> (@ViewBag.RoleName)</h3>
+
+<h4>What role should this user have?</h4>
+
+<table>
+    <tr>@Html.ActionLink("HR", "UMeditrole", "Account", new { rola = "HR", user = @ViewBag.UserId }, new { @class = "btn btn-success" })</tr>
+    <tr>@Html.ActionLink("TL", "UMeditrole", "Account", new { rola = "TL", user = @ViewBag.UserId }, new { @class = "btn btn-success" })</tr>
+    <tr>@Html.ActionLink("Cancel", "UM", "Account", new { @class = "btn btn-danger" })</tr>
+    </table>
