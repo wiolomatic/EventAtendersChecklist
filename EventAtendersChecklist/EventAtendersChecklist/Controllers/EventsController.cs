@@ -139,6 +139,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -452,6 +453,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -476,6 +478,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Edit([Bind(Include = "Id,Name,StartDate,EndDate")] Event @event)
         {
             if (ModelState.IsValid)
@@ -493,6 +496,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

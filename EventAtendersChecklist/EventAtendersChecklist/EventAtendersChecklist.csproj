@@ -238,6 +238,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleAuthorizeAttribute.cs" />
     <Compile Include="SignalR\SignalRHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

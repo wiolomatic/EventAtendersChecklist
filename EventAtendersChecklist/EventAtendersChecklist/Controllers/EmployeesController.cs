@@ -17,6 +17,7 @@
     /// Defines the <see cref="EmployeesController" />
     /// </summary>
     [Authorize]
+    [RoleAuthorize(Roles = "HR")]
     public class EmployeesController : Controller
     {
         /// <summary>
