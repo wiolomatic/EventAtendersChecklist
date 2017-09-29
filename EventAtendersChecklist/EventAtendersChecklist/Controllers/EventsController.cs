@@ -3,20 +3,20 @@
     using EventAtendersChecklist.DAL;
     using EventAtendersChecklist.Models;
     using EventAtendersChecklist.ModelsView;
+    using EventAtendersChecklist.SignalR;
     using OfficeOpenXml;
     using System;
+    using System.Collections.Generic;
+    using System.Configuration;
     using System.Data;
     using System.Data.Entity;
+    using System.Data.SqlClient;
     using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Web;
     using System.Web.Mvc;
-    using System.Configuration;
-    using System.Data.SqlClient;
-    using EventAtendersChecklist.SignalR;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Defines the <see cref="EventsController" />
@@ -44,6 +44,10 @@
             return View();
         }
 
+        /// <summary>
+        /// The GetCurrentEvents
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
         public ActionResult GetCurrentEvents()
         {
@@ -71,22 +75,30 @@
                     List<Event> currentevents = new List<Event>();
                     foreach (var i in events)
                     {
-                        if (i.EndDate.CompareTo(DateTime.Now)>0)
+                        if (i.EndDate.CompareTo(DateTime.Now) > 0)
                         {
                             currentevents.Add(i);
                         }
                     }
-                   
-                    return PartialView("_EventsList", currentevents.OrderBy(x=>x.StartDate));
+
+                    return PartialView("_EventsList", currentevents.OrderBy(x => x.StartDate));
                 }
             }
         }
 
+        /// <summary>
+        /// The History
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult History()
         {
             return View();
         }
 
+        /// <summary>
+        /// The GetHistoricalEvents
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
         public ActionResult GetHistoricalEvents()
         {
@@ -124,14 +136,18 @@
             }
         }
 
-        void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
+        /// <summary>
+        /// The dependancy_OnChange
+        /// </summary>
+        /// <param name="sender">The <see cref="object"/></param>
+        /// <param name="e">The <see cref="SqlNotificationEventArgs"/></param>
+        internal void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
         {
             if (e.Type == SqlNotificationType.Change)
             {
                 SignalRHub.NotifyChanges();
             }
         }
-
 
         // GET: Events/Details/5
         /// <summary>
@@ -169,6 +185,11 @@
             return View();
         }
 
+        /// <summary>
+        /// The ShowHistory
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult ShowHistory(int? id)
         {
             if (id == null)
@@ -179,10 +200,15 @@
             return View();
         }
 
+        /// <summary>
+        /// The GetEventGrid
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
         public ActionResult GetEventGrid(int? id)
         {
-            if(db.EmployeeEventAssignments.Include(x => x.Event)
+            if (db.EmployeeEventAssignments.Include(x => x.Event)
                         .Where(x => x.EventId == id).Count() == 0)
             {
                 var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
@@ -296,6 +322,11 @@
             }
         }
 
+        /// <summary>
+        /// The GetEventHistoryGrid
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
         public ActionResult GetEventHistoryGrid(int? id)
         {
@@ -412,7 +443,6 @@
                 }
             }
         }
-
 
         // GET: Events/Create
         /// <summary>
@@ -607,13 +637,13 @@
             if (upload == null)
             {
                 ViewBag.Message = "File could not be empty.";
-                return View(string.Format("../Events/ImportExcelFile/{0}", EventId));
+                return RedirectToAction("Events", "ImportExcelFile", new { id = EventId });
             }
             else if (Path.GetExtension(upload.FileName) == ".xlsx" || Path.GetExtension(upload.FileName) == ".xls")
             {
                 ExcelPackage package = new ExcelPackage(upload.InputStream);
-                var lol = EmployeeToDatabase.ToDataBase(package);
-                AddToDatabase(lol);
+                var excelDatabase = EmployeeToDatabase.ToDataBase(package);
+                AddToDatabase(excelDatabase);
                 return RedirectToAction("Show", "Events", new { id = EventId });
             }
             else
@@ -625,15 +655,17 @@
         /// <summary>
         /// The AddToDatabase
         /// </summary>
-        /// <param name="loafe">The <see cref="ListOfAttendeesFromExcel"/></param>
+        /// <param name="loadedDatabase">The <see cref="ListOfAttendeesFromExcel"/></param>
         /// <param name="id">The <see cref="int?"/></param>
-        private ActionResult AddToDatabase(ListOfAttendeesFromExcel loafe)
+        private ActionResult AddToDatabase(ListOfAttendeesFromExcel loadedDatabase)
         {
             int eventId = EventId;
 
             //Add attendees to database
-            foreach (var item in loafe.ListOfEmployee)
+            foreach (var item in loadedDatabase.ListOfEmployee)
             {
+                // for emp from excel check if there is no emp in db where db.email == emp.email
+                //If not add to db.
                 if (db.Employees.Where(x => x.Email == item.Email).Count() == 0)
                 {
                     db.Employees.Add(new Employee
@@ -644,15 +676,21 @@
                     });
                     db.SaveChanges();
                 }
+
+                // Take id of specified emp from db, there should be only 1 emp with that email
                 var idEmployee = db.Employees.Where(x => x.Email == item.Email)
                     .Select(x => x.Id)
                     .ToList()
                     .First();
+                
+                // Take all actions from db in event with specified ID
+                var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
 
-                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee).Count() == 0)
+                // For each action in event add to database new employeeEventAsignment with proper action id if doesn't exist.
+                foreach (var actionInEvent in actionsInEvent)
                 {
-                    var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
-                    foreach (var actionInEvent in actionsInEvent)
+                    if(db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee 
+                            & x.ActionDictionaryId == actionInEvent.ActionDictionaryId).Select(x => x.Id).Count() == 0)
                     {
                         db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
                         {
@@ -667,13 +705,12 @@
             }
 
             // Add all actions to Attendees
-            foreach (var item in loafe.ListOfActionDictionary)
+            foreach (var item in loadedDatabase.ListOfActionDictionary)
             {
                 var name = item.Name;
 
                 //Add Action to Database if doesnt exist
-                var exist = db.ActionDictionary.Where(x => x.Name == name).Count();
-                if (exist == 0)
+                if (db.ActionDictionary.Where(x => x.Name == name).Count() == 0)
                 {
                     db.ActionDictionary.Add(new ActionDictionary
                     {
@@ -689,27 +726,28 @@
                     .First();
 
                 // Add correct actionGroup if doesnt exist
-                var exist2 = db.ActionGroups.Where(x => x.EventId == eventId & x.ActionDictionaryId == actionId).Count();
-                if (exist2 == 0)
+                if (db.ActionGroups.Where(x => x.EventId == eventId & x.ActionDictionaryId == actionId).Count() == 0)
                 {
                     db.ActionGroups.Add(new ActionGroup
                     {
                         EventId = eventId,
                         ActionDictionaryId = actionId
                     });
+                    db.SaveChanges();
                 }
 
-                var attendeeInEventList = db.EmployeeEventAssignments
+                // Take all attendees from db in event
+                var attendeesInEventList = db.EmployeeEventAssignments
                     .Where(x => x.EventId == eventId)
                     .GroupBy(x => x.EmployeeId)
                     .Select(x => x.FirstOrDefault())
                     .ToList();
-                foreach (var item2 in attendeeInEventList)
+                foreach (var attendee in attendeesInEventList)
                 {
                     db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
                     {
                         EventId = eventId,
-                        EmployeeId = item2.EmployeeId,
+                        EmployeeId = attendee.EmployeeId,
                         ActionDictionaryId = actionId,
                         ActionValue = false
                     });
@@ -719,6 +757,10 @@
             return RedirectToAction("Show", "Events", new { id = eventId });
         }
 
+        /// <summary>
+        /// The ExportToExcel
+        /// </summary>
+        /// <param name="id">The <see cref="int?"/></param>
         public void ExportToExcel(int? id)
         {
             string alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -785,7 +827,7 @@
                     ws.Cells[string.Format("D{0}", rowStart)].Value = attendee.Email;
                     foreach (var actionForAttendee in attendee.Actions)
                     {
-                        if(actionForAttendee.Value == true)
+                        if (actionForAttendee.Value == true)
                         {
                             ws.Cells[string.Format("{0}{1}", alphabet[alphabetIndex], rowStart)].Value = 1;
                         }
@@ -804,9 +846,7 @@
                 Response.BinaryWrite(pck.GetAsByteArray());
                 Response.End();
             }
-
         }
-
 
         /// <summary>
         /// The Dispose

@@ -116,8 +116,8 @@
                 var name = actionModel.ActionDictionaryProp.Name;
 
                 //Add Action to Database if doesnt exist
-                var exist = db.ActionDictionary.Where(x => x.Name == name).Count();
-                if (exist == 0)
+                var actionExist = db.ActionDictionary.Where(x => x.Name == name).Count();
+                if (actionExist == 0)
                 {
                     db.ActionDictionary.Add(new ActionDictionary
                     {
@@ -133,19 +133,17 @@
                     .First();
 
                 // Add correct actionGroup if doesnt exist
-                var exist2 = db.ActionGroups.Where(x => x.EventId == eventId & x.ActionDictionaryId == actionId).Count();
-                if (exist2 == 0)
+                var actionGroupExist = db.ActionGroups.Where(x => x.EventId == eventId & x.ActionDictionaryId == actionId).Count();
+                if (actionGroupExist == 0)
                 {
                     db.ActionGroups.Add(new ActionGroup
                     {
                         EventId = eventId,
                         ActionDictionaryId = actionId
                     });
+                    db.SaveChanges();
                 }
-                else
-                {
-                    return RedirectToAction("Show", "Events", new { id = eventId });
-                }
+
                 var attendeeInEventList = db.EmployeeEventAssignments
                     .Where(x => x.EventId == eventId)
                     .GroupBy(x => x.EmployeeId)
@@ -153,14 +151,21 @@
                     .ToList();
                 foreach (var item in attendeeInEventList)
                 {
-                    db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                    if(db.EmployeeEventAssignments
+                        .Where(x => x.EmployeeId == item.EmployeeId & 
+                        x.EventId == item.EventId & 
+                        x.ActionDictionaryId == actionId)
+                        .Count() == 0)
                     {
-                        EventId = eventId,
-                        EmployeeId = item.EmployeeId,
-                        ActionDictionaryId = actionId,
-                        ActionValue = false
-                    });
-                    db.SaveChanges();
+                        db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                        {
+                            EventId = eventId,
+                            EmployeeId = item.EmployeeId,
+                            ActionDictionaryId = actionId,
+                            ActionValue = false
+                        });
+                        db.SaveChanges();
+                    }
                 }
                 return RedirectToAction("Show", "Events", new { id = eventId });
             }
