@@ -867,7 +867,7 @@
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Show", "Events");
+            return RedirectToAction("Index", "Events");
         }
 
         /// <summary>
