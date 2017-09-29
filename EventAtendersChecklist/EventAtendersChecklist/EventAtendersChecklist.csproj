@@ -208,7 +208,6 @@
     <Compile Include="Controllers\ActionDictionariesController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\eacContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -379,7 +378,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -441,6 +439,7 @@
     <Content Include="Views\Events\_EventsList.cshtml" />
     <Content Include="Views\Events\History.cshtml" />
     <Content Include="Views\Events\_EventsHistoricalList.cshtml" />
+    <Content Include="Views\Events\_EventsGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

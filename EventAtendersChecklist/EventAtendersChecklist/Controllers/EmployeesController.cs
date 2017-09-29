@@ -16,6 +16,7 @@
     /// <summary>
     /// Defines the <see cref="EmployeesController" />
     /// </summary>
+    [Authorize]
     public class EmployeesController : Controller
     {
         /// <summary>

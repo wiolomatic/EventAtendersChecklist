@@ -11,6 +11,7 @@
     /// <summary>
     /// Defines the <see cref="ActionDictionariesController" />
     /// </summary>
+    [Authorize]
     public class ActionDictionariesController : Controller
     {
         /// <summary>

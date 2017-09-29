@@ -9,7 +9,6 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Security;
 
     /// <summary>
     /// Defines the <see cref="AccountController" />
@@ -125,12 +124,20 @@
             }
         }
 
+        /// <summary>
+        /// The usmen
+        /// </summary>
+        /// <returns>The <see cref="ApplicationUserManager"/></returns>
         public ApplicationUserManager usmen()
         {
             return _userManager;
         }
 
-        [Authorize (Roles="HR")]
+        /// <summary>
+        /// The UM
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
+        [Authorize(Roles = "HR")]
         public ActionResult UM()
         {
             UM model = new UM();
@@ -138,15 +145,15 @@
             model.dane = new List<UserModelList>();
             var context = new ApplicationDbContext();
             var roles = context.Roles.ToList();
-            
+
             //model.users = context.Users.ToList();
             //var allRoles = context.Roles.ToList();
             //var lol = usmen();
             //model.users = lol.Users.ToList();
             model.users = UserManager.Users.ToList();
-            
-            
-            
+
+
+
             foreach (var x in model.users)
             {
                 UserModelList tymczasowy = new UserModelList();
@@ -159,20 +166,22 @@
                         tymczasowy.NazwaRoli = m.Name;
                     }
                 }
-                
+
                 tymczasowy.IdUsera = x.Id;
                 tymczasowy.NazwaUsera = x.UserName;
                 tymczasowy.Email = x.Email;
                 //tymczasowy.Delete = false;
                 model.dane.Add(tymczasowy);
-
-
             }
-
             return View(model);
-
-            //return View();
         }
+
+        /// <summary>
+        /// The UMeditrole
+        /// </summary>
+        /// <param name="rola">The <see cref="string"/></param>
+        /// <param name="user">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
         public async Task<ActionResult> UMeditrole(string rola, string user)
         {
@@ -193,20 +202,18 @@
 
             await UserManager.RemoveFromRoleAsync(appUser.Id, RoleName);
             await UserManager.AddToRoleAsync(appUser.Id, rola);
-            ViewBag.Info = "User with name "+ appUser.UserName + " has now new role: " + rola;
+            ViewBag.Info = "User with name " + appUser.UserName + " has now new role: " + rola;
             // UserToEdit user = model.edit;
 
 
             UM model = new UM();
             //model.users = new List<ApplicationUser>();
             model.dane = new List<UserModelList>();
-                        //model.users = context.Users.ToList();
+            //model.users = context.Users.ToList();
             //var allRoles = context.Roles.ToList();
             //var lol = usmen();
             //model.users = lol.Users.ToList();
             model.users = UserManager.Users.ToList();
-
-
 
             foreach (var x in model.users)
             {
@@ -226,15 +233,16 @@
                 tymczasowy.Email = x.Email;
                 //tymczasowy.Delete = false;
                 model.dane.Add(tymczasowy);
-
-
             }
-
-
-
-
             return View("UM", model);
         }
+
+        /// <summary>
+        /// The UMdeleteUser
+        /// </summary>
+        /// <param name="rola">The <see cref="string"/></param>
+        /// <param name="user">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
         public async Task<ActionResult> UMdeleteUser(string rola, string user)
         {
@@ -269,8 +277,6 @@
             //model.users = lol.Users.ToList();
             model.users = UserManager.Users.ToList();
 
-
-
             foreach (var x in model.users)
             {
                 UserModelList tymczasowy = new UserModelList();
@@ -289,18 +295,15 @@
                 tymczasowy.Email = x.Email;
                 //tymczasowy.Delete = false;
                 model.dane.Add(tymczasowy);
-
-
             }
-
-
-
-
             return View("UM", model);
         }
 
-
-
+        /// <summary>
+        /// The UMedit
+        /// </summary>
+        /// <param name="id">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
         public ActionResult UMedit(string id)
         {
@@ -312,23 +315,29 @@
             var context = new ApplicationDbContext();
             var roles = context.Roles.ToList();
             string RoleId = user.Roles.First().RoleId;
-            string RoleName="";
-            
-                foreach (var m in roles)
+            string RoleName = "";
+
+            foreach (var m in roles)
+            {
+                if (m.Id == RoleId)
                 {
-                    if (m.Id == RoleId)
-                    {
-                        RoleName = m.Name;
-                    }
+                    RoleName = m.Name;
                 }
-                
-                ViewBag.userId = IdUsera;
+            }
+
+            ViewBag.userId = IdUsera;
             ViewBag.UserName = user.UserName;
             ViewBag.RoleName = RoleName;
             ViewBag.RoleId = RoleId;
 
             return View("UMedit");
         }
+
+        /// <summary>
+        /// The UMdelete
+        /// </summary>
+        /// <param name="id">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
         public ActionResult UMdelete(string id)
         {
@@ -356,11 +365,6 @@
             ViewBag.RoleId = RoleId;
             return View("UMdelete");
         }
-
-        
-
-       
-
 
         //public async Task<ActionResult> UM(UM model)
         //{
@@ -569,7 +573,7 @@
         /// The ForgotPasswordConfirmation
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
@@ -582,7 +586,7 @@
         /// </summary>
         /// <param name="code">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ResetPassword(string code)
         {
             return code == null ? View("Error") : View();
@@ -596,7 +600,7 @@
         /// <param name="model">The <see cref="ResetPasswordViewModel"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -625,7 +629,7 @@
         /// The ResetPasswordConfirmation
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
@@ -640,7 +644,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
@@ -656,7 +660,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <param name="rememberMe">The <see cref="bool"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
@@ -677,7 +681,7 @@
         /// <param name="model">The <see cref="SendCodeViewModel"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendCode(SendCodeViewModel model)
         {
@@ -738,7 +742,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
         {
@@ -784,7 +788,7 @@
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
@@ -863,7 +867,7 @@
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("GetCurrentEvents", "Events");
         }
 
         /// <summary>
