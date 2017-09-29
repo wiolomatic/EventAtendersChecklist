@@ -440,6 +440,8 @@
     <Content Include="Views\Events\History.cshtml" />
     <Content Include="Views\Events\_EventsHistoricalList.cshtml" />
     <Content Include="Views\Events\_EventsGrid.cshtml" />
+    <Content Include="Views\Events\ShowHistory.cshtml" />
+    <Content Include="Views\Events\_EventsHistoryGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -132,13 +132,17 @@
             if (ModelState.IsValid)
             {
                 var eventId = employee.EventId;
-                db.Employees.Add(new Employee
+                if (db.Employees.Where(x => x.Email.Equals(employee._employee.Email)).Count() == 0)
                 {
-                    FirstName = employee._employee.FirstName,
-                    LastName = employee._employee.LastName,
-                    Email = employee._employee.Email
-                });
-                db.SaveChanges();
+                    db.Employees.Add(new Employee
+                    {
+                        FirstName = employee._employee.FirstName,
+                        LastName = employee._employee.LastName,
+                        Email = employee._employee.Email
+                    });
+                    db.SaveChanges();
+                }
+                
                 var id = db.Employees.Where(x => x.Email == employee._employee.Email)
                     .Select(x => x.Id)
                     .ToList()

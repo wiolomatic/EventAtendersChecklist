@@ -3,7 +3,6 @@
 
 @{
     ViewBag.id = Model.EventId;
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
@@ -54,7 +53,6 @@
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
 </p>
 
-@section scripts{
     <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
@@ -125,4 +123,3 @@
         }
 
     </script>
-}

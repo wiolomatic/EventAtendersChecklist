@@ -1,0 +1,49 @@
+﻿@model EventAtendersChecklist.ModelsView.ListOfAttendeesWithActions
+@using GridMvc.Html;
+
+@{
+    ViewBag.id = Model.EventId;
+}
+<link href="~/Content/Gridmvc.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/gridmvc.min.js"></script>
+
+        <div>
+            <h4>Show event list</h4>
+            <hr />
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("HR"))
+                {
+                    <p>
+                        @if (Model != null)
+                        {
+                            @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
+                        }
+                    </p>
+                }
+            }
+        </div>
+
+
+        @Html.Grid(Model.EventAttenderList).Columns(columns =>
+{
+    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true).Filterable(true);
+    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true).Filterable(true);
+    columns.Add(x => x.Email).Titled("Email").Sortable(true).Filterable(true);
+    foreach (var item in Model.ActionDictionaryList)
+    {
+        columns.Add()
+        .Titled(item.Name)
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
+                        .Where(x => x.ActionId == item.Id)
+                        .Select(x => x.Value).First(), new { @class = "disabled" }))
+            .Sortable(true);
+    }
+}).WithPaging(10).WithMultipleFilters()
+<p>
+    @Html.ActionLink("Back to List", "History", null, new { @class = "btn btn-primary" })
+</p>
