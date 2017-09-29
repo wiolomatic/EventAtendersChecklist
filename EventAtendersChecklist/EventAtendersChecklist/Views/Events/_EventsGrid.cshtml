@@ -1,0 +1,128 @@
+﻿@model EventAtendersChecklist.ModelsView.ListOfAttendeesWithActions
+@using GridMvc.Html;
+
+@{
+    ViewBag.id = Model.EventId;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h4>Show event list</h4>
+    <hr />
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("HR"))
+        {
+            <p>
+                @Html.ActionLink("Add New Attendee", "AddToEvent", "Employees", new { id = Model.EventId }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Add New Action", "AddActionToEvent", "ActionDictionaries", new { id = Model.EventId }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Import from excel", "ImportExcelFile", "Events", new { id = Model.EventId }, new { @class = "btn btn-success" })
+                @if (Model != null)
+                {
+                    @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
+                }
+            </p>
+        }
+    }
+</div>
+
+
+@Html.Grid(Model.EventAttenderList).Columns(columns =>
+{
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
+                                     onclick="DeleteEmployee(@Model.EventId, @o.AttenderId)"></button>);
+                                    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
+                                    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
+                                    columns.Add(x => x.Email).Titled("Email").Sortable(true);
+    foreach (var item in Model.ActionDictionaryList)
+    {
+        columns.Add()
+        .Titled(item.Name)
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
+                        .Where(x => x.ActionId == item.Id)
+                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)" }))
+            .Sortable(true);
+    }
+}).WithPaging(10).WithMultipleFilters()
+
+<p>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            var notification = $.connection.signalRHub;
+
+            // Create a function that the hub can call to broadcast messages.
+            notification.client.notifyChanges = function () {
+                getEvents();
+            };
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                getEvents();
+            }).fail(function (e) {
+            });
+        });
+
+
+        function getEvents() {
+            $.ajax({
+                url: '/Events/GetEventGrid',
+                data: {
+                    id : @Model.EventId
+                },
+                cache: false,
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html'
+            }).success(function (result) {
+                $("#partialContent").empty().append(result);
+            }).error(function () {
+
+            });
+        }
+
+        function AsertClick(clicked_id) {
+            var val = document.getElementById(clicked_id).checked;
+            var res = clicked_id.split("_");
+            var EventId = String(res[1]);
+            var AttendeeId = String(res[2]);
+            var ActionId = String(res[3]);
+            $.ajax({
+                type: "POST",
+                url: "/Events/ChangeCheckBoxValue",
+                data: {
+                    EmployeeId: AttendeeId,
+                    EventId: EventId,
+                    ActionID: ActionId,
+                    value: val
+                },
+                success: function (result) {
+                }
+            })
+        }
+
+        var DeleteEmployee = function (EventId, employeeId) {
+            $.ajax({
+                type: "POST",
+                url: "/Events/DeleteEmployee",
+                data: {
+                    EmployeeId: employeeId,
+                    EventId: EventId
+                },
+                success: function (result) {
+                }
+            })
+        }
+
+    </script>
+}
