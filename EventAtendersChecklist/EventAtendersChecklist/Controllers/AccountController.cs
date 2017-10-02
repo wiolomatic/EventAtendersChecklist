@@ -84,7 +84,6 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
-        [RoleAuthorize(Roles = "HR")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -102,7 +101,6 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -132,6 +130,7 @@
         /// The Usmen
         /// </summary>
         /// <returns>The <see cref="ApplicationUserManager"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ApplicationUserManager Usmen()
         {
             return _userManager;
@@ -186,6 +185,7 @@
         /// The UMeditCP
         /// </summary>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> UMeditCP()
         {
             string AppUser = User.Identity.GetUserName();
