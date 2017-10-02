@@ -93,6 +93,7 @@
         /// The History
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult History()
         {
             return View();
@@ -103,6 +104,7 @@
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult GetHistoricalEvents()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -179,6 +181,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Show(int? id)
         {
             if (id == null)
@@ -194,6 +197,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult ShowHistory(int? id)
         {
             if (id == null)
@@ -332,6 +336,7 @@
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult GetEventHistoryGrid(int? id)
         {
             if (db.EmployeeEventAssignments.Include(x => x.Event)
@@ -453,6 +458,7 @@
         /// The Create
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Create()
         {
             return View();
@@ -468,6 +474,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Create([Bind(Include = "Id,Name,StartDate,EndDate")] Event @event)
         {
             if (ModelState.IsValid)
@@ -552,6 +559,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult DeleteConfirmed(int id)
         {
             Event @event = db.Events.Find(id);
@@ -566,6 +574,7 @@
         /// <param name="EmployeeId">The <see cref="int"/></param>
         /// <param name="EventId">The <see cref="int"/></param>
         /// <returns>The <see cref="JsonResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public JsonResult DeleteEmployee(int EmployeeId, int EventId)
         {
             var listOfId = db.EmployeeEventAssignments
@@ -622,6 +631,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult ImportExcelFile(int? id)
         {
             if (id == null)
@@ -639,6 +649,7 @@
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult ReadExcel(HttpPostedFileBase upload)
         {
             if (upload == null)
@@ -664,6 +675,7 @@
         /// </summary>
         /// <param name="loadedDatabase">The <see cref="ListOfAttendeesFromExcel"/></param>
         /// <param name="id">The <see cref="int?"/></param>
+        [RoleAuthorize(Roles = "HR")]
         private ActionResult AddToDatabase(ListOfAttendeesFromExcel loadedDatabase)
         {
             int eventId = EventId;
@@ -878,6 +890,7 @@
         /// The ExportToExcel
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
+        [RoleAuthorize(Roles = "HR")]
         public void ExportToExcel(int? id)
         {
             string alphabet = "abcdefghijklmnopqrstuvwxyz";
