@@ -1,5 +1,13 @@
 ﻿@model EventAtendersChecklist.Models.Employee
 
+@using (Html.BeginForm("Index", "Employees", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", "", new { @class = "form-control", placeholder = "SearchString"})
+        <input id="Search" type="submit" />
+    </p>
+}
+
 <div id="partialContent">
     @Html.Action("GetEmployees", "Employees")
 </div>
@@ -27,7 +35,7 @@
         function getEmployees() {
             $.ajax({
                 url: '/Employees/GetEmployees',
-                cache : false,
+                cache: false,
                 contentType: 'application/html ; charset:utf-8',
                 type: 'GET',
                 dataType: 'html'
@@ -39,3 +47,4 @@
         }
     </script>
 }
+

@@ -11,6 +11,7 @@
     using System.Configuration;
     using System.Data.SqlClient;
     using EventAtendersChecklist.SignalR;
+    using System;
 
 
     /// <summary>
@@ -47,30 +48,46 @@
         }
 
         [HttpGet]
-        public ActionResult GetEmployees()
+        public ActionResult GetEmployees(string searchString)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection sqlcon = new SqlConnection(connectionString))
-            {
-                using (SqlCommand sqlcom = new SqlCommand(@"SELECT [Id], [FirstName], [LastName], [Email] FROM dbo.Employees", sqlcon))
+          
+                string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                using (SqlConnection sqlcon = new SqlConnection(connectionString))
                 {
-                    sqlcon.Open();
-                    sqlcom.CommandType = CommandType.Text;
-                    sqlcom.Notification = null;
-                    SqlDependency dependancy = new SqlDependency(sqlcom);
-                    dependancy.OnChange += dependancy_OnChange;
-                    var reader = sqlcom.ExecuteReader();
-                    var employees = reader.Cast<IDataRecord>()
-                       .Select(e => new Employee()
-                       {
-                           Id = e.GetInt32(0),
-                           FirstName = e.GetString(1),
-                           LastName = e.GetString(2),
-                           Email = e.GetString(3)
-                       }).ToList();
-                    return PartialView("_EmployeesList", employees);
+                    using (SqlCommand sqlcom = new SqlCommand(@"SELECT [Id], [FirstName], [LastName], [Email] FROM dbo.Employees", sqlcon))
+                    {
+                        sqlcon.Open();
+                        sqlcom.CommandType = CommandType.Text;
+                        sqlcom.Notification = null;
+                        SqlDependency dependancy = new SqlDependency(sqlcom);
+                        dependancy.OnChange += dependancy_OnChange;
+                        var reader = sqlcom.ExecuteReader();
+                        var employees = reader.Cast<IDataRecord>()
+                           .Select(e => new Employee()
+                           {
+                               Id = e.GetInt32(0),
+                               FirstName = e.GetString(1),
+                               LastName = e.GetString(2),
+                               Email = e.GetString(3)
+                           }).ToList();
+
+
+                        string ddd = searchString;
+
+
+
+                        if (!String.IsNullOrEmpty(ddd))
+                        {
+                            var employees2 = employees.Where(s => s.FirstName.Contains(searchString));
+                            return PartialView("_EmployeesList", employees2);
+                        }
+                        else
+                        {
+                            return PartialView("_EmployeesList", employees);
+                        }
+                    }
                 }
-            }
+            
         }
 
         void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
