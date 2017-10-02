@@ -113,6 +113,7 @@
                 EventId = id,
                 _employee = new Employee()
             };
+
             if (employee == null)
             {
                 return HttpNotFound();
@@ -148,7 +149,7 @@
                     .ToList()
                     .First();
 
-                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == id).Count() == 0)
+                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == id & x.EventId == eventId).Count() == 0)
                 {
                     var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
                     foreach (var item in actionsInEvent)

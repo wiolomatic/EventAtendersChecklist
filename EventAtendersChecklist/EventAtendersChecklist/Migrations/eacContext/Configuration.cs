@@ -47,8 +47,8 @@
 
             //New Event
             context.Events.AddOrUpdate(e => e.Id,
-                new Models.Event { Id = 1, Name = "First Integration" },
-                new Models.Event { Id = 2, Name = "Floryda" });
+                new Models.Event { Id = 1, Name = "First Integration", StartDate = new DateTime(2017,09,29).AddYears(2), EndDate = new DateTime(2017, 09, 29).AddYears(2).AddDays(3)},
+                new Models.Event { Id = 2, Name = "Floryda", StartDate = new DateTime(2016, 09, 29), EndDate = new DateTime(2016, 09, 29) });
 
             // New Event connection
             context.EmployeeEventAssignments.AddOrUpdate(eea => eea.Id,

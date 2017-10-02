@@ -208,7 +208,7 @@
         [HttpGet]
         public ActionResult GetEventGrid(int? id)
         {
-            if (db.EmployeeEventAssignments.Include(x => x.Event)
+            if(db.EmployeeEventAssignments.Include(x => x.Event)
                         .Where(x => x.EventId == id).Count() == 0)
             {
                 var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
@@ -661,49 +661,6 @@
         {
             int eventId = EventId;
 
-            //Add attendees to database
-            foreach (var item in loadedDatabase.ListOfEmployee)
-            {
-                // for emp from excel check if there is no emp in db where db.email == emp.email
-                //If not add to db.
-                if (db.Employees.Where(x => x.Email == item.Email).Count() == 0)
-                {
-                    db.Employees.Add(new Employee
-                    {
-                        FirstName = item.FirstName,
-                        LastName = item.LastName,
-                        Email = item.Email
-                    });
-                    db.SaveChanges();
-                }
-
-                // Take id of specified emp from db, there should be only 1 emp with that email
-                var idEmployee = db.Employees.Where(x => x.Email == item.Email)
-                    .Select(x => x.Id)
-                    .ToList()
-                    .First();
-                
-                // Take all actions from db in event with specified ID
-                var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
-
-                // For each action in event add to database new employeeEventAsignment with proper action id if doesn't exist.
-                foreach (var actionInEvent in actionsInEvent)
-                {
-                    if(db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee 
-                            & x.ActionDictionaryId == actionInEvent.ActionDictionaryId).Select(x => x.Id).Count() == 0)
-                    {
-                        db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
-                        {
-                            EventId = eventId,
-                            EmployeeId = idEmployee,
-                            ActionDictionaryId = actionInEvent.ActionDictionaryId,
-                            ActionValue = false
-                        });
-                        db.SaveChanges();
-                    }
-                }
-            }
-
             // Add all actions to Attendees
             foreach (var item in loadedDatabase.ListOfActionDictionary)
             {
@@ -752,6 +709,49 @@
                         ActionValue = false
                     });
                     db.SaveChanges();
+                }
+            }
+
+            //Add attendees to database
+            foreach (var item in loadedDatabase.ListOfEmployee)
+            {
+                // for emp from excel check if there is no emp in db where db.email == emp.email
+                //If not add to db.
+                if (db.Employees.Where(x => x.Email == item.Email).Count() == 0)
+                {
+                    db.Employees.Add(new Employee
+                    {
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        Email = item.Email
+                    });
+                    db.SaveChanges();
+                }
+
+                // Take id of specified emp from db, there should be only 1 emp with that email
+                var idEmployee = db.Employees.Where(x => x.Email == item.Email)
+                    .Select(x => x.Id)
+                    .ToList()
+                    .First();
+                
+                // Take all actions from db in event with specified ID
+                var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
+
+                // For each action in event add to database new employeeEventAsignment with proper action id if doesn't exist.
+                foreach (var actionInEvent in actionsInEvent)
+                {
+                    if(db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee 
+                            & x.ActionDictionaryId == actionInEvent.ActionDictionaryId & x.EventId == eventId).Select(x => x.Id).Count() == 0)
+                    {
+                        db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
+                        {
+                            EventId = eventId,
+                            EmployeeId = idEmployee,
+                            ActionDictionaryId = actionInEvent.ActionDictionaryId,
+                            ActionValue = false
+                        });
+                        db.SaveChanges();
+                    }
                 }
             }
             return RedirectToAction("Show", "Events", new { id = eventId });

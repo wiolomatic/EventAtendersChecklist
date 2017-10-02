@@ -144,6 +144,7 @@
                     db.SaveChanges();
                 }
 
+                //Take all attendee in event and add to them new action
                 var attendeeInEventList = db.EmployeeEventAssignments
                     .Where(x => x.EventId == eventId)
                     .GroupBy(x => x.EmployeeId)
