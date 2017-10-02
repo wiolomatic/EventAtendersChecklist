@@ -56,7 +56,6 @@
 
     public class UM
     {
-        //Model
         public List<ApplicationUser> users { get; set; }
         public List<UserModelList> dane { get; set; }
         public UserToEdit edit { get; set; }

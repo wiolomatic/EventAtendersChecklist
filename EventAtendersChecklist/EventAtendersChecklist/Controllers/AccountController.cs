@@ -6,11 +6,10 @@
     using Microsoft.Owin.Security;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Security;
+    using static EventAtendersChecklist.Controllers.ManageController;
 
     /// <summary>
     /// Defines the <see cref="AccountController" />
@@ -126,33 +125,37 @@
             }
         }
 
-        public ApplicationUserManager usmen()
+        /// <summary>
+        /// The Usmen
+        /// </summary>
+        /// <returns>The <see cref="ApplicationUserManager"/></returns>
+        public ApplicationUserManager Usmen()
         {
             return _userManager;
         }
 
-        [Authorize (Roles="HR")]
+        /// <summary>
+        /// The UM
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
+        [Authorize(Roles = "HR")]
         public ActionResult UM()
         {
-            UM model = new UM();
-            //model.users = new List<ApplicationUser>();
-            model.dane = new List<UserModelList>();
+            UM model = new UM
+            {
+                dane = new List<UserModelList>()
+            };
             var context = new ApplicationDbContext();
             var roles = context.Roles.ToList();
-            
-            //model.users = context.Users.ToList();
-            //var allRoles = context.Roles.ToList();
-            //var lol = usmen();
-            //model.users = lol.Users.ToList();
             model.users = UserManager.Users.ToList();
-            
-            
-            
+
             foreach (var x in model.users)
             {
-                UserModelList tymczasowy = new UserModelList();
-                tymczasowy.NazwaRoli = "";
-                tymczasowy.IdRoli = "";
+                UserModelList tymczasowy = new UserModelList
+                {
+                    NazwaRoli = "",
+                    IdRoli = ""
+                };
                 foreach (var UserRole in x.Roles.ToList())
                 {
                     foreach (var m in roles)
@@ -165,67 +168,46 @@
                                 tymczasowy.NazwaRoli = m.Name;
                                 tymczasowy.IdRoli = m.Id;
                             }
-
                         }
                     }
                 }
-
                 tymczasowy.IdUsera = x.Id;
                 tymczasowy.NazwaUsera = x.UserName;
                 tymczasowy.Email = x.Email;
-                //tymczasowy.Delete = false;
                 model.dane.Add(tymczasowy);
-
-
             }
-
             return View(model);
-
-            //return View();
         }
 
+        /// <summary>
+        /// The UMeditCP
+        /// </summary>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         public async Task<ActionResult> UMeditCP()
         {
             string AppUser = User.Identity.GetUserName();
             ApplicationUser appUser = UserManager.FindByName(AppUser);
 
-            //var context = new ApplicationDbContext();
-            //var DbRoles = context.Roles.ToList();
-            ////string RoleId = appUser.Roles.First().RoleId;
-            //string RoleName = "";
-            //string RoleId = "";
-            //foreach (var UserRole in appUser.Roles.ToList())
-            //{
-            //    foreach (var m in DbRoles)
-            //    {
-
-            //        if (m.Name == "CP")
-            //        {
-            //            if (m.Id == UserRole.RoleId)
-            //            {
-            //                RoleName = m.Name;
-            //                RoleId = m.Id;
-            //            }
-
-            //        }
-            //    }
-            //}
-
-           var result = await UserManager.RemoveFromRoleAsync(appUser.Id, "CP");
+            var result = await UserManager.RemoveFromRoleAsync(appUser.Id, "CP");
             ViewBag.UserId = "";
             if (result.Succeeded)
             {
-                ViewBag.Info = "Twoje hasło nie jest już tymczasowym";
-                
-               // return RedirectToAction("Index", "Home");
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("Index", "Events");
             }
-
-
-
-
             return View();
         }
 
+        /// <summary>
+        /// The UMeditrole
+        /// </summary>
+        /// <param name="rola">The <see cref="string"/></param>
+        /// <param name="user">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
         public async Task<ActionResult> UMeditrole(string rola, string user)
         {
@@ -233,7 +215,6 @@
 
             var context = new ApplicationDbContext();
             var DbRoles = context.Roles.ToList();
-            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
             string RoleId = "";
             foreach (var UserRole in appUser.Roles.ToList())
@@ -248,41 +229,35 @@
                             RoleName = m.Name;
                             RoleId = m.Id;
                         }
-
                     }
                 }
             }
 
             await UserManager.RemoveFromRoleAsync(appUser.Id, RoleName);
             await UserManager.AddToRoleAsync(appUser.Id, rola);
-            ViewBag.Info = "User with name "+ appUser.UserName + " has now new role: " + rola;
-            // UserToEdit user = model.edit;
+            ViewBag.Info = "User with name " + appUser.UserName + " has now new role: " + rola;
 
 
-            UM model = new UM();
-            //model.users = new List<ApplicationUser>();
-            model.dane = new List<UserModelList>();
-            
+            UM model = new UM
+            {
+                dane = new List<UserModelList>()
+            };
+
             var roles = context.Roles.ToList();
 
-            //model.users = context.Users.ToList();
-            //var allRoles = context.Roles.ToList();
-            //var lol = usmen();
-            //model.users = lol.Users.ToList();
             model.users = UserManager.Users.ToList();
-
-
 
             foreach (var x in model.users)
             {
-                UserModelList tymczasowy = new UserModelList();
-                tymczasowy.NazwaRoli = "";
-                tymczasowy.IdRoli = "";
+                UserModelList tymczasowy = new UserModelList
+                {
+                    NazwaRoli = "",
+                    IdRoli = ""
+                };
                 foreach (var UserRole in x.Roles.ToList())
                 {
                     foreach (var m in roles)
                     {
-
                         if (m.Name != "CP")
                         {
                             if (m.Id == UserRole.RoleId)
@@ -290,7 +265,6 @@
                                 tymczasowy.NazwaRoli = m.Name;
                                 tymczasowy.IdRoli = m.Id;
                             }
-
                         }
                     }
                 }
@@ -298,17 +272,17 @@
                 tymczasowy.IdUsera = x.Id;
                 tymczasowy.NazwaUsera = x.UserName;
                 tymczasowy.Email = x.Email;
-                //tymczasowy.Delete = false;
                 model.dane.Add(tymczasowy);
-
-
             }
-
-
-
-
             return View("UM", model);
         }
+
+        /// <summary>
+        /// The UMdeleteUser
+        /// </summary>
+        /// <param name="rola">The <see cref="string"/></param>
+        /// <param name="user">The <see cref="string"/></param>
+        /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
         public async Task<ActionResult> UMdeleteUser(string rola, string user)
         {
@@ -316,14 +290,12 @@
 
             var context = new ApplicationDbContext();
             var DbRoles = context.Roles.ToList();
-            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
             string RoleId = "";
             foreach (var UserRole in appUser.Roles.ToList())
             {
                 foreach (var m in DbRoles)
                 {
-
                     if (m.Name != "CP")
                     {
                         if (m.Id == UserRole.RoleId)
@@ -331,77 +303,62 @@
                             RoleName = m.Name;
                             RoleId = m.Id;
                         }
-
                     }
                 }
             }
-
             await UserManager.RemoveFromRoleAsync(appUser.Id, RoleName);
-            //await UserManager.AddToRoleAsync(appUser.Id, rola);
             await UserManager.DeleteAsync(appUser);
             ViewBag.Info = "User with name " + appUser.UserName + " has been removed permanently.";
-            // UserToEdit user = model.edit;
 
-
-            UM model = new UM();
-            //model.users = new List<ApplicationUser>();
-            model.dane = new List<UserModelList>();
-            //model.users = context.Users.ToList();
-            //var allRoles = context.Roles.ToList();
-            //var lol = usmen();
-            //model.users = lol.Users.ToList();
-            model.users = UserManager.Users.ToList();
-
-
+            UM model = new UM
+            {
+                dane = new List<UserModelList>(),
+                users = UserManager.Users.ToList()
+            };
 
             foreach (var x in model.users)
             {
-                UserModelList tymczasowy = new UserModelList();
-                tymczasowy.NazwaRoli = "";
-                tymczasowy.IdRoli = x.Roles.First().RoleId;
+                UserModelList tymczasowy = new UserModelList
+                {
+                    NazwaRoli = "",
+                    IdRoli = x.Roles.First().RoleId
+                };
+
                 foreach (var m in DbRoles)
                 {
                     if (m.Id == tymczasowy.IdRoli)
                     {
                         tymczasowy.NazwaRoli = m.Name;
                     }
-                }
+                };
 
                 tymczasowy.IdUsera = x.Id;
                 tymczasowy.NazwaUsera = x.UserName;
                 tymczasowy.Email = x.Email;
-                //tymczasowy.Delete = false;
                 model.dane.Add(tymczasowy);
-
-
             }
-
-
-
-
             return View("UM", model);
         }
 
-
-
+        /// <summary>
+        /// The UMedit
+        /// </summary>
+        /// <param name="id">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
         public ActionResult UMedit(string id)
         {
             string IdUsera = "";
             IdUsera = id;
             ApplicationUser user = UserManager.FindById(IdUsera);
-            //await UserManager.RemoveFromRoleAsync(user.Id, user.Roles.First().ToString());
-            //await UserManager.AddToRoleAsync(user.Id, user.);
             var context = new ApplicationDbContext();
             var DbRoles = context.Roles.ToList();
-            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
             string RoleId = "";
             foreach (var UserRole in user.Roles.ToList())
             {
                 foreach (var m in DbRoles)
                 {
-
                     if (m.Name != "CP")
                     {
                         if (m.Id == UserRole.RoleId)
@@ -409,7 +366,6 @@
                             RoleName = m.Name;
                             RoleId = m.Id;
                         }
-
                     }
                 }
             }
@@ -421,37 +377,37 @@
 
             return View("UMedit");
         }
-        
+
+        /// <summary>
+        /// The UMdelete
+        /// </summary>
+        /// <param name="id">The <see cref="string"/></param>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
         public ActionResult UMdelete(string id)
         {
             string IdUsera = "";
             IdUsera = id;
             ApplicationUser appUser = UserManager.FindById(IdUsera);
-            //await UserManager.RemoveFromRoleAsync(user.Id, user.Roles.First().ToString());
-            //await UserManager.AddToRoleAsync(user.Id, user.);
             var context = new ApplicationDbContext();
             var DbRoles = context.Roles.ToList();
-            //string RoleId = appUser.Roles.First().RoleId;
             string RoleName = "";
             string RoleId = "";
             foreach (var UserRole in appUser.Roles.ToList())
             {
                 foreach (var m in DbRoles)
                 {
-                    
+
                     if (m.Name != "CP")
                     {
-                        if(m.Id == UserRole.RoleId)
+                        if (m.Id == UserRole.RoleId)
                         {
-                        RoleName = m.Name;
-                        RoleId = m.Id;
+                            RoleName = m.Name;
+                            RoleId = m.Id;
                         }
-                        
                     }
                 }
             }
-
 
             ViewBag.userId = IdUsera;
             ViewBag.UserName = appUser.UserName;
@@ -460,45 +416,6 @@
             return View("UMdelete");
         }
 
-        
-
-       
-
-
-        //public async Task<ActionResult> UM(UM model)
-        //{
-        //    //if (id == null)
-        //    //{
-        //    //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    //}
-
-        //    model.users = new List<ApplicationUser>();
-        //    model.dane = new List<UserModelList>();
-        //    model.users = UserManager.Users.ToList();
-        //    UserModelList tymczasowy = new UserModelList();
-        //    //string mod;
-        //    //var roleHR = new IdentityRole();
-        //    foreach (var x in model.users)
-        //    {
-        //        tymczasowy.NazwaRoli = UserManager.GetRoles(x.Id).First();
-        //        tymczasowy.IdRoli = "";
-        //        tymczasowy.IdUsera = x.Id;
-        //        tymczasowy.NazwaUsera = x.UserName;
-        //        tymczasowy.Email = x.Email;
-        //        model.dane.Add(tymczasowy);
-        //        //x.Roles.First();
-        //        //UserManager.GetRoles(x.Id).First();
-        //        // model.role.Add(UserManager.GetRoles(x.Id).First());
-        //        //x.Roles.First().RoleId;
-        //        //model.dane.Add();
-
-        //    }
-
-        //    return View(model);
-        //}
-
-
-        //
         // GET: /Account/VerifyCode
         /// <summary>
         /// The VerifyCode
@@ -518,7 +435,6 @@
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        //
         // POST: /Account/VerifyCode
         /// <summary>
         /// The VerifyCode
@@ -553,7 +469,6 @@
             }
         }
 
-        //
         // GET: /Account/Register
         /// <summary>
         /// The Register
@@ -565,7 +480,6 @@
             return View();
         }
 
-        //
         // POST: /Account/Register
         /// <summary>
         /// The Register
@@ -586,24 +500,14 @@
                 {
                     UserManager.AddToRole(UserManager.FindByName(model.Email).Id, model.Role);
                     UserManager.AddToRole(UserManager.FindByName(model.Email).Id, "CP");
-                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
                     return RedirectToAction("UM", "Account");
                 }
                 AddErrors(result);
             }
-
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
         // GET: /Account/ConfirmEmail
         /// <summary>
         /// The ConfirmEmail
@@ -622,7 +526,6 @@
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
-        //
         // GET: /Account/ForgotPassword
         /// <summary>
         /// The ForgotPassword
@@ -634,7 +537,6 @@
             return View();
         }
 
-        //
         // POST: /Account/ForgotPassword
         /// <summary>
         /// The ForgotPassword
@@ -654,20 +556,10 @@
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
-
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
         // GET: /Account/ForgotPasswordConfirmation
         /// <summary>
         /// The ForgotPasswordConfirmation
@@ -679,7 +571,6 @@
             return View();
         }
 
-        //
         // GET: /Account/ResetPassword
         /// <summary>
         /// The ResetPassword
@@ -692,7 +583,6 @@
             return code == null ? View("Error") : View();
         }
 
-        //
         // POST: /Account/ResetPassword
         /// <summary>
         /// The ResetPassword
@@ -723,7 +613,6 @@
             return View();
         }
 
-        //
         // GET: /Account/ResetPasswordConfirmation
         /// <summary>
         /// The ResetPasswordConfirmation
@@ -735,7 +624,6 @@
             return View();
         }
 
-        //
         // POST: /Account/ExternalLogin
         /// <summary>
         /// The ExternalLogin
@@ -752,7 +640,6 @@
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
         // GET: /Account/SendCode
         /// <summary>
         /// The SendCode
@@ -773,7 +660,6 @@
             return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        //
         // POST: /Account/SendCode
         /// <summary>
         /// The SendCode
@@ -798,7 +684,6 @@
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
-        //
         // GET: /Account/ExternalLoginCallback
         /// <summary>
         /// The ExternalLoginCallback
@@ -833,7 +718,6 @@
             }
         }
 
-        //
         // POST: /Account/ExternalLoginConfirmation
         /// <summary>
         /// The ExternalLoginConfirmation
@@ -877,7 +761,6 @@
             return View(model);
         }
 
-        //
         // POST: /Account/LogOff
         /// <summary>
         /// The LogOff
@@ -891,7 +774,6 @@
             return RedirectToAction("Index", "Home");
         }
 
-        //
         // GET: /Account/ExternalLoginFailure
         /// <summary>
         /// The ExternalLoginFailure
@@ -923,12 +805,9 @@
                     _signInManager = null;
                 }
             }
-
             base.Dispose(disposing);
         }
 
-        // Used for XSRF protection when adding external logins
-        // Used for XSRF protection when adding external logins        /// <summary>
         /// Defines the XsrfKey
         /// </summary>
         private const string XsrfKey = "XsrfId";
