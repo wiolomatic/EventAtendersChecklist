@@ -208,7 +208,6 @@
     <Compile Include="Controllers\ActionDictionariesController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\eacContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -226,6 +225,7 @@
     <Compile Include="Migrations\eacContext\Configuration.cs" />
     <Compile Include="ModelsView\AddActionToEventViewModel.cs" />
     <Compile Include="ModelsView\AddEmployeeToEventViewModel.cs" />
+    <Compile Include="ModelsView\EmployeeInEventView.cs" />
     <Compile Include="ModelsView\EmployeeToDatabase.cs" />
     <Compile Include="ModelsView\ListOfAttendeesFromExcel.cs" />
     <Compile Include="ModelsView\ListOfAttendeesWithActions.cs" />
@@ -238,6 +238,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleAuthorizeAttribute.cs" />
     <Compile Include="SignalR\SignalRHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -378,7 +379,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -429,7 +429,6 @@
     <Content Include="Views\Employees\AddToEvent.cshtml" />
     <Content Include="Views\ActionDictionaries\AddActionToEvent.cshtml" />
     <Content Include="Views\Events\ImportExcelFile.cshtml" />
-    <Content Include="Views\Events\ReadExcel.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Account\UM.cshtml" />
@@ -442,6 +441,9 @@
     <Content Include="Views\Shared\_ChangePass.cshtml" />
     <Content Include="Views\Account\UMeditCP.cshtml" />
     <Content Include="Views\Shared\_LayoutTemp.cshtml" />
+    <Content Include="Views\Events\_EventsGrid.cshtml" />
+    <Content Include="Views\Events\ShowHistory.cshtml" />
+    <Content Include="Views\Events\_EventsHistoryGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

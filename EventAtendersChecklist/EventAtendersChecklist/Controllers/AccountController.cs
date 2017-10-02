@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Security;
     using static EventAtendersChecklist.Controllers.ManageController;
 
     /// <summary>
@@ -83,6 +84,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -100,6 +102,7 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -139,6 +142,7 @@
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult UM()
         {
             UM model = new UM
@@ -178,7 +182,6 @@
             }
             return View(model);
         }
-
         /// <summary>
         /// The UMeditCP
         /// </summary>
@@ -209,6 +212,7 @@
         /// <param name="user">The <see cref="string"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> UMeditrole(string rola, string user)
         {
             ApplicationUser appUser = UserManager.FindById(user);
@@ -244,9 +248,7 @@
             };
 
             var roles = context.Roles.ToList();
-
             model.users = UserManager.Users.ToList();
-
             foreach (var x in model.users)
             {
                 UserModelList tymczasowy = new UserModelList
@@ -284,6 +286,7 @@
         /// <param name="user">The <see cref="string"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> UMdeleteUser(string rola, string user)
         {
             ApplicationUser appUser = UserManager.FindById(user);
@@ -309,13 +312,11 @@
             await UserManager.RemoveFromRoleAsync(appUser.Id, RoleName);
             await UserManager.DeleteAsync(appUser);
             ViewBag.Info = "User with name " + appUser.UserName + " has been removed permanently.";
-
             UM model = new UM
             {
                 dane = new List<UserModelList>(),
                 users = UserManager.Users.ToList()
             };
-
             foreach (var x in model.users)
             {
                 UserModelList tymczasowy = new UserModelList
@@ -346,6 +347,7 @@
         /// <param name="id">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult UMedit(string id)
         {
             string IdUsera = "";
@@ -384,6 +386,7 @@
         /// <param name="id">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult UMdelete(string id)
         {
             string IdUsera = "";
@@ -475,6 +478,7 @@
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Register()
         {
             return View();
@@ -565,7 +569,7 @@
         /// The ForgotPasswordConfirmation
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
@@ -577,7 +581,7 @@
         /// </summary>
         /// <param name="code">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ResetPassword(string code)
         {
             return code == null ? View("Error") : View();
@@ -590,7 +594,7 @@
         /// <param name="model">The <see cref="ResetPasswordViewModel"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -618,7 +622,7 @@
         /// The ResetPasswordConfirmation
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
@@ -632,7 +636,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
@@ -647,7 +651,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <param name="rememberMe">The <see cref="bool"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
@@ -667,7 +671,7 @@
         /// <param name="model">The <see cref="SendCodeViewModel"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendCode(SendCodeViewModel model)
         {
@@ -726,7 +730,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
         {
@@ -771,7 +775,7 @@
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         // GET: /Account/ExternalLoginFailure
@@ -846,7 +850,7 @@
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Events");
         }
 
         /// <summary>

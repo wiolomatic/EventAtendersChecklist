@@ -12,7 +12,7 @@
                 .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending); ;
     collumn.Add(x => x.EndDate).Titled("End Date").Sortable(true).Filterable(true);
     collumn.Add().Sanitized(false).Encoded(false)
-                .RenderValueAs(model => Html.ActionLink("Show", "Show", new { id = model.Id }, new { @class = "btn btn-info" }).ToHtmlString());
+                .RenderValueAs(model => Html.ActionLink("Show", "ShowHistory", new { id = model.Id }, new { @class = "btn btn-info" }).ToHtmlString());
     collumn.Add().Sanitized(false).Encoded(false)
                 .RenderValueAs(model => Html.ActionLink("Delete", "Delete", new { id = model.Id }, new { @class = "btn btn-danger" }).ToHtmlString());
 }).WithPaging(10)

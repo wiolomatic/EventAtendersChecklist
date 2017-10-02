@@ -11,11 +11,16 @@
     using System.Configuration;
     using System.Data.SqlClient;
     using EventAtendersChecklist.SignalR;
+    using System.Data.Entity.Validation;
+    using System.Data.Entity.Infrastructure;
+    using System.Diagnostics;
 
 
     /// <summary>
     /// Defines the <see cref="EmployeesController" />
     /// </summary>
+    [Authorize]
+    [RoleAuthorize(Roles = "HR")]
     public class EmployeesController : Controller
     {
         /// <summary>
@@ -112,6 +117,7 @@
                 EventId = id,
                 _employee = new Employee()
             };
+
             if (employee == null)
             {
                 return HttpNotFound();
@@ -131,19 +137,45 @@
             if (ModelState.IsValid)
             {
                 var eventId = employee.EventId;
-                db.Employees.Add(new Employee
+                if (db.Employees.Where(x => x.Email.Equals(employee._employee.Email)).Count() == 0)
                 {
-                    FirstName = employee._employee.FirstName,
-                    LastName = employee._employee.LastName,
-                    Email = employee._employee.Email
-                });
-                db.SaveChanges();
+                    db.Employees.Add(new Employee
+                    {
+                        FirstName = employee._employee.FirstName,
+                        LastName = employee._employee.LastName,
+                        Email = employee._employee.Email
+                    });
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (DbEntityValidationResult item in ex.EntityValidationErrors)
+                        {
+                            // Get entry
+
+                            DbEntityEntry entry = item.Entry;
+                            string entityTypeName = entry.Entity.GetType().Name;
+
+                            // Display or log error messages
+
+                            foreach (DbValidationError subItem in item.ValidationErrors)
+                            {
+                                string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                         subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                Debug.Fail(message);
+                            }
+                        }
+                    }
+                }
+                
                 var id = db.Employees.Where(x => x.Email == employee._employee.Email)
                     .Select(x => x.Id)
                     .ToList()
                     .First();
 
-                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == id).Count() == 0)
+                if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == id & x.EventId == eventId).Count() == 0)
                 {
                     var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
                     foreach (var item in actionsInEvent)
@@ -155,7 +187,29 @@
                             ActionDictionaryId = item.ActionDictionaryId,
                             ActionValue = false
                         });
-                        db.SaveChanges();
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (DbEntityValidationException ex)
+                        {
+                            foreach (DbEntityValidationResult item2 in ex.EntityValidationErrors)
+                            {
+                                // Get entry
+
+                                DbEntityEntry entry = item2.Entry;
+                                string entityTypeName = entry.Entity.GetType().Name;
+
+                                // Display or log error messages
+
+                                foreach (DbValidationError subItem in item2.ValidationErrors)
+                                {
+                                    string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                             subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                    Debug.Fail(message);
+                                }
+                            }
+                        }
                     }
                 }
                 return RedirectToAction("Show", "Events", new { id = employee.EventId });
