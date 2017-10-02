@@ -82,6 +82,7 @@
         /// <param name="returnUrl">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [AllowAnonymous]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -99,6 +100,7 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -138,6 +140,7 @@
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult UM()
         {
             UM model = new UM();
@@ -183,6 +186,7 @@
         /// <param name="user">The <see cref="string"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> UMeditrole(string rola, string user)
         {
             ApplicationUser appUser = UserManager.FindById(user);
@@ -244,6 +248,7 @@
         /// <param name="user">The <see cref="string"/></param>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> UMdeleteUser(string rola, string user)
         {
             ApplicationUser appUser = UserManager.FindById(user);
@@ -305,6 +310,7 @@
         /// <param name="id">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult UMedit(string id)
         {
             string IdUsera = "";
@@ -339,6 +345,7 @@
         /// <param name="id">The <see cref="string"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult UMdelete(string id)
         {
             string IdUsera = "";
@@ -461,6 +468,7 @@
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
         [Authorize(Roles = "HR")]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Register()
         {
             return View();
