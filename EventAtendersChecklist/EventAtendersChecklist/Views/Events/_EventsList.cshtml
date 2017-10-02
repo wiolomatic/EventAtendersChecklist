@@ -1,14 +1,21 @@
 ﻿@model IEnumerable<EventAtendersChecklist.Models.Event>
 @using GridMvc.Html;
 
-<h2>Index</h2>
-@if (User.IsInRole("HR"))
+@if (!User.IsInRole("CP"))
 {
+<h2>Index</h2>
+}
+
+@if (User.IsInRole("HR") && (!User.IsInRole("CP")))
+{
+
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
 </p>
 }
 
+@if (!User.IsInRole("CP"))
+{
 @Html.Grid(Model).Columns(collumn =>
 {
     collumn.Add(x => x.Id, true);
@@ -28,4 +35,6 @@
                     .RenderValueAs(model => Html.ActionLink("Delete", "Delete", new { id = model.Id }, new { @class = "btn btn-danger" }).ToHtmlString());
     }
 }).WithPaging(10)
+}
+
 
