@@ -12,6 +12,7 @@
     /// Defines the <see cref="ActionDictionariesController" />
     /// </summary>
     [Authorize]
+    [RoleAuthorize(Roles = "HR")]
     public class ActionDictionariesController : Controller
     {
         /// <summary>
