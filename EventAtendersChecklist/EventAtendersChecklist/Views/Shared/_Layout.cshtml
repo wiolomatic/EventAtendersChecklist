@@ -40,8 +40,8 @@
             {
                 <div style="text-align:center;">
                     <h3>Your password is temporary. Do you want to change it?</h3>
-                    <tr>@Html.ActionLink("No", "UMeditCP", "Account", new { @class = "btn btn-success" })</tr>
-                    <tr>@Html.ActionLink("Change Password", "ChangePassword", "Manage", new { @class = "btn btn-danger" })</tr>
+                    @Html.ActionLink("No", "UMeditCP", "Account", null ,new { @class = "btn btn-success" })
+                    @Html.ActionLink("Change Password", "ChangePassword", "Manage", null, new { @class = "btn btn-danger" })
                 </div>
             }
         }

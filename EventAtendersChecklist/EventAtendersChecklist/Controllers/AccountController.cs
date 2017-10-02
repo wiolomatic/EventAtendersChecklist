@@ -241,7 +241,6 @@
             await UserManager.AddToRoleAsync(appUser.Id, rola);
             ViewBag.Info = "User with name " + appUser.UserName + " has now new role: " + rola;
 
-
             UM model = new UM
             {
                 dane = new List<UserModelList>()
