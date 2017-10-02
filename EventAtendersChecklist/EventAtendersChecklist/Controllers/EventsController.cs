@@ -10,7 +10,10 @@
     using System.Configuration;
     using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Validation;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -673,7 +676,29 @@
                     {
                         Name = name
                     });
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
+                        {
+                            // Get entry
+
+                            DbEntityEntry entry = entityValidationError.Entry;
+                            string entityTypeName = entry.Entity.GetType().Name;
+
+                            // Display or log error messages
+
+                            foreach (DbValidationError subItem in entityValidationError.ValidationErrors)
+                            {
+                                string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                         subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                Debug.Fail(message);
+                            }
+                        }
+                    }
                 }
 
                 //Get Action Id from Database
@@ -690,7 +715,29 @@
                         EventId = eventId,
                         ActionDictionaryId = actionId
                     });
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
+                        {
+                            // Get entry
+
+                            DbEntityEntry entry = entityValidationError.Entry;
+                            string entityTypeName = entry.Entity.GetType().Name;
+
+                            // Display or log error messages
+
+                            foreach (DbValidationError subItem in entityValidationError.ValidationErrors)
+                            {
+                                string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                         subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                Debug.Fail(message);
+                            }
+                        }
+                    }
                 }
 
                 // Take all attendees from db in event
@@ -708,7 +755,29 @@
                         ActionDictionaryId = actionId,
                         ActionValue = false
                     });
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
+                        {
+                            // Get entry
+
+                            DbEntityEntry entry = entityValidationError.Entry;
+                            string entityTypeName = entry.Entity.GetType().Name;
+
+                            // Display or log error messages
+
+                            foreach (DbValidationError subItem in entityValidationError.ValidationErrors)
+                            {
+                                string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                         subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                Debug.Fail(message);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -725,7 +794,29 @@
                         LastName = item.LastName,
                         Email = item.Email
                     });
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
+                        {
+                            // Get entry
+
+                            DbEntityEntry entry = entityValidationError.Entry;
+                            string entityTypeName = entry.Entity.GetType().Name;
+
+                            // Display or log error messages
+
+                            foreach (DbValidationError subItem in entityValidationError.ValidationErrors)
+                            {
+                                string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                         subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                Debug.Fail(message);
+                            }
+                        }
+                    }
                 }
 
                 // Take id of specified emp from db, there should be only 1 emp with that email
@@ -750,7 +841,29 @@
                             ActionDictionaryId = actionInEvent.ActionDictionaryId,
                             ActionValue = false
                         });
-                        db.SaveChanges();
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (DbEntityValidationException ex)
+                        {
+                            foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
+                            {
+                                // Get entry
+
+                                DbEntityEntry entry = entityValidationError.Entry;
+                                string entityTypeName = entry.Entity.GetType().Name;
+
+                                // Display or log error messages
+
+                                foreach (DbValidationError subItem in entityValidationError.ValidationErrors)
+                                {
+                                    string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                             subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                    Debug.Fail(message);
+                                }
+                            }
+                        }
                     }
                 }
             }
