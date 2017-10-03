@@ -895,7 +895,7 @@
         {
             string alphabet = "abcdefghijklmnopqrstuvwxyz";
             var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
+                .Where(x => x.EventId == id).GroupBy(x => x.EmployeeId).Select(x => x.FirstOrDefault()).ToList();
 
             var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                 .Where(x => x.EventId == id).ToList();
