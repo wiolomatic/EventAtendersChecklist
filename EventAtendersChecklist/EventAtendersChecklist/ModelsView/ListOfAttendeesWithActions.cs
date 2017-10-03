@@ -9,7 +9,11 @@
     /// </summary>
     public class ListOfAttendeesWithActions
     {
+        /// <summary>
+        /// Gets or sets the EventId
+        /// </summary>
         public int? EventId { get; set; }
+
         /// Gets or sets the ActionDictionaryList
         /// </summary>
         public IEnumerable<ActionDictionary> ActionDictionaryList { get; set; }
@@ -57,6 +61,11 @@
         /// Gets or sets the Actions
         /// </summary>
         public IEnumerable<ActionValue> Actions { get; set; }
+
+        /// <summary>
+        /// Defines the IsSearched
+        /// </summary>
+        public bool IsSearched = true;
     }
 
     /// <summary>

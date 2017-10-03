@@ -33,9 +33,9 @@
         .Sanitized(false)
         .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
                                      onclick="DeleteEmployee(@Model.EventId, @o.AttenderId)"></button>);
-                                    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
-                                    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
-                                    columns.Add(x => x.Email).Titled("Email").Sortable(true);
+    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
+    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
+    columns.Add(x => x.Email).Titled("Email").Sortable(true);
     foreach (var item in Model.ActionDictionaryList)
     {
         columns.Add()
@@ -47,7 +47,7 @@
                         .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)" }))
             .Sortable(true);
     }
-}).WithPaging(10).WithMultipleFilters()
+}).SetRowCssClasses(item => item.IsSearched ? "Search" : "Search")
 
 <p>
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
@@ -84,6 +84,29 @@
                 dataType: 'html'
             }).success(function (result) {
                 $("#partialContent").empty().append(result);
+                $("#filter").text(function () {
+
+                    // Retrieve the input field text and reset the count to zero
+                    var filter = $(this).val(), count = 0;
+
+                    // Loop through the comment list
+                    $(".Search").each(function () {
+
+                        // If the list item does not contain the text phrase fade it out
+                        if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                            $(this).hide();
+
+                            // Show the list item if the phrase matches and increase the count by 1
+                        } else {
+                            $(this).show();
+                            count++;
+                        }
+                    });
+
+                    // Update the count
+                    var numberItems = count;
+                    $("#filter-count").text("Number of Attendees = " + count);
+                });
             }).error(function () {
 
             });
@@ -123,3 +146,30 @@
         }
 
     </script>
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#filter").keyup(function () {
+
+                // Retrieve the input field text and reset the count to zero
+                var filter = $(this).val(), count = 0;
+
+                // Loop through the comment list
+                $(".Search").each(function () {
+
+                    // If the list item does not contain the text phrase fade it out
+                    if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                        $(this).fadeOut();
+
+                        // Show the list item if the phrase matches and increase the count by 1
+                    } else {
+                        $(this).show();
+                        count++;
+                    }
+                });
+
+                // Update the count
+                var numberItems = count;
+                $("#filter-count").text("Number of Attendees = " + count);
+            });
+        });
+</script>
