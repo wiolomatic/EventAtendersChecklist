@@ -154,30 +154,33 @@
 
             foreach (var x in model.users)
             {
-                UserModelList tymczasowy = new UserModelList
-                {
-                    NazwaRoli = "",
-                    IdRoli = ""
-                };
-                foreach (var UserRole in x.Roles.ToList())
-                {
-                    foreach (var m in roles)
+                
+                    
+                    UserModelList tymczasowy = new UserModelList
                     {
-
-                        if (m.Name != "CP")
+                        NazwaRoli = "",
+                        IdRoli = ""
+                    };
+                    foreach (var UserRole in x.Roles.ToList())
+                    {
+                        foreach (var m in roles)
                         {
-                            if (m.Id == UserRole.RoleId)
+
+                            if (m.Name != "CP")
                             {
-                                tymczasowy.NazwaRoli = m.Name;
-                                tymczasowy.IdRoli = m.Id;
+                                if (m.Id == UserRole.RoleId)
+                                {
+                                    tymczasowy.NazwaRoli = m.Name;
+                                    tymczasowy.IdRoli = m.Id;
+                                }
                             }
                         }
                     }
-                }
-                tymczasowy.IdUsera = x.Id;
-                tymczasowy.NazwaUsera = x.UserName;
-                tymczasowy.Email = x.Email;
-                model.dane.Add(tymczasowy);
+                    tymczasowy.IdUsera = x.Id;
+                    tymczasowy.NazwaUsera = x.UserName;
+                    tymczasowy.Email = x.Email;
+                    model.dane.Add(tymczasowy);
+                
             }
             return View(model);
         }
@@ -185,7 +188,7 @@
         /// The UMeditCP
         /// </summary>
         /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [RoleAuthorize(Roles = "HR")]
+        //[RoleAuthorize(Roles = "HR")]
         public async Task<ActionResult> UMeditCP()
         {
             string AppUser = User.Identity.GetUserName();
@@ -200,7 +203,7 @@
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Index", "Events");
+                return RedirectToAction("UMeditCP", "Account");
             }
             return View();
         }

@@ -17,10 +17,12 @@
 <table>
     @foreach (var x in @Model.dane)
     {
-        if (!User.Identity.GetUserName().Contains(x.NazwaUsera))
+        if (x.Email != "admin@admin.com")
         {
+            if (!User.Identity.GetUserName().Contains(x.NazwaUsera))
+            {
 
-            Model.edit = Model.editUser(x.IdUsera, x.NazwaUsera);
+                Model.edit = Model.editUser(x.IdUsera, x.NazwaUsera);
             <tr>
                 <th style="padding: 10px">
                     @x.NazwaUsera
@@ -36,6 +38,11 @@
                     @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.IdUsera }, new { @class = "btn btn-success" })
                 </th>
             </tr>
+            }
+        }
+        else
+        {
+            continue;
         }
     }
 
