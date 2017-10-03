@@ -4,13 +4,6 @@
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
 </p>
 
-<form id="live-search" action="" class="styled" method="post">
-    <fieldset>
-        <input type="text" class="text-input" id="filter" value="" />
-        <span id="filter-count"></span>
-    </fieldset>
-</form>
-
 <table class="table">
     <tr>
         <th>
@@ -59,7 +52,7 @@
 
                     // If the list item does not contain the text phrase fade it out
                     if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                        $(this).fadeOut();
+                        $(this).hide();
 
                         // Show the list item if the phrase matches and increase the count by 1
                     } else {

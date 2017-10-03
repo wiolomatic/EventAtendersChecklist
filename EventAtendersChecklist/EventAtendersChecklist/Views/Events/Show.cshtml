@@ -1,3 +1,11 @@
-﻿<div id="partialContent">
+﻿
+<form id="live-search" action="" class="styled" method="post">
+    <fieldset>
+        <input type="text" class="text-input" id="filter" value="" />
+        <span id="filter-count"></span>
+    </fieldset>
+</form>
+
+<div id="partialContent">
     @Html.Action("GetEventGrid", "Events", new { id = @ViewBag.id})
 </div>
