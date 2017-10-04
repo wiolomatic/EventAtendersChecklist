@@ -6,7 +6,6 @@
 }
 
 <div>
-    <h4>Show event list</h4>
     <hr />
     @if (User.Identity.IsAuthenticated)
     {
@@ -27,6 +26,7 @@
     }
 </div>
 
+<h4 style="padding: 20px 0 20px 0">Show Event list</h4>
 
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
@@ -150,8 +150,8 @@
     </script>
 <script type="text/javascript">
         $(document).ready(function () {
-            $("#filter").keyup(function () {
-
+            $("#filter").keyup(function (e) {
+                
                 // Retrieve the input field text and reset the count to zero
                 var filter = $(this).val(), count = 0;
 

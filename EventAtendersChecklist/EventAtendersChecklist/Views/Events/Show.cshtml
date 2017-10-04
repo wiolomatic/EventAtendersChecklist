@@ -1,8 +1,11 @@
 ﻿
-<form id="live-search" action="" class="styled" method="post">
+<form id="live-search">
     <fieldset>
-        <input type="text" class="text-input" id="filter" value="" />
-        <span id="filter-count"></span>
+        <div style="padding: 20px 0 20px 0">
+            <h5>Search:</h5>
+            <input type="text" class="text-input" id="filter" value="" onkeydown="if (event.keyCode == 13) return false;" />
+            <span id="filter-count"></span>
+        </div>
     </fieldset>
 </form>
 
