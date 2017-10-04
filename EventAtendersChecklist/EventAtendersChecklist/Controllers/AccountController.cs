@@ -86,6 +86,10 @@
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Events");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
