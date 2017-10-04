@@ -16,10 +16,12 @@
                 @Html.ActionLink("Add New Attendee", "AddToEvent", "Employees", new { id = Model.EventId }, new { @class = "btn btn-success" })
                 @Html.ActionLink("Add New Action", "AddActionToEvent", "ActionDictionaries", new { id = Model.EventId }, new { @class = "btn btn-success" })
                 @Html.ActionLink("Import from excel", "ImportExcelFile", "Events", new { id = Model.EventId }, new { @class = "btn btn-success" })
-                @if (Model != null)
-                {
-                    @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
-                }
+                   if (Model != null)
+                   {
+                    
+                       @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
+                   }
+                
             </p>
         }
     }
