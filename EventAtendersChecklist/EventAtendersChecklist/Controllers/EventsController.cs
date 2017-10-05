@@ -903,7 +903,10 @@
             var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == id)
                .Select(x => x.ActionDictionary).ToList();
-
+            
+            var eventList = db.Events.Where(x => x.Id == id).ToList();
+            var eventName = eventList[0].Name;
+            
             var list = new ListOfAttendeesWithActions()
             {
                 EventId = id,
@@ -929,7 +932,7 @@
             ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Report");
 
             ws.Cells["A2"].Value = "Report";
-            ws.Cells["B2"].Value = "Report1";
+            ws.Cells["B2"].Value = eventName;
 
             ws.Cells["A3"].Value = "Data";
             ws.Cells["B3"].Value = string.Format("{0:dd MMMM yyyy} at {0:H: mm tt}", DateTimeOffset.Now);
@@ -972,7 +975,7 @@
                 ws.Cells["A:AZ"].AutoFitColumns();
                 Response.Clear();
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment: filename=" + "ExcelReport.xlsx");
+                Response.AddHeader("content-disposition", "attachment;filename=" + String.Format(eventName+".xlsx"));
                 Response.BinaryWrite(pck.GetAsByteArray());
                 Response.End();
             }
