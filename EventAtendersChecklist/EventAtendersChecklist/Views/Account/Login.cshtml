@@ -3,6 +3,21 @@
 @{
     ViewBag.Title = "Log in";
 }
+
+<h1 align="center">Event Attendees Checklist</h1>
+
+<head>
+    <style>
+        body {
+            background-image: url("/Content/images/logo.png");
+            background-repeat: no-repeat;
+            background-position: top right;
+            background-position-y: 60px;
+            background-size: 150px;
+        }
+    </style>
+</head>
+
 <style>
     #loginForm {
         width: 400px;
@@ -13,7 +28,7 @@
 <div class="row">
     <div>
         <section id="loginForm">
-            <h2>@ViewBag.Title.</h2>
+            <h2 align="center">Please Log in</h2>
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
