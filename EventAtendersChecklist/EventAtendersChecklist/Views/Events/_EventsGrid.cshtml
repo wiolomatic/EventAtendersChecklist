@@ -17,7 +17,7 @@
                 @if (!Request.Browser.IsMobileDevice)
                 {
                 @Html.ActionLink("Import from excel", "ImportExcelFile", "Events", new { id = Model.EventId }, new { @class = "btn btn-success" })
-                    if (Model != null)
+                   @if (Model != null)
                     {
 
                        @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
