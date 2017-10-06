@@ -253,77 +253,38 @@
             }
             else
             {
-                string query = "SELECT " +
-                "EmployeeEventAssignments.EventId, " +
-                "EmployeeEventAssignments.EmployeeId, " +
-                "Employees.FirstName, " +
-                "Employees.LastName, " +
-                "Employees.Email, " +
-                "ActionDictionaries.Name, " +
-                "EmployeeEventAssignments.ActionValue, " +
-                "EmployeeEventAssignments.ActionDictionaryId " +
-                "FROM [EmployeeEventAssignments] " +
-                "JOIN [Events] " +
-                "ON Events.Id = EmployeeEventAssignments.EventId " +
-                "JOIN [Employees] " +
-                "ON EmployeeEventAssignments.EmployeeId = Employees.Id " +
-                "JOIN [ActionDictionaries] ON EmployeeEventAssignments.ActionDictionaryId = ActionDictionaries.Id " +
-                "WHERE Events.Id = @ID";
                 string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
                 using (SqlConnection sqlcon = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand sqlcom = new SqlCommand("SELECT [ActionDictionaryId], [ActionValue], [EmployeeId], [EventId] FROM dbo.EmployeeEventAssignments WHERE EventId = 1", sqlcon))
+                    using (SqlCommand sqlcom = new SqlCommand("SELECT [ActionDictionaryId], [ActionValue], [EmployeeId], [EventId] FROM dbo.EmployeeEventAssignments WHERE EventId = @ID", sqlcon))
                     {
                         sqlcon.Open();
                         sqlcom.CommandType = CommandType.Text;
-                        //sqlcom.Parameters.AddWithValue("@ID", id);
+                        sqlcom.Parameters.AddWithValue("@ID", id);
                         sqlcom.Notification = null;
                         SqlDependency dependancy = new SqlDependency(sqlcom);
                         dependancy.OnChange += dependancy_OnChange;
                         var reader = sqlcom.ExecuteReader();
                         if (reader.HasRows)
                         {
-                            /*var eventsSql = reader.Cast<IDataRecord>().
-                                Select(eventAttender => new EmployeeInEventView()
-                                {
-                                    EventID = eventAttender.GetInt32(0),
-                                    EmployeeId = eventAttender.GetInt32(1),
-                                    FirtName = eventAttender.GetString(2),
-                                    LastName = eventAttender.GetString(3),
-                                    Email = eventAttender.GetString(4),
-                                    ActionDictionaryId = eventAttender.GetInt32(7),
-                                    ActionName = eventAttender.GetString(5),
-                                    ActionValue = eventAttender.GetBoolean(6)
-                                }).ToList();*/
-
-                            var eventsSql = reader.Cast<IDataRecord>().
-                               Select(eventAttender => new Models.EmployeeEventAssignment()
-                               {
-                                   ActionDictionaryId = eventAttender.GetInt32(0),
-                                   ActionValue = eventAttender.GetBoolean(1),
-                                   EmployeeId = eventAttender.GetInt32(2),
-                                   EventId = eventAttender.GetInt32(3)
-                               }).ToList();
-
-                            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                            var ourEvent = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                             .Where(x => x.EventId == id).ToList();
                             
 
                             var events = new ListOfAttendeesWithActions()
                             {
-                                ActionDictionaryList = eventsSql.Select(x => new ActionDictionary()
+                                ActionDictionaryList = ourEvent.Select(x => new ActionDictionary()
                                 {
                                     Id = x.ActionDictionaryId,
-                                    //Name = x.ActionName
                                 }).GroupBy(x => x.Id).Select(x => x.First()).ToList(),
-                                EventId = eventsSql.First().EventId,
-                                EventAttenderList = eventsSql.Select(x => new EventAttender()
+                                EventId = ourEvent.First().EventId,
+                                EventAttenderList = ourEvent.Select(x => new EventAttender()
                                 {
-                                    AttenderId = x.EmployeeId,
-                                    //FirstName = x.FirtName,
-                                    //LastName = x.LastName,
-                                    //Email = x.Email,
-                                    Actions = actions.Where(z => z.EmployeeId == x.EmployeeId)
+                                    AttenderId = x.Employee.Id,
+                                    FirstName = x.Employee.FirstName,
+                                    LastName = x.Employee.LastName,
+                                    Email = x.Employee.Email,
+                                    Actions = ourEvent.Where(z => z.EmployeeId == x.EmployeeId)
                                         .Select(y => new ActionValue()
                                         {
                                             ActionId = y.ActionDictionaryId,
