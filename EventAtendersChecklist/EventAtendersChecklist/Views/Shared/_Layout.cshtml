@@ -45,12 +45,14 @@
                 </div>
             }
         }
+        
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Event Attendees Checklist Application</p>
         </footer>
     </div>
+    <img src="/Content/images/logo.png" height=100 style="position:fixed;bottom:0px;left:0px;z-index:999; opacity: 0.2; filter: alpha(opacity=50);" />
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
