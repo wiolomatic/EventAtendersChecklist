@@ -13,6 +13,7 @@
     @Html.Action("GetEventGrid", "Events", new { id = @ViewBag.id})
 </div>
 
+@section scripts{
 <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script type="text/javascript">
@@ -106,3 +107,4 @@
         }
 
 </script>
+}

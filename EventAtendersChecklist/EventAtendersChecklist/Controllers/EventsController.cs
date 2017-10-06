@@ -627,8 +627,8 @@
                     sqlcom.Parameters.AddWithValue("@ActionDicationaryID", ActionID);
                     sqlcom.Parameters.AddWithValue("@EventID", EventId);
                     sqlcom.Notification = null;
-                    SqlDependency dependancy = new SqlDependency(sqlcom);
-                    dependancy.OnChange += dependancy_OnChange;
+                    //SqlDependency dependancy = new SqlDependency(sqlcom);
+                    //dependancy.OnChange += dependancy_OnChange;
                     sqlcom.ExecuteReader();
                     result = true;
                 }
