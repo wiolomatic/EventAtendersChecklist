@@ -579,9 +579,6 @@
             {
                 if (i.ActionDictionaryId == ActionID && i.EmployeeId == EmployeeId && i.EventId == EventId)
                 {
-                    i.ActionValue = value;
-                    //SqlDependency dependancy = new SqlDependency(sqlcom);
-                    //dependancy.OnChange += dependancy_OnChange;
                 }
             }
             await db.SaveChangesAsync();
