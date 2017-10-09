@@ -18,6 +18,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
 
@@ -596,7 +597,7 @@
         /// <param name="EmployeeId">The <see cref="int"/></param>
         /// <param name="EventId">The <see cref="int"/></param>
         /// <returns>The <see cref="JsonResult"/></returns>
-        public JsonResult ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
+        public async Task<JsonResult> ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
         {
             var result = false;
 
@@ -607,7 +608,7 @@
                     i.ActionValue = value;
                 }
             }
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             result = true;
 
             return Json(result, JsonRequestBehavior.AllowGet);
