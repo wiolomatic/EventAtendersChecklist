@@ -3,7 +3,7 @@
 
 @if (!User.IsInRole("CP"))
 {
-<h2>Index</h2>
+<h2>Events</h2>
 }
 
 @if (User.IsInRole("HR") && (!User.IsInRole("CP")))
@@ -19,10 +19,10 @@
 @Html.Grid(Model).Columns(collumn =>
 {
     collumn.Add(x => x.Id, true);
-    collumn.Add(x => x.Name).Titled("Event").Sortable(true);
-    collumn.Add(x => x.StartDate).Titled("Start Date").Sortable(true)
-                .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending); ;
-    collumn.Add(x => x.EndDate).Titled("End Date").Sortable(true).Filterable(true);
+    collumn.Add(x => x.Name).Titled("Event");
+    collumn.Add(x => x.StartDate).Titled("Start Date")
+                .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending); 
+    collumn.Add(x => x.EndDate).Titled("End Date");
     collumn.Add().Sanitized(false).Encoded(false)
             .RenderValueAs(model => Html.ActionLink("Show", "Show", new { id = model.Id }, new { @class = "btn btn-info" }).ToHtmlString());
     if (User.IsInRole("HR"))

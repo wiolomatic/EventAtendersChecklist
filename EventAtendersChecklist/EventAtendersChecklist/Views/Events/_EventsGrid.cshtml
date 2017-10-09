@@ -28,8 +28,6 @@
     }
 </div>
 
-<h4 style="padding: 20px 0 20px 0">Show Event list</h4>
-
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
     if (User.IsInRole("HR"))
@@ -40,9 +38,9 @@
     .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
                                      onclick="DeleteEmployee(@Model.EventId, @o.AttenderId)"></button>);
     }
-    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
-    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
-    columns.Add(x => x.Email).Titled("Email").Sortable(true);
+    columns.Add(x => x.FirstName).Titled("First Name");
+    columns.Add(x => x.LastName).Titled("Last Name");
+    columns.Add(x => x.Email).Titled("Email");
     foreach (var item in Model.ActionDictionaryList)
     {
         columns.Add()
@@ -123,8 +121,8 @@
                 });
 
                 // Update the count
-                var numberItems = count;
-                $("#filter-count").text("Number of Attendees = " + count);
+                //var numberItems = count;
+                //$("#filter-count").text("Number of Attendees = " + count);
             });
         });
 </script>
