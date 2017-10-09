@@ -22,24 +22,15 @@
 
             // Create a function that the hub can call to broadcast messages.
             notification.client.notifyChanges = function () {
-                //getEvents();
             };
             window.setInterval("getEvents()", 2000);
 
             // Start the connection.
             $.connection.hub.start().done(function () {
-                //getEvents();
                 AsertClick();
             }).fail(function (e) {
             });
     });
-
-       // function() {
-        //    getEvents();
-         //   window.setInterval("loadPartialView()", 3000);
-        //});
-
-
         function getEvents() {
             $.ajax({
                 url: '/Events/GetEventGrid',

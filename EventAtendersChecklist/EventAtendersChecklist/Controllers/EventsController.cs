@@ -276,7 +276,10 @@
                                 ActionDictionaryList = ourEvent.Select(x => new ActionDictionary()
                                 {
                                     Id = x.ActionDictionaryId,
-                                }).GroupBy(x => x.Id).Select(x => x.First()).ToList(),
+                                    Name = x.ActionDictionary.Name
+                                }).GroupBy(x => x.Id)
+                                    .Select(x => x.First())
+                                    .ToList(),
                                 EventId = ourEvent.First().EventId,
                                 EventAttenderList = ourEvent.Select(x => new EventAttender()
                                 {
