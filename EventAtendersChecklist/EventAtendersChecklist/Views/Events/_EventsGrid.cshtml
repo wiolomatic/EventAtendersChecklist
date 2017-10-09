@@ -27,8 +27,6 @@
     }
 </div>
 
-<h4 style="padding: 20px 0 20px 0">Show Event list</h4>
-
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
     if (User.IsInRole("HR"))
@@ -121,8 +119,8 @@
                 });
 
                 // Update the count
-                var numberItems = count;
-                $("#filter-count").text("Number of Attendees = " + count);
+                //var numberItems = count;
+                //$("#filter-count").text("Number of Attendees = " + count);
             });
         });
 </script>
