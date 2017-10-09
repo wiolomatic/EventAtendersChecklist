@@ -15,27 +15,27 @@
 @Html.AntiForgeryToken()
 <h3>User List</h3>
 <table>
-    @foreach (var x in @Model.dane)
+    @foreach (var x in @Model.Data)
     {
         if (x.Email != "admin@admin.com")
         {
-            if (!User.Identity.GetUserName().Contains(x.NazwaUsera))
+            if (!User.Identity.GetUserName().Contains(x.UserName))
             {
 
-                Model.edit = Model.editUser(x.IdUsera, x.NazwaUsera);
+                Model.Edit = Model.EditUser(x.UserId, x.UserName);
             <tr>
                 <th style="padding: 10px">
-                    @x.NazwaUsera
+                    @x.UserName
                 </th>
                 <th style="padding: 10px">
-                    @x.NazwaRoli
+                    @x.RoleName
                 </th>
                 <th>
-                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.IdUsera }, new { @class = "btn btn-success" })
+                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.UserId }, new { @class = "btn btn-success" })
 
                 </th>
                 <th>
-                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.IdUsera }, new { @class = "btn btn-success" })
+                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.UserId }, new { @class = "btn btn-success" })
                 </th>
             </tr>
             }

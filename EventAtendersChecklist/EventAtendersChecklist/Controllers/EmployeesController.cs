@@ -3,18 +3,17 @@
     using EventAtendersChecklist.DAL;
     using EventAtendersChecklist.Models;
     using EventAtendersChecklist.ModelsView;
+    using EventAtendersChecklist.SignalR;
+    using System.Configuration;
     using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Validation;
+    using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
-    using System.Configuration;
-    using System.Data.SqlClient;
-    using EventAtendersChecklist.SignalR;
-    using System.Data.Entity.Validation;
-    using System.Data.Entity.Infrastructure;
-    using System.Diagnostics;
-
 
     /// <summary>
     /// Defines the <see cref="EmployeesController" />
@@ -26,7 +25,7 @@
         /// <summary>
         /// Defines the db
         /// </summary>
-        private eacContext db = new eacContext();
+        private EacContext db = new EacContext();
 
         // GET: Employees
         /// <summary>
@@ -49,6 +48,10 @@
             return View();
         }
 
+        /// <summary>
+        /// The GetEmployees
+        /// </summary>
+        /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
         public ActionResult GetEmployees()
         {
@@ -61,7 +64,7 @@
                     sqlcom.CommandType = CommandType.Text;
                     sqlcom.Notification = null;
                     SqlDependency dependancy = new SqlDependency(sqlcom);
-                    dependancy.OnChange += dependancy_OnChange;
+                    dependancy.OnChange += Dependancy_OnChange;
                     var reader = sqlcom.ExecuteReader();
                     var employees = reader.Cast<IDataRecord>()
                        .Select(e => new Employee()
@@ -76,7 +79,12 @@
             }
         }
 
-        void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
+        /// <summary>
+        /// The Dependancy_OnChange
+        /// </summary>
+        /// <param name="sender">The <see cref="object"/></param>
+        /// <param name="e">The <see cref="SqlNotificationEventArgs"/></param>
+        internal void Dependancy_OnChange(object sender, SqlNotificationEventArgs e)
         {
             if (e.Type == SqlNotificationType.Change)
             {
@@ -169,7 +177,7 @@
                         }
                     }
                 }
-                
+
                 var id = db.Employees.Where(x => x.Email == employee._employee.Email)
                     .Select(x => x.Id)
                     .ToList()
