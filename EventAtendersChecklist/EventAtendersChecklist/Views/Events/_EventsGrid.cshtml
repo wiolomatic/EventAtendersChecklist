@@ -19,7 +19,6 @@
                 @Html.ActionLink("Import from excel", "ImportExcelFile", "Events", new { id = Model.EventId }, new { @class = "btn btn-success" })
                     if (Model != null)
                     {
-
                        @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
                     }
                 }
@@ -49,8 +48,7 @@
         .Sanitized(false)
         .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
                         .Where(x => x.ActionId == item.Id)
-                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)" }))
-            .Sortable(true);
+                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)" }));
     }
 }).SetRowCssClasses(item => item.IsSearched ? "Search" : "Search")
 
