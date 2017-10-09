@@ -32,11 +32,14 @@
 
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
+    if (User.IsInRole("HR"))
+    {
     columns.Add()
-        .Encoded(false)
-        .Sanitized(false)
-        .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
+    .Encoded(false)
+    .Sanitized(false)
+    .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
                                      onclick="DeleteEmployee(@Model.EventId, @o.AttenderId)"></button>);
+    }
     columns.Add(x => x.FirstName).Titled("First Name").Sortable(true);
     columns.Add(x => x.LastName).Titled("Last Name").Sortable(true);
     columns.Add(x => x.Email).Titled("Email").Sortable(true);
@@ -57,8 +60,43 @@
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
 </p>
 
-    
+<script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
 <script type="text/javascript">
+   
+    function AsertClick(clicked_id) {
+        var val = document.getElementById(clicked_id).checked;
+        var res = clicked_id.split("_");
+        var EventId = String(res[1]);
+        var AttendeeId = String(res[2]);
+        var ActionId = String(res[3]);
+        $.ajax({
+            type: "POST",
+            url: "/Events/ChangeCheckBoxValue",
+            data: {
+                EmployeeId: AttendeeId,
+                EventId: EventId,
+                ActionID: ActionId,
+                value: val
+            },
+            success: function (result) {
+            }
+        })
+    }
+
+    var DeleteEmployee = function (EventId, employeeId) {
+        $.ajax({
+            type: "POST",
+            url: "/Events/DeleteEmployee",
+            data: {
+                EmployeeId: employeeId,
+                EventId: EventId
+            },
+            success: function (result) {
+            }
+        })
+    }
+
         $(document).ready(function () {
             $("#filter").keyup(function (e) {
                 

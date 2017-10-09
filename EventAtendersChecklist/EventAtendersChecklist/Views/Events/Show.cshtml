@@ -73,38 +73,9 @@
             });
         }
 
-        function AsertClick(clicked_id) {
-            var val = document.getElementById(clicked_id).checked;
-            var res = clicked_id.split("_");
-            var EventId = String(res[1]);
-            var AttendeeId = String(res[2]);
-            var ActionId = String(res[3]);
-            $.ajax({
-                type: "POST",
-                url: "/Events/ChangeCheckBoxValue",
-                data: {
-                    EmployeeId: AttendeeId,
-                    EventId: EventId,
-                    ActionID: ActionId,
-                    value: val
-                },
-                success: function (result) {
-                }
-            })
-        }
+        
 
-        var DeleteEmployee = function (EventId, employeeId) {
-            $.ajax({
-                type: "POST",
-                url: "/Events/DeleteEmployee",
-                data: {
-                    EmployeeId: employeeId,
-                    EventId: EventId
-                },
-                success: function (result) {
-                }
-            })
-        }
+        
 
 </script>
 }
