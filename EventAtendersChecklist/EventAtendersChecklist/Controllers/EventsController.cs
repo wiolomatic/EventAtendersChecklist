@@ -579,6 +579,7 @@
             {
                 if (i.ActionDictionaryId == ActionID && i.EmployeeId == EmployeeId && i.EventId == EventId)
                 {
+                    i.ActionValue = value;
                 }
             }
             await db.SaveChangesAsync();
