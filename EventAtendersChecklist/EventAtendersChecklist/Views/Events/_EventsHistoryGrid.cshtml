@@ -10,28 +10,30 @@
 <script src="~/Scripts/gridmvc.min.js"></script>
 
         <div>
-            <h4>Show event list</h4>
             <hr />
             @if (User.Identity.IsAuthenticated)
             {
                 if (User.IsInRole("HR"))
                 {
+                    if (!Request.Browser.IsMobileDevice)
+                    {
                     <p>
                         @if (Model != null)
                         {
                             @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
                         }
                     </p>
-                }
+                        }
+                    }
             }
         </div>
 
 
         @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
-    columns.Add(x => x.FirstName).Titled("First Name").Sortable(true).Filterable(true);
-    columns.Add(x => x.LastName).Titled("Last Name").Sortable(true).Filterable(true);
-    columns.Add(x => x.Email).Titled("Email").Sortable(true).Filterable(true);
+    columns.Add(x => x.FirstName).Titled("First Name").Filterable(true);
+    columns.Add(x => x.LastName).Titled("Last Name").Filterable(true);
+    columns.Add(x => x.Email).Titled("Email").Filterable(true);
     foreach (var item in Model.ActionDictionaryList)
     {
         columns.Add()
