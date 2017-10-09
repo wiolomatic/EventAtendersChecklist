@@ -181,7 +181,6 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [RoleAuthorize(Roles = "HR")]
         public ActionResult Show(int? id)
         {
             if (id == null)
@@ -599,30 +598,18 @@
         /// <returns>The <see cref="JsonResult"/></returns>
         public JsonResult ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
         {
-            var query = "UPDATE [EmployeeEventAssignments] " +
-                "SET ActionValue = @Value " +
-                "WHERE EmployeeId = @EmployeeId AND " +
-                "ActionDictionaryId = @ActionDicationaryID AND " +
-                "EventId = @EventID";
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             var result = false;
-            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+
+            foreach (var i in db.EmployeeEventAssignments)
             {
-                using (SqlCommand sqlcom = new SqlCommand(query, sqlcon))
+                if (i.ActionDictionaryId == ActionID && i.EmployeeId == EmployeeId && i.EventId == EventId)
                 {
-                    sqlcon.Open();
-                    sqlcom.CommandType = CommandType.Text;
-                    sqlcom.Parameters.AddWithValue("@Value", value);
-                    sqlcom.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                    sqlcom.Parameters.AddWithValue("@ActionDicationaryID", ActionID);
-                    sqlcom.Parameters.AddWithValue("@EventID", EventId);
-                    sqlcom.Notification = null;
-                    SqlDependency dependancy = new SqlDependency(sqlcom);
-                    dependancy.OnChange += dependancy_OnChange;
-                    sqlcom.ExecuteReader();
-                    result = true;
+                    i.ActionValue = value;
                 }
             }
+            db.SaveChanges();
+            result = true;
+
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
