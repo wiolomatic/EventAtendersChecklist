@@ -22,13 +22,13 @@
 
             // Create a function that the hub can call to broadcast messages.
             notification.client.notifyChanges = function () {
-                getEvents();
             };
 
             // Start the connection.
             $.connection.hub.start().done(function () {
-                getEvents();
+                AsertClick(clicked_id);              
             }).fail(function (e) {
+                alert(e);
             });
         });
 
@@ -46,24 +46,19 @@
             }).success(function (result) {
                 $("#partialContent").empty().append(result);
                 $("#filter").text(function () {
-
                     // Retrieve the input field text and reset the count to zero
                     var filter = $(this).val(), count = 0;
-
                     // Loop through the comment list
                     $(".Search").each(function () {
-
                         // If the list item does not contain the text phrase fade it out
                         if ($(this).text().search(new RegExp(filter, "i")) < 0) {
                             $(this).hide();
-
-                            // Show the list item if the phrase matches and increase the count by 1
+                        // Show the list item if the phrase matches and increase the count by 1
                         } else {
                             $(this).show();
                             count++;
                         }
                     });
-
                     // Update the count
                     var numberItems = count;
                     $("#filter-count").text("Number of Attendees = " + count);
@@ -89,6 +84,7 @@
                     value: val
                 },
                 success: function (result) {
+                    getEvents();
                 }
             })
         }
@@ -102,6 +98,7 @@
                     EventId: EventId
                 },
                 success: function (result) {
+                    getEvents();
                 }
             })
         }

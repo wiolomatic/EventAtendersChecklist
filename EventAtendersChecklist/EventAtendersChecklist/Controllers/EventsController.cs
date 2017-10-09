@@ -18,6 +18,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
 
@@ -152,6 +153,11 @@
             {
                 SignalRHub.NotifyChanges();
             }
+        }
+
+        internal void Notify()
+        {
+            SignalRHub.NotifyChanges();
         }
 
         // GET: Events/Details/5
@@ -486,7 +492,7 @@
         /// <param name="EmployeeId">The <see cref="int"/></param>
         /// <param name="EventId">The <see cref="int"/></param>
         /// <returns>The <see cref="JsonResult"/></returns>
-        public JsonResult ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
+        public async Task<JsonResult> ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
         {
             var result = false;
 
@@ -497,8 +503,11 @@
                     i.ActionValue = value;
                 }
             }
-            db.SaveChanges();
-            result = true;
+            var count = await db.SaveChangesAsync();
+            if (count == 1)
+                result = true;
+            else
+                result = false;
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
