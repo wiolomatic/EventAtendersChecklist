@@ -1,16 +1,23 @@
 ﻿
-@using Microsoft.AspNet.Identity
 @{
-    ViewBag.Title = "UMdelete";
+    ViewBag.Title = "Remove user";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<br />
+<br />
 <h4>Remove user </h4>
 <h3><b> @ViewBag.UserName </b> (@ViewBag.RoleName)</h3>
 
 <h4>Do you realy want to delete this user??</h4>
+<br />
 
-<table>
-    <tr>@Html.ActionLink("Delete", "UMdeleteUser", "Account", new {user = @ViewBag.UserId }, new { @class = "btn btn-success" })</tr>
-    <tr>@Html.ActionLink("Cancel", "UM", "Account", new { @class = "btn btn-danger" })</tr>
-</table>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        @Html.ActionLink("Delete", "UMdeleteUser", "Account", new { user = @ViewBag.UserId }, new { @class = "btn btn-success" }) |
+         @Html.ActionLink("Cancel", "UM", "Account", new { @class = "btn btn-danger" })
+    </div>
+}
+

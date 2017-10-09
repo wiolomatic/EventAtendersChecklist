@@ -2,7 +2,7 @@
 @using Microsoft.AspNet.Identity
 
 @{
-    ViewBag.Title = "UM";
+    ViewBag.Title = "User management system";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -31,11 +31,13 @@
                     @x.RoleName
                 </th>
                 <th>
-                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.UserId }, new { @class = "btn btn-success" })
-
+                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.UserId }, new { @class = "btn btn-warning" })
                 </th>
                 <th>
-                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.UserId }, new { @class = "btn btn-success" })
+                    <span style="padding-right: 10px; padding-left: 10px;">|</span>
+                </th>
+                <th>
+                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.UserId }, new { @class = "btn btn-danger" })
                 </th>
             </tr>
             }
