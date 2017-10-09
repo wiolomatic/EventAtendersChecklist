@@ -79,7 +79,12 @@
                 ActionID: ActionId,
                 value: val
             },
+            cache: false,
             success: function (result) {
+                var notification = $.connection.signalRHub;
+                notification.client.notifyChanges = function () {
+                    getEvents();
+                };
             }
         })
     }
@@ -92,6 +97,7 @@
                 EmployeeId: employeeId,
                 EventId: EventId
             },
+            cache: false,
             success: function (result) {
             }
         })
