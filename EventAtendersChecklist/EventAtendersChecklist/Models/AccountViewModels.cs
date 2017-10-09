@@ -56,34 +56,36 @@
 
     public class UM
     {
-        public List<ApplicationUser> users { get; set; }
-        public List<UserModelList> dane { get; set; }
-        public UserToEdit edit { get; set; }
-        public UserToEdit editUser( string Id, string Nazwa)
+        public List<ApplicationUser> Users { get; set; }
+        public List<UserModelList> Data { get; set; }
+        public UserToEdit Edit { get; set; }
+        public UserToEdit EditUser( string Id, string Name)
         {
-            UserToEdit ue = new UserToEdit();
-            ue.IdUsera = Id;
-            ue.NazwaUsera = Nazwa;
+            UserToEdit ue = new UserToEdit
+            {
+                UserId = Id,
+                UserName = Name
+            };
 
             return ue;
         }
     }
     public class UserModelList
     {
-        public string IdUsera { get; set; }
-        public string NazwaUsera { get; set; }
-        public string IdRoli { get; set; }
-        public string NazwaRoli { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string RoleId { get; set; }
+        public string RoleName { get; set; }
         public string Email { get; set; }
 
     }
     public class UserToEdit
     {
-        public string IdUsera { get; set; }
-        public string NazwaUsera { get; set; }
-        public string IdRoli { get; set; }
-        public string NazwaRoli { get; set; }
-        public string NowaRola { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string RoleId { get; set; }
+        public string RoleName { get; set; }
+        public string NewRole { get; set; }
     }
 
     /// <summary>

@@ -5,7 +5,7 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<EventAtendersChecklist.DAL.eacContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<EventAtendersChecklist.DAL.EacContext>
     {
         public Configuration()
         {
@@ -13,7 +13,7 @@
             MigrationsDirectory = @"Migrations\eacContext";
         }
 
-        protected override void Seed(EventAtendersChecklist.DAL.eacContext context)
+        protected override void Seed(EventAtendersChecklist.DAL.EacContext context)
         {
             context.Employees.AddOrUpdate(employee => employee.Id,
                 new Models.Employee
