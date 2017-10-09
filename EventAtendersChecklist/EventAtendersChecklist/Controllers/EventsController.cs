@@ -30,7 +30,7 @@
         /// <summary>
         /// Defines the db
         /// </summary>
-        private eacContext db = new eacContext();
+        private EacContext db = new EacContext();
 
         /// <summary>
         /// Defines the EventId
@@ -63,7 +63,7 @@
                     sqlcom.CommandType = CommandType.Text;
                     sqlcom.Notification = null;
                     SqlDependency dependancy = new SqlDependency(sqlcom);
-                    dependancy.OnChange += dependancy_OnChange;
+                    dependancy.OnChange += Dependancy_OnChange;
                     var reader = sqlcom.ExecuteReader();
 
                     var events = reader.Cast<IDataRecord>()
@@ -116,7 +116,7 @@
                     sqlcom.CommandType = CommandType.Text;
                     sqlcom.Notification = null;
                     SqlDependency dependancy = new SqlDependency(sqlcom);
-                    dependancy.OnChange += dependancy_OnChange;
+                    dependancy.OnChange += Dependancy_OnChange;
                     var reader = sqlcom.ExecuteReader();
                     var events = reader.Cast<IDataRecord>()
                        .Select(e => new Event()
@@ -146,7 +146,7 @@
         /// </summary>
         /// <param name="sender">The <see cref="object"/></param>
         /// <param name="e">The <see cref="SqlNotificationEventArgs"/></param>
-        internal void dependancy_OnChange(object sender, SqlNotificationEventArgs e)
+        internal void Dependancy_OnChange(object sender, SqlNotificationEventArgs e)
         {
             if (e.Type == SqlNotificationType.Change)
             {
@@ -181,7 +181,6 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
-        [RoleAuthorize(Roles = "HR")]
         public ActionResult Show(int? id)
         {
             if (id == null)
@@ -216,7 +215,7 @@
         [HttpGet]
         public ActionResult GetEventGrid(int? id)
         {
-            if(db.EmployeeEventAssignments.Include(x => x.Event)
+            if (db.EmployeeEventAssignments.Include(x => x.Event)
                         .Where(x => x.EventId == id).Count() == 0)
             {
                 var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
@@ -263,7 +262,7 @@
                         sqlcom.Parameters.AddWithValue("@ID", id);
                         sqlcom.Notification = null;
                         SqlDependency dependancy = new SqlDependency(sqlcom);
-                        dependancy.OnChange += dependancy_OnChange;
+                        dependancy.OnChange += Dependancy_OnChange;
                         var reader = sqlcom.ExecuteReader();
                         if (reader.HasRows)
                         {
@@ -373,7 +372,7 @@
                         sqlcom.Parameters.AddWithValue("@ID", id);
                         sqlcom.Notification = null;
                         SqlDependency dependancy = new SqlDependency(sqlcom);
-                        dependancy.OnChange += dependancy_OnChange;
+                        dependancy.OnChange += Dependancy_OnChange;
                         var reader = sqlcom.ExecuteReader();
                         if (reader.HasRows)
                         {
@@ -570,30 +569,18 @@
         /// <returns>The <see cref="JsonResult"/></returns>
         public JsonResult ChangeCheckBoxValue(int EventId, int EmployeeId, int ActionID, bool value = true)
         {
-            var query = "UPDATE [EmployeeEventAssignments] " +
-                "SET ActionValue = @Value " +
-                "WHERE EmployeeId = @EmployeeId AND " +
-                "ActionDictionaryId = @ActionDicationaryID AND " +
-                "EventId = @EventID";
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             var result = false;
-            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+
+            foreach (var i in db.EmployeeEventAssignments)
             {
-                using (SqlCommand sqlcom = new SqlCommand(query, sqlcon))
+                if (i.ActionDictionaryId == ActionID && i.EmployeeId == EmployeeId && i.EventId == EventId)
                 {
-                    sqlcon.Open();
-                    sqlcom.CommandType = CommandType.Text;
-                    sqlcom.Parameters.AddWithValue("@Value", value);
-                    sqlcom.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                    sqlcom.Parameters.AddWithValue("@ActionDicationaryID", ActionID);
-                    sqlcom.Parameters.AddWithValue("@EventID", EventId);
-                    sqlcom.Notification = null;
-                    //SqlDependency dependancy = new SqlDependency(sqlcom);
-                    //dependancy.OnChange += dependancy_OnChange;
-                    sqlcom.ExecuteReader();
-                    result = true;
+                    i.ActionValue = value;
                 }
             }
+            db.SaveChanges();
+            result = true;
+
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -811,15 +798,15 @@
                     .Select(x => x.Id)
                     .ToList()
                     .First();
-                
+
                 // Take all actions from db in event with specified ID
                 var actionsInEvent = db.ActionGroups.Where(x => x.EventId == eventId).ToList();
 
                 // For each action in event add to database new employeeEventAsignment with proper action id if doesn't exist.
                 foreach (var actionInEvent in actionsInEvent)
                 {
-                    if(db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee 
-                            & x.ActionDictionaryId == actionInEvent.ActionDictionaryId & x.EventId == eventId).Select(x => x.Id).Count() == 0)
+                    if (db.EmployeeEventAssignments.Where(x => x.EmployeeId == idEmployee
+                             & x.ActionDictionaryId == actionInEvent.ActionDictionaryId & x.EventId == eventId).Select(x => x.Id).Count() == 0)
                     {
                         db.EmployeeEventAssignments.Add(new EmployeeEventAssignment
                         {
@@ -874,10 +861,10 @@
             var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
                .Where(x => x.EventId == id)
                .Select(x => x.ActionDictionary).ToList();
-            
+
             var eventList = db.Events.Where(x => x.Id == id).ToList();
             var eventName = eventList[0].Name;
-            
+
             var list = new ListOfAttendeesWithActions()
             {
                 EventId = id,
@@ -946,7 +933,7 @@
                 ws.Cells["A:AZ"].AutoFitColumns();
                 Response.Clear();
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;filename=" + String.Format(eventName+".xlsx"));
+                Response.AddHeader("content-disposition", "attachment;filename=" + String.Format(eventName + ".xlsx"));
                 Response.BinaryWrite(pck.GetAsByteArray());
                 Response.End();
             }

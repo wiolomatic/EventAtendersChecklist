@@ -18,7 +18,7 @@
         /// <summary>
         /// Defines the db
         /// </summary>
-        private eacContext db = new eacContext();
+        private EacContext db = new EacContext();
 
         // GET: ActionDictionaries
         /// <summary>
@@ -153,9 +153,9 @@
                     .ToList();
                 foreach (var item in attendeeInEventList)
                 {
-                    if(db.EmployeeEventAssignments
-                        .Where(x => x.EmployeeId == item.EmployeeId & 
-                        x.EventId == item.EventId & 
+                    if (db.EmployeeEventAssignments
+                        .Where(x => x.EmployeeId == item.EmployeeId &
+                        x.EventId == item.EventId &
                         x.ActionDictionaryId == actionId)
                         .Count() == 0)
                     {

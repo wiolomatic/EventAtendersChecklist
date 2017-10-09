@@ -9,8 +9,6 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Security;
-    using static EventAtendersChecklist.Controllers.ManageController;
 
     /// <summary>
     /// Defines the <see cref="AccountController" />
@@ -150,44 +148,45 @@
         {
             UM model = new UM
             {
-                dane = new List<UserModelList>()
+                Data = new List<UserModelList>()
             };
             var context = new ApplicationDbContext();
             var roles = context.Roles.ToList();
-            model.users = UserManager.Users.ToList();
+            model.Users = UserManager.Users.ToList();
 
-            foreach (var x in model.users)
+            foreach (var x in model.Users)
             {
-                
-                    
-                    UserModelList tymczasowy = new UserModelList
-                    {
-                        NazwaRoli = "",
-                        IdRoli = ""
-                    };
-                    foreach (var UserRole in x.Roles.ToList())
-                    {
-                        foreach (var m in roles)
-                        {
 
-                            if (m.Name != "CP")
+
+                UserModelList tymczasowy = new UserModelList
+                {
+                    RoleName = "",
+                    RoleId = ""
+                };
+                foreach (var UserRole in x.Roles.ToList())
+                {
+                    foreach (var m in roles)
+                    {
+
+                        if (m.Name != "CP")
+                        {
+                            if (m.Id == UserRole.RoleId)
                             {
-                                if (m.Id == UserRole.RoleId)
-                                {
-                                    tymczasowy.NazwaRoli = m.Name;
-                                    tymczasowy.IdRoli = m.Id;
-                                }
+                                tymczasowy.RoleName = m.Name;
+                                tymczasowy.RoleId = m.Id;
                             }
                         }
                     }
-                    tymczasowy.IdUsera = x.Id;
-                    tymczasowy.NazwaUsera = x.UserName;
-                    tymczasowy.Email = x.Email;
-                    model.dane.Add(tymczasowy);
-                
+                }
+                tymczasowy.UserId = x.Id;
+                tymczasowy.UserName = x.UserName;
+                tymczasowy.Email = x.Email;
+                model.Data.Add(tymczasowy);
+
             }
             return View(model);
         }
+
         /// <summary>
         /// The UMeditCP
         /// </summary>
@@ -250,17 +249,17 @@
 
             UM model = new UM
             {
-                dane = new List<UserModelList>()
+                Data = new List<UserModelList>()
             };
 
             var roles = context.Roles.ToList();
-            model.users = UserManager.Users.ToList();
-            foreach (var x in model.users)
+            model.Users = UserManager.Users.ToList();
+            foreach (var x in model.Users)
             {
-                UserModelList tymczasowy = new UserModelList
+                UserModelList temporatyUser = new UserModelList
                 {
-                    NazwaRoli = "",
-                    IdRoli = ""
+                    RoleName = "",
+                    RoleId = ""
                 };
                 foreach (var UserRole in x.Roles.ToList())
                 {
@@ -270,17 +269,17 @@
                         {
                             if (m.Id == UserRole.RoleId)
                             {
-                                tymczasowy.NazwaRoli = m.Name;
-                                tymczasowy.IdRoli = m.Id;
+                                temporatyUser.RoleName = m.Name;
+                                temporatyUser.RoleId = m.Id;
                             }
                         }
                     }
                 }
 
-                tymczasowy.IdUsera = x.Id;
-                tymczasowy.NazwaUsera = x.UserName;
-                tymczasowy.Email = x.Email;
-                model.dane.Add(tymczasowy);
+                temporatyUser.UserId = x.Id;
+                temporatyUser.UserName = x.UserName;
+                temporatyUser.Email = x.Email;
+                model.Data.Add(temporatyUser);
             }
             return View("UM", model);
         }
@@ -320,29 +319,29 @@
             ViewBag.Info = "User with name " + appUser.UserName + " has been removed permanently.";
             UM model = new UM
             {
-                dane = new List<UserModelList>(),
-                users = UserManager.Users.ToList()
+                Data = new List<UserModelList>(),
+                Users = UserManager.Users.ToList()
             };
-            foreach (var x in model.users)
+            foreach (var x in model.Users)
             {
-                UserModelList tymczasowy = new UserModelList
+                UserModelList temporaryModel = new UserModelList
                 {
-                    NazwaRoli = "",
-                    IdRoli = x.Roles.First().RoleId
+                    RoleName = "",
+                    RoleId = x.Roles.First().RoleId
                 };
 
                 foreach (var m in DbRoles)
                 {
-                    if (m.Id == tymczasowy.IdRoli)
+                    if (m.Id == temporaryModel.RoleId)
                     {
-                        tymczasowy.NazwaRoli = m.Name;
+                        temporaryModel.RoleName = m.Name;
                     }
                 };
 
-                tymczasowy.IdUsera = x.Id;
-                tymczasowy.NazwaUsera = x.UserName;
-                tymczasowy.Email = x.Email;
-                model.dane.Add(tymczasowy);
+                temporaryModel.UserId = x.Id;
+                temporaryModel.UserName = x.UserName;
+                temporaryModel.Email = x.Email;
+                model.Data.Add(temporaryModel);
             }
             return View("UM", model);
         }
@@ -423,59 +422,6 @@
             ViewBag.RoleName = RoleName;
             ViewBag.RoleId = RoleId;
             return View("UMdelete");
-        }
-
-        // GET: /Account/VerifyCode
-        /// <summary>
-        /// The VerifyCode
-        /// </summary>
-        /// <param name="provider">The <see cref="string"/></param>
-        /// <param name="returnUrl">The <see cref="string"/></param>
-        /// <param name="rememberMe">The <see cref="bool"/></param>
-        /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
-        {
-            // Require that the user has already logged in via username/password or external login
-            if (!await SignInManager.HasBeenVerifiedAsync())
-            {
-                return View("Error");
-            }
-            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        }
-
-        // POST: /Account/VerifyCode
-        /// <summary>
-        /// The VerifyCode
-        /// </summary>
-        /// <param name="model">The <see cref="VerifyCodeViewModel"/></param>
-        /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
-            // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid code.");
-                    return View(model);
-            }
         }
 
         // GET: /Account/Register
@@ -648,50 +594,6 @@
         {
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
-        }
-
-        // GET: /Account/SendCode
-        /// <summary>
-        /// The SendCode
-        /// </summary>
-        /// <param name="returnUrl">The <see cref="string"/></param>
-        /// <param name="rememberMe">The <see cref="bool"/></param>
-        /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [Authorize]
-        public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
-        {
-            var userId = await SignInManager.GetVerifiedUserIdAsync();
-            if (userId == null)
-            {
-                return View("Error");
-            }
-            var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-            var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        }
-
-        // POST: /Account/SendCode
-        /// <summary>
-        /// The SendCode
-        /// </summary>
-        /// <param name="model">The <see cref="SendCodeViewModel"/></param>
-        /// <returns>The <see cref="Task{ActionResult}"/></returns>
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            // Generate the token and send it
-            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
-            {
-                return View("Error");
-            }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
         // GET: /Account/ExternalLoginCallback
