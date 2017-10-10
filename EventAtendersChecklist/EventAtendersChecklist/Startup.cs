@@ -12,5 +12,8 @@ namespace EventAtendersChecklist
             app.MapSignalR();
             ConfigureAuth(app);
         }
+
+        
+
     }
 }

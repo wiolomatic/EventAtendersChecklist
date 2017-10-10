@@ -8,7 +8,7 @@ namespace EventAtendersChecklist
 {
     public class RoleAuthorizeAttribute : AuthorizeAttribute
     {
-        private string redirectUrl = "";
+        private string redirectUrl = "Events/Index";
         public RoleAuthorizeAttribute() : base()
         {
         }
