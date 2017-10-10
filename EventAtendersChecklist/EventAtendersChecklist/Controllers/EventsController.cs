@@ -269,7 +269,6 @@
                         {
                             var ourEvent = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
                             .Where(x => x.EventId == id).ToList();
-                            
 
                             var events = new ListOfAttendeesWithActions()
                             {
@@ -313,118 +312,37 @@
         [RoleAuthorize(Roles = "HR")]
         public ActionResult GetEventHistoryGrid(int? id)
         {
-            if (db.EmployeeEventAssignments.Include(x => x.Event)
-                        .Where(x => x.EventId == id).Count() == 0)
+            var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+            .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
+
+            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                .Where(x => x.EventId == id).ToList();
+
+            var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
+               .Where(x => x.EventId == id)
+               .Select(x => x.ActionDictionary).ToList();
+
+            var list = new ListOfAttendeesWithActions()
             {
-                var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
-
-                var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                    .Where(x => x.EventId == id).ToList();
-
-                var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
-                   .Where(x => x.EventId == id)
-                   .Select(x => x.ActionDictionary).ToList();
-
-                var list = new ListOfAttendeesWithActions()
-                {
-                    EventId = id,
-                    ActionDictionaryList = listOfActions,
-                    EventAttenderList = from e in employ
-                                        select new EventAttender()
-                                        {
-                                            FirstName = e.Employee.FirstName,
-                                            AttenderId = e.EmployeeId,
-                                            LastName = e.Employee.LastName,
-                                            Email = e.Employee.Email,
-                                            Actions = from ea in actions.Where(x => x.EmployeeId == e.EmployeeId)
-                                                      select new ActionValue()
-                                                      {
-                                                          ActionId = ea.ActionDictionaryId,
-                                                          ActionName = ea.ActionDictionary.Name,
-                                                          Value = ea.ActionValue
-                                                      }
-                                        }
-                };
-                return PartialView("_EventsHistoryGrid", list);
-            }
-            else
-            {
-                string query = "SELECT " +
-                "EmployeeEventAssignments.EventId, " +
-                "EmployeeEventAssignments.EmployeeId, " +
-                "Employees.FirstName, " +
-                "Employees.LastName, " +
-                "Employees.Email, " +
-                "ActionDictionaries.Name, " +
-                "EmployeeEventAssignments.ActionValue, " +
-                "EmployeeEventAssignments.ActionDictionaryId " +
-                "FROM [EmployeeEventAssignments] " +
-                "JOIN [Events] " +
-                "ON Events.Id = EmployeeEventAssignments.EventId " +
-                "JOIN [Employees] " +
-                "ON EmployeeEventAssignments.EmployeeId = Employees.Id " +
-                "JOIN [ActionDictionaries] ON EmployeeEventAssignments.ActionDictionaryId = ActionDictionaries.Id " +
-                "WHERE Events.Id = @ID";
-                string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-                using (SqlConnection sqlcon = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand sqlcom = new SqlCommand(query, sqlcon))
-                    {
-                        sqlcon.Open();
-                        sqlcom.CommandType = CommandType.Text;
-                        sqlcom.Parameters.AddWithValue("@ID", id);
-                        sqlcom.Notification = null;
-                        SqlDependency dependancy = new SqlDependency(sqlcom);
-                        dependancy.OnChange += Dependancy_OnChange;
-                        var reader = sqlcom.ExecuteReader();
-                        if (reader.HasRows)
-                        {
-                            var eventsSql = reader.Cast<IDataRecord>().
-                                Select(eventAttender => new EmployeeInEventView()
-                                {
-                                    EventID = eventAttender.GetInt32(0),
-                                    EmployeeId = eventAttender.GetInt32(1),
-                                    FirtName = eventAttender.GetString(2),
-                                    LastName = eventAttender.GetString(3),
-                                    Email = eventAttender.GetString(4),
-                                    ActionDictionaryId = eventAttender.GetInt32(7),
-                                    ActionName = eventAttender.GetString(5),
-                                    ActionValue = eventAttender.GetBoolean(6)
-                                }).ToList();
-
-                            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                            .Where(x => x.EventId == id).ToList();
-
-                            var events = new ListOfAttendeesWithActions()
-                            {
-                                ActionDictionaryList = eventsSql.Select(x => new ActionDictionary()
-                                {
-                                    Id = x.ActionDictionaryId,
-                                    Name = x.ActionName
-                                }).GroupBy(x => x.Id).Select(x => x.First()).ToList(),
-                                EventId = eventsSql.First().EventID,
-                                EventAttenderList = eventsSql.Select(x => new EventAttender()
-                                {
-                                    AttenderId = x.EmployeeId,
-                                    FirstName = x.FirtName,
-                                    LastName = x.LastName,
-                                    Email = x.Email,
-                                    Actions = actions.Where(z => z.EmployeeId == x.EmployeeId)
-                                        .Select(y => new ActionValue()
-                                        {
-                                            ActionId = y.ActionDictionaryId,
-                                            ActionName = y.ActionDictionary.Name,
-                                            Value = y.ActionValue
-                                        }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
-                                }).GroupBy(x => x.AttenderId).Select(x => x.First()).ToList()
-                            };
-                            return PartialView("_EventsHistoryGrid", events);
-                        }
-                        return PartialView("_EventsHistoryGrid");
-                    }
-                }
-            }
+                EventId = id,
+                ActionDictionaryList = listOfActions,
+                EventAttenderList = from e in employ
+                                    select new EventAttender()
+                                    {
+                                        FirstName = e.Employee.FirstName,
+                                        AttenderId = e.EmployeeId,
+                                        LastName = e.Employee.LastName,
+                                        Email = e.Employee.Email,
+                                        Actions = from ea in actions.Where(x => x.EmployeeId == e.EmployeeId)
+                                                  select new ActionValue()
+                                                  {
+                                                      ActionId = ea.ActionDictionaryId,
+                                                      ActionName = ea.ActionDictionary.Name,
+                                                      Value = ea.ActionValue
+                                                  }
+                                    }
+            };
+            return PartialView("_EventsHistoryGrid", list);
         }
 
         // GET: Events/Create
@@ -742,7 +660,6 @@
                         foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
                         {
                             // Get entry
-
                             DbEntityEntry entry = entityValidationError.Entry;
                             string entityTypeName = entry.Entity.GetType().Name;
 
@@ -781,7 +698,6 @@
                         foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
                         {
                             // Get entry
-
                             DbEntityEntry entry = entityValidationError.Entry;
                             string entityTypeName = entry.Entity.GetType().Name;
 
@@ -828,7 +744,6 @@
                             foreach (DbEntityValidationResult entityValidationError in ex.EntityValidationErrors)
                             {
                                 // Get entry
-
                                 DbEntityEntry entry = entityValidationError.Entry;
                                 string entityTypeName = entry.Entity.GetType().Name;
 

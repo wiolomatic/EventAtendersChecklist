@@ -1,23 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace EventAtendersChecklist
+﻿namespace EventAtendersChecklist
 {
+    using System;
+    using System.Web.Mvc;
+
+    /// <summary>
+    /// Defines the <see cref="RoleAuthorizeAttribute" />
+    /// </summary>
     public class RoleAuthorizeAttribute : AuthorizeAttribute
     {
+        /// <summary>
+        /// Defines the redirectUrl
+        /// </summary>
         private string redirectUrl = "Events/Index";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoleAuthorizeAttribute"/> class.
+        /// </summary>
         public RoleAuthorizeAttribute() : base()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoleAuthorizeAttribute"/> class.
+        /// </summary>
+        /// <param name="redirectUrl">The <see cref="string"/></param>
         public RoleAuthorizeAttribute(string redirectUrl) : base()
         {
             this.redirectUrl = redirectUrl;
         }
 
+        /// <summary>
+        /// The HandleUnauthorizedRequest
+        /// </summary>
+        /// <param name="filterContext">The <see cref="AuthorizationContext"/></param>
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             if (filterContext.HttpContext.Request.IsAuthenticated)
@@ -31,7 +46,6 @@ namespace EventAtendersChecklist
                 if (!String.IsNullOrEmpty(authUrl))
                     filterContext.HttpContext.Response.Redirect(authUrl);
             }
-
             //else do normal process
             base.HandleUnauthorizedRequest(filterContext);
         }

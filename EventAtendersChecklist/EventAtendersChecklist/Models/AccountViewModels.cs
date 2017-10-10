@@ -27,7 +27,6 @@
         public string ReturnUrl { get; set; }
     }
 
-
     /// <summary>
     /// Defines the <see cref="SendCodeViewModel" />
     /// </summary>
@@ -54,12 +53,33 @@
         public bool RememberMe { get; set; }
     }
 
+    /// <summary>
+    /// Defines the <see cref="UM" />
+    /// </summary>
     public class UM
     {
+        /// <summary>
+        /// Gets or sets the Users
+        /// </summary>
         public List<ApplicationUser> Users { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Data
+        /// </summary>
         public List<UserModelList> Data { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Edit
+        /// </summary>
         public UserToEdit Edit { get; set; }
-        public UserToEdit EditUser( string Id, string Name)
+
+        /// <summary>
+        /// The EditUser
+        /// </summary>
+        /// <param name="Id">The <see cref="string"/></param>
+        /// <param name="Name">The <see cref="string"/></param>
+        /// <returns>The <see cref="UserToEdit"/></returns>
+        public UserToEdit EditUser(string Id, string Name)
         {
             UserToEdit ue = new UserToEdit
             {
@@ -70,28 +90,73 @@
             return ue;
         }
     }
+
+    /// <summary>
+    /// Defines the <see cref="UserModelList" />
+    /// </summary>
     public class UserModelList
     {
+        /// <summary>
+        /// Gets or sets the UserId
+        /// </summary>
         public string UserId { get; set; }
-        public string UserName { get; set; }
-        public string RoleId { get; set; }
-        public string RoleName { get; set; }
-        public string Email { get; set; }
 
+        /// <summary>
+        /// Gets or sets the UserName
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RoleId
+        /// </summary>
+        public string RoleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RoleName
+        /// </summary>
+        public string RoleName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Email
+        /// </summary>
+        public string Email { get; set; }
     }
+
+    /// <summary>
+    /// Defines the <see cref="UserToEdit" />
+    /// </summary>
     public class UserToEdit
     {
+        /// <summary>
+        /// Gets or sets the UserId
+        /// </summary>
         public string UserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserName
+        /// </summary>
         public string UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RoleId
+        /// </summary>
         public string RoleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RoleName
+        /// </summary>
         public string RoleName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the NewRole
+        /// </summary>
         public string NewRole { get; set; }
     }
 
     /// <summary>
     /// Defines the <see cref="VerifyCodeViewModel" />
     /// </summary>
-    /// 
+    ///
     public class VerifyCodeViewModel
     {
         /// <summary>

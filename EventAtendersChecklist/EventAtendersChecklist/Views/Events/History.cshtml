@@ -11,19 +11,14 @@
     <script type="text/javascript">
         $(function () {
             var notification = $.connection.signalRHub;
-
-            // Create a function that the hub can call to broadcast messages.
             notification.client.notifyChanges = function () {
                 getEvents();
             };
-
-            // Start the connection.
             $.connection.hub.start().done(function () {
                 getEvents();
             }).fail(function (e) {
             });
         });
-
 
         function getEvents() {
             $.ajax({

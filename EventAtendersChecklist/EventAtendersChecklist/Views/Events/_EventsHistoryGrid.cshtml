@@ -27,8 +27,6 @@
                     }
             }
         </div>
-
-
         @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
     columns.Add(x => x.FirstName).Titled("First Name").Filterable(true);

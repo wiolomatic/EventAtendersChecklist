@@ -10,12 +10,16 @@
     /// </summary>
     public static class EmployeeToDatabase
     {
+        /// <summary>
+        /// Defines the ListOfReservedWords
+        /// </summary>
         public static List<string> ListOfReservedWords = new List<string>()
         {
             "FirstName",
             "LastName",
             "Email"
         };
+
         /// <summary>
         /// The ToDataBase
         /// </summary>
@@ -36,7 +40,7 @@
                 for (int col = start.Column + 3; col <= end.Column; col++)
                 { // ... Cell by cell...
                     string cellValue = workSheet.Cells[row, col].Text; // This got me the actual value I needed.
-                    if(!ListOfReservedWords.Any(x => x.Contains(cellValue))) // check if checkbox is not Name or email.
+                    if (!ListOfReservedWords.Any(x => x.Contains(cellValue))) // check if checkbox is not Name or email.
                     {
                         listOfCheckBoxNames.Add(new ActionDictionary { Name = cellValue });
                     }
@@ -51,7 +55,7 @@
                     for (int col = start.Column; col <= end.Column; col++)
                     { // ... Cell by cell...
                         string cellValue = workSheet.Cells[row, col].Text; // This got me the actual value I needed.
-                        if(cellValue == null)
+                        if (cellValue == null)
                         {
                             break;
                         }
