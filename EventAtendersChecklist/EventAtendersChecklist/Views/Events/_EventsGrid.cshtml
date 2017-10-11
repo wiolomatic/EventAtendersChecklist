@@ -59,7 +59,7 @@
 <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script type="text/javascript">
-   
+
     function AsertClick(clicked_id) {
         var val = document.getElementById(clicked_id).checked;
         var res = clicked_id.split("_");
@@ -77,11 +77,12 @@
             },
             cache: false,
             success: function (result) {
-                getEvents();
-                    
-                
+               getEvents();
+
+
             }
         })
+         
     }
 
     var DeleteEmployee = function (EventId, employeeId) {
@@ -94,6 +95,7 @@
             },
             cache: false,
             success: function (result) {
+                getEvents();
             }
         })
     }
@@ -110,5 +112,7 @@
                     }
                 });
             });
-        });
+    });
+
+
 </script>

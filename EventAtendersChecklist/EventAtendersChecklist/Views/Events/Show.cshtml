@@ -1,13 +1,5 @@
 ﻿
-<form id="live-search">
-    <fieldset>
-        <div style="padding: 20px 0 20px 0">
-            <h5>Search:</h5>
-            <input type="text" class="text-input" id="filter" value="" onkeydown="if (event.keyCode == 13) return false;" />
-            <span id="filter-count"></span>
-        </div>
-    </fieldset>
-</form>
+
 
 <div id="partialContent">
     @Html.Action("GetEventGrid", "Events", new { id = @ViewBag.id})
@@ -17,25 +9,25 @@
 <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script type="text/javascript">
-        $(function () {
-            var notification = $.connection.signalRHub;
+    $(function () {
+        var notification = $.connection.signalRHub;
+        // Create a function that the hub can call to broadcast messages.
+        notification.client.notifyChanges = function () {
+            getEvents2();
+        };
 
-            // Create a function that the hub can call to broadcast messages.
-            notification.client.notifyChanges = function () {
-            };
-            window.setInterval("getEvents()", 2000);
-
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                AsertClick();
-            }).fail(function (e) {
-            });
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            AsertClick();
+            //getEvents();
+        }).fail(function (e) {
+        });
     });
-        function getEvents() {
-            $.ajax({
-                url: '/Events/GetEventGrid',
-                data: {
-                    id : @ViewBag.id
+    function getEvents() {
+        $.ajax({
+            url: '/Events/GetEventGrid',
+            data: {
+                id: @ViewBag.id
                 },
                 cache: false,
                 contentType: 'application/html ; charset:utf-8',
@@ -48,8 +40,12 @@
                     var filter = $(this).val(), count = 0;
                     // Loop through the comment list
                     $(".Search").each(function () {
+
                         // If the list item does not contain the text phrase fade it out
+
+
                         if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                            //setTimeout(2000);
                             $(this).hide();
                             // Show the list item if the phrase matches and increase the count by 1
                         } else {
@@ -61,6 +57,48 @@
             }).error(function () {
 
             });
+    }
+
+    function getEvents2() {
+            $.ajax({
+                url: '/Events/GetEventGrid2',
+                data: {
+                    id : @ViewBag.id
+                },
+                cache: false,
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html'
+            }).success(function (result) {
+                $("#partialContent").empty().append(result);
+                $("#filter").keyup(function () {
+                    //if (e.which == 13) {
+                        // Retrieve the input field text and reset the count to zero
+                        var filter = $(this).val(), count = 0;
+                        // Loop through the comment list
+                        $(".Search").each(function () {
+                            //if (e.which == 13) {
+                                // If the list item does not contain the text phrase fade it out
+
+
+                                if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                                    //setTimeout(2000);
+                                    $(this).hide();
+                                    // Show the list item if the phrase matches and increase the count by 1
+                                } else {
+                                    $(this).show();
+                                    count++;
+                                }
+                            //}
+
+                        });
+                    //}
+                });
+            }).error(function () {
+
+            });
         }
+
+
 </script>
 }

@@ -1,4 +1,6 @@
-﻿[assembly: OwinStartupAttribute(typeof(EventAtendersChecklist.Startup))]
+﻿using Microsoft.Owin;
+
+[assembly: OwinStartupAttribute(typeof(EventAtendersChecklist.Startup))]
 namespace EventAtendersChecklist
 {
     using Owin;

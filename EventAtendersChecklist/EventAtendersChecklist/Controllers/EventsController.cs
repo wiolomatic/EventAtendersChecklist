@@ -22,6 +22,7 @@
     using System.Web;
     using System.Web.Mvc;
 
+
     /// <summary>
     /// Defines the <see cref="EventsController" />
     /// </summary>
@@ -303,6 +304,40 @@
             }
         }
 
+        [HttpGet]
+        public ActionResult GetEventGrid2(int? id)
+        {
+            var ourEvent = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                        .Where(x => x.EventId == id).ToList();
+
+            var events = new ListOfAttendeesWithActions()
+            {
+                ActionDictionaryList = ourEvent.Select(x => new ActionDictionary()
+                {
+                    Id = x.ActionDictionaryId,
+                    Name = x.ActionDictionary.Name
+                }).GroupBy(x => x.Id)
+                    .Select(x => x.First())
+                    .ToList(),
+                EventId = ourEvent.First().EventId,
+                EventAttenderList = ourEvent.Select(x => new EventAttender()
+                {
+                    AttenderId = x.Employee.Id,
+                    FirstName = x.Employee.FirstName,
+                    LastName = x.Employee.LastName,
+                    Email = x.Employee.Email,
+                    Actions = ourEvent.Where(z => z.EmployeeId == x.EmployeeId)
+                        .Select(y => new ActionValue()
+                        {
+                            ActionId = y.ActionDictionaryId,
+                            ActionName = y.ActionDictionary.Name,
+                            Value = y.ActionValue
+                        }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
+                }).GroupBy(x => x.AttenderId).Select(x => x.First()).ToList()
+            };
+            return PartialView("_EventsGrid", events);     
+        }
+
         /// <summary>
         /// The GetEventHistoryGrid
         /// </summary>
@@ -480,6 +515,7 @@
                 db.SaveChanges();
                 result = true;
             }
+            
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
