@@ -195,27 +195,28 @@
                             ActionDictionaryId = item.ActionDictionaryId,
                             ActionValue = false
                         });
-                        try
+                        
+                    }
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (DbEntityValidationResult item2 in ex.EntityValidationErrors)
                         {
-                            db.SaveChanges();
-                        }
-                        catch (DbEntityValidationException ex)
-                        {
-                            foreach (DbEntityValidationResult item2 in ex.EntityValidationErrors)
+                            // Get entry
+
+                            DbEntityEntry entry = item2.Entry;
+                            string entityTypeName = entry.Entity.GetType().Name;
+
+                            // Display or log error messages
+
+                            foreach (DbValidationError subItem in item2.ValidationErrors)
                             {
-                                // Get entry
-
-                                DbEntityEntry entry = item2.Entry;
-                                string entityTypeName = entry.Entity.GetType().Name;
-
-                                // Display or log error messages
-
-                                foreach (DbValidationError subItem in item2.ValidationErrors)
-                                {
-                                    string message = string.Format("Error '{0}' occurred in {1} at {2}",
-                                             subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
-                                    Debug.Fail(message);
-                                }
+                                string message = string.Format("Error '{0}' occurred in {1} at {2}",
+                                         subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                                Debug.Fail(message);
                             }
                         }
                     }

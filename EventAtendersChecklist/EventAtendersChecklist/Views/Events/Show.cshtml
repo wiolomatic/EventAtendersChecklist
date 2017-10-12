@@ -1,5 +1,12 @@
-﻿
-
+﻿﻿<form id="live-search">
+    <fieldset>
+        <div style="padding: 20px 0 20px 0">
+            <h5>Search:</h5>
+            <input type="text" class="text-input" id="filter" value="" onkeydown="if (event.keyCode == 13) return false;" />
+            <span id="filter-count"></span>
+        </div>
+    </fieldset>
+</form>
 
 <div id="partialContent">
     @Html.Action("GetEventGrid", "Events", new { id = @ViewBag.id})
@@ -40,12 +47,8 @@
                     var filter = $(this).val(), count = 0;
                     // Loop through the comment list
                     $(".Search").each(function () {
-
                         // If the list item does not contain the text phrase fade it out
-
-
                         if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                            //setTimeout(2000);
                             $(this).hide();
                             // Show the list item if the phrase matches and increase the count by 1
                         } else {
@@ -71,28 +74,20 @@
                 dataType: 'html'
             }).success(function (result) {
                 $("#partialContent").empty().append(result);
-                $("#filter").keyup(function () {
-                    //if (e.which == 13) {
+                $("#filter").text(function () {
                         // Retrieve the input field text and reset the count to zero
                         var filter = $(this).val(), count = 0;
                         // Loop through the comment list
                         $(".Search").each(function () {
-                            //if (e.which == 13) {
                                 // If the list item does not contain the text phrase fade it out
-
-
                                 if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                                    //setTimeout(2000);
                                     $(this).hide();
                                     // Show the list item if the phrase matches and increase the count by 1
                                 } else {
                                     $(this).show();
                                     count++;
                                 }
-                            //}
-
                         });
-                    //}
                 });
             }).error(function () {
 

@@ -166,9 +166,10 @@
                             ActionDictionaryId = actionId,
                             ActionValue = false
                         });
-                        db.SaveChanges();
+                        //db.SaveChanges();
                     }
                 }
+                db.SaveChanges();
                 return RedirectToAction("Show", "Events", new { id = eventId });
             }
             return View(actionModel);

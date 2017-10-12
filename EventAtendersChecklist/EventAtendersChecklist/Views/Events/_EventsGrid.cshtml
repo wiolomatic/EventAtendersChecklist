@@ -102,16 +102,19 @@
 
         $(document).ready(function () {
             $("#filter").keyup(function (e) {
-                var filter = $(this).val(), count = 0;
-                $(".Search").each(function () {
-                    if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                        $(this).fadeOut();
-                    } else {
-                        $(this).show();
-                        count++;
-                    }
-                });
+                if (e.keyCode == 13) {
+                    var filter = $(this).val(), count = 0;
+                    $(".Search").each(function () {
+                        if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                            $(this).fadeOut();
+                        } else {
+                            $(this).show();
+                            count++;
+                        }
+                    });
+                }
             });
+
     });
 
 
