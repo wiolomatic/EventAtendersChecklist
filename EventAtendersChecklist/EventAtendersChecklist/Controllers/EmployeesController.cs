@@ -335,6 +335,17 @@
             return RedirectToAction("Index");
         }
 
+        public ActionResult DeleteAll()
+        {
+            var employees = db.Employees;
+            foreach(var item in employees)
+            {
+                db.Employees.Remove(item);
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         /// <summary>
         /// The Dispose
         /// </summary>
