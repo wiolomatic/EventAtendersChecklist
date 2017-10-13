@@ -29,8 +29,8 @@
 
 @Html.Grid(Model.EventAttenderList).Columns(columns =>
 {
-    if (User.IsInRole("HR"))
-    {
+if (User.IsInRole("HR"))
+{
     columns.Add()
     .Encoded(false)
     .Sanitized(false)
@@ -48,7 +48,7 @@
         .Sanitized(false)
         .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
                         .Where(x => x.ActionId == item.Id)
-                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)" }));
+                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)", @style = "zoom:2" })).SetWidth(120);
     }
 }).SetRowCssClasses(item => item.IsSearched ? "Search" : "Search")
 
@@ -59,7 +59,6 @@
 <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script type="text/javascript">
-
     function AsertClick(clicked_id) {
         var val = document.getElementById(clicked_id).checked;
         var res = clicked_id.split("_");
@@ -78,11 +77,8 @@
             cache: false,
             success: function (result) {
                getEvents();
-
-
             }
-        })
-         
+        })   
     }
 
     var DeleteEmployee = function (EventId, employeeId) {
@@ -114,7 +110,6 @@
                     });
                 }
             });
-
     });
 
 

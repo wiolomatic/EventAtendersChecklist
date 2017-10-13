@@ -28,22 +28,22 @@
             }
         </div>
         @Html.Grid(Model.EventAttenderList).Columns(columns =>
-{
-    columns.Add(x => x.FirstName).Titled("First Name").Filterable(true);
-    columns.Add(x => x.LastName).Titled("Last Name").Filterable(true);
-    columns.Add(x => x.Email).Titled("Email").Filterable(true);
-    foreach (var item in Model.ActionDictionaryList)
-    {
-        columns.Add()
-        .Titled(item.Name)
-        .Encoded(false)
-        .Sanitized(false)
-        .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
-                        .Where(x => x.ActionId == item.Id)
-                        .Select(x => x.Value).First(), new { @class = "disabled" }))
-            .Sortable(true);
-    }
-}).WithPaging(10).WithMultipleFilters()
+   {
+       columns.Add(x => x.FirstName).Titled("First Name").Filterable(true);
+       columns.Add(x => x.LastName).Titled("Last Name").Filterable(true);
+       columns.Add(x => x.Email).Titled("Email").Filterable(true);
+       foreach (var item in Model.ActionDictionaryList)
+       {
+           columns.Add()
+           .Titled(item.Name)
+           .Encoded(false)
+           .Sanitized(false)
+           .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
+                           .Where(x => x.ActionId == item.Id)
+                           .Select(x => x.Value).First(), new { @class = "disabled", @style = "zoom:2" }))
+               .Sortable(true);
+       }
+   }).WithPaging(10).WithMultipleFilters()
 <p>
     @Html.ActionLink("Back to List", "History", null, new { @class = "btn btn-primary" })
 </p>
