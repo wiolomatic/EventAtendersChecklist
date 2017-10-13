@@ -29,9 +29,9 @@
         </div>
         @Html.Grid(Model.EventAttenderList).Columns(columns =>
    {
-       columns.Add(x => x.FirstName).Titled("First Name").Filterable(true);
-       columns.Add(x => x.LastName).Titled("Last Name").Filterable(true);
-       columns.Add(x => x.Email).Titled("Email").Filterable(true);
+       columns.Add(x => x.FirstName).Titled("First Name");
+       columns.Add(x => x.LastName).Titled("Last Name");
+       columns.Add(x => x.Email).Titled("Email");
        foreach (var item in Model.ActionDictionaryList)
        {
            columns.Add()
@@ -43,7 +43,7 @@
                            .Select(x => x.Value).First(), new { @class = "disabled", @style = "zoom:2" }))
                .Sortable(true);
        }
-   }).WithPaging(10).WithMultipleFilters()
+   })
 <p>
     @Html.ActionLink("Back to List", "History", null, new { @class = "btn btn-primary" })
 </p>
