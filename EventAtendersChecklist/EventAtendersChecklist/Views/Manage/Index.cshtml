@@ -15,7 +15,7 @@
             [
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                @Html.ActionLink("Change password", "ChangePassword", null, new { @class = "btn btn-primary", style = "width:140px; height:35px" })
             }
             else
             {

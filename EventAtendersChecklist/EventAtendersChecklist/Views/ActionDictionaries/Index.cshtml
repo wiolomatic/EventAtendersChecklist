@@ -8,11 +8,11 @@
 <h2>Actions</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, null, new { @class = "btn btn-success" })
+    @Html.ActionLink("Create New", "Create", null, null, new { @class = "btn btn-success", style = "width:120px; height:35px" })
 </p>
 <table class="table">
     <tr>
-        <th>
+        <th style="font-size:17px">
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th></th>
@@ -20,13 +20,12 @@
 
 @foreach (var item in Model) {
     <tr class="Search">
-        <td>
+        <td style="font-size:17px">
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class = "btn btn-warning" }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class = "btn btn-primary" }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id }, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class = "btn btn-warning", style = "width:120px; height:35px" })
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id }, new { @class = "btn btn-danger", style = "width:120px; height:35px" })
         </td>
     </tr>
 }

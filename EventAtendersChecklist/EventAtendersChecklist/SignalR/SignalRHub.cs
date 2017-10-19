@@ -14,6 +14,7 @@ namespace EventAtendersChecklist.SignalR
         public static void NotifyChanges()
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<SignalRHub>();
+                
             context.Clients.All.notifyChanges();
         }
     }

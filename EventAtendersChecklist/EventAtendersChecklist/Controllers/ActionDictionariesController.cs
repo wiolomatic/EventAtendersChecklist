@@ -27,7 +27,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         public ActionResult Index()
         {
-            return View(db.ActionDictionary.ToList());
+            return View(db.ActionDictionary.OrderBy(x=>x.Name).ToList());
         }
 
         // GET: ActionDictionaries/Details/5

@@ -10,10 +10,9 @@
     @ViewBag.Info
 </h4>
 
-<p align="right">@Html.ActionLink("Create user", "Register", "Account", new { @class = "btn btn-success" })</p>
-
 @Html.AntiForgeryToken()
 <h3>User List</h3>
+<p align="left">@Html.ActionLink("Create user", "Register", "Account", new { @class = "btn btn-success", style = "width:120px; height:35px" })</p>
 <table>
     @foreach (var x in @Model.Data)
     {
@@ -24,20 +23,20 @@
 
                 Model.Edit = Model.EditUser(x.UserId, x.UserName);
             <tr>
-                <th style="padding: 10px">
+                <th style="padding: 10px; font-size:17px;">
                     @x.UserName
                 </th>
-                <th style="padding: 10px">
+                <th style="padding: 10px; font-size:17px;">
                     @x.RoleName
                 </th>
                 <th>
-                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.UserId }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Edit Role", "UMedit", "Account", new { id = x.UserId }, new { @class = "btn btn-warning", style = "width:120px; height:35px" })
                 </th>
                 <th>
                     <span style="padding-right: 10px; padding-left: 10px;">|</span>
                 </th>
                 <th>
-                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.UserId }, new { @class = "btn btn-success" })
+                    @Html.ActionLink("Delete", "UMdelete", "Account", new { id = x.UserId }, new { @class = "btn btn-danger", style = "width:120px; height:35px" })
                 </th>
             </tr>
             }

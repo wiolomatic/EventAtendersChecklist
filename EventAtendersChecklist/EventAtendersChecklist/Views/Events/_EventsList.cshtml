@@ -10,7 +10,7 @@
 {
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success", style="width:120px; height:35px" })
 </p>
 }
 
@@ -19,20 +19,26 @@
 @Html.Grid(Model).Columns(collumn =>
 {
     collumn.Add(x => x.Id, true);
-    collumn.Add(x => x.Name).Titled("Event");
-    collumn.Add(x => x.StartDate).Titled("Start Date")
-                .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending); 
-    collumn.Add(x => x.EndDate).Titled("End Date");
+    collumn.Add(x => x.Name).Titled("Event").Css("bolded");
+    collumn.Add(x => x.StartDate).Titled("Start Date").Css("bolded")
+                .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
+    collumn.Add(x => x.EndDate).Titled("End Date").Css("bolded");
     collumn.Add().Sanitized(false).Encoded(false)
-            .RenderValueAs(model => Html.ActionLink("Show", "Show", new { id = model.Id }, new { @class = "btn btn-info" }).ToHtmlString());
+            .RenderValueAs(model => Html.ActionLink("Show", "Show", new { id = model.Id }, new { @class = "btn btn-info", style = "width:120px; height:35px" }).ToHtmlString());
     if (User.IsInRole("HR"))
     {
         collumn.Add().Sanitized(false).Encoded(false)
-                .RenderValueAs(model => Html.ActionLink("Edit", "Edit", new { id = model.Id }, new { @class = "btn btn-warning" }).ToHtmlString());
+                .RenderValueAs(model => Html.ActionLink("Edit", "Edit", new { id = model.Id }, new { @class = "btn btn-warning", style = "width:120px; height:35px" }).ToHtmlString());
+        //collumn.Add().Sanitized(false).Encoded(false)
+        //            .RenderValueAs(model => Html.ActionLink("Details", "Details", new { id = model.Id }, new { @class = "btn btn-primary" }).ToHtmlString());
         collumn.Add().Sanitized(false).Encoded(false)
-                    .RenderValueAs(model => Html.ActionLink("Details", "Details", new { id = model.Id }, new { @class = "btn btn-primary" }).ToHtmlString());
-        collumn.Add().Sanitized(false).Encoded(false)
-                    .RenderValueAs(model => Html.ActionLink("Delete", "Delete", new { id = model.Id }, new { @class = "btn btn-danger" }).ToHtmlString());
+                    .RenderValueAs(model => Html.ActionLink("Delete", "Delete", new { id = model.Id }, new { @class = "btn btn-danger", style = "width:120px; height:35px" }).ToHtmlString());
     }
 }).WithPaging(10)
 }
+
+<style>
+    .bolded {
+        font-size: 17px;
+    }
+</style>

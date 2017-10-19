@@ -3,12 +3,24 @@
 <form id="live-search">
     <fieldset>
         <div style="padding: 20px 0 20px 0">
-            <h5><b>Search:</b></h5>
-            <input type="text" class="text-input" id="filter" value="" onkeydown="if (event.keyCode == 13) return false;" />
+            <h5><b><font size="5px">Search:</font></b></h5>
+            <input type="text" class="text-input" id="filter" value="" style="width:300px; height:40px; font-size:25px;" onkeydown="if (event.keyCode == 13) return false;" />
             <span id="filter-count"></span>
         </div>
     </fieldset>
 </form>
+
+@Html.ActionLink(" ", "Index", new { id = @ViewBag.id }, new { @class = "home-icon", style = "position: relative; top: -53px; left: 290px; opacity:0.9;" })
+
+<style>
+    .home-icon {
+        padding: 20px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url("/Content/images/clear2.png");
+    }
+</style>
 
 <div id="partialContent">
     @Html.Action("GetEmployees", "Employees")

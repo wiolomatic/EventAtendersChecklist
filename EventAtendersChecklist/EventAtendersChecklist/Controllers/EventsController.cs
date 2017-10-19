@@ -294,7 +294,7 @@
                                             ActionName = y.ActionDictionary.Name,
                                             Value = y.ActionValue
                                         }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
-                                }).GroupBy(x => x.AttenderId).Select(x => x.First()).ToList()
+                                }).GroupBy(x=>x.AttenderId).Select(x=>x.First()).OrderBy(x=>x.LastName).ToList()
                             };
                             return PartialView("_EventsGrid", events);
                         }
@@ -333,7 +333,7 @@
                             ActionName = y.ActionDictionary.Name,
                             Value = y.ActionValue
                         }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
-                }).GroupBy(x => x.AttenderId).Select(x => x.First()).ToList()
+                }).GroupBy(x => x.AttenderId).Select(x => x.First()).OrderBy(x => x.LastName).ToList()
             };
             return PartialView("_EventsGrid", events);     
         }
@@ -347,36 +347,35 @@
         [RoleAuthorize(Roles = "HR")]
         public ActionResult GetEventHistoryGrid(int? id)
         {
-            var employ = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-            .Where(x => x.EventId == id & x.ActionDictionaryId == 1).ToList();
-
-            var actions = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
-                .Where(x => x.EventId == id).ToList();
-
-            var listOfActions = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
-               .Where(x => x.EventId == id)
-               .Select(x => x.ActionDictionary).ToList();
+            var ourEvent = db.EmployeeEventAssignments.Include(x => x.Event).Include(x => x.Employee)
+                        .Where(x => x.EventId == id).ToList();
 
             var list = new ListOfAttendeesWithActions()
             {
-                EventId = id,
-                ActionDictionaryList = listOfActions,
-                EventAttenderList = from e in employ
-                                    select new EventAttender()
-                                    {
-                                        FirstName = e.Employee.FirstName,
-                                        AttenderId = e.EmployeeId,
-                                        LastName = e.Employee.LastName,
-                                        Email = e.Employee.Email,
-                                        Actions = from ea in actions.Where(x => x.EmployeeId == e.EmployeeId)
-                                                  select new ActionValue()
-                                                  {
-                                                      ActionId = ea.ActionDictionaryId,
-                                                      ActionName = ea.ActionDictionary.Name,
-                                                      Value = ea.ActionValue
-                                                  }
-                                    }
+                ActionDictionaryList = ourEvent.Select(x => new ActionDictionary()
+                {
+                    Id = x.ActionDictionaryId,
+                    Name = x.ActionDictionary.Name
+                }).GroupBy(x => x.Id)
+                    .Select(x => x.First())
+                    .ToList(),
+                EventId = ourEvent.First().EventId,
+                EventAttenderList = ourEvent.Select(x => new EventAttender()
+                {
+                    AttenderId = x.Employee.Id,
+                    FirstName = x.Employee.FirstName,
+                    LastName = x.Employee.LastName,
+                    Email = x.Employee.Email,
+                    Actions = ourEvent.Where(z => z.EmployeeId == x.EmployeeId)
+                        .Select(y => new ActionValue()
+                        {
+                            ActionId = y.ActionDictionaryId,
+                            ActionName = y.ActionDictionary.Name,
+                            Value = y.ActionValue
+                        }).GroupBy(y => y.ActionId).Select(y => y.First()).ToList()
+                }).GroupBy(x => x.AttenderId).Select(x => x.First()).OrderBy(x => x.LastName).ToList()
             };
+       
             return PartialView("_EventsHistoryGrid", list);
         }
 

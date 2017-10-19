@@ -1,19 +1,19 @@
 ﻿@model IEnumerable<EventAtendersChecklist.Models.Employee>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
-    @Html.ActionLink("Delete All", "DeleteAll", null, new { @class = "btn btn-danger" })
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success", style = "width:120px; height:35px" })
+    @Html.ActionLink("Delete All", "DeleteAll", null, new { @class = "btn btn-danger", style = "width:120px; height:35px" })
 </p>
 
 <table class="table">
     <tr>
-        <th>
+        <th style="font-size:17px">
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
-        <th>
+        <th style="font-size:17px">
             @Html.DisplayNameFor(model => model.LastName)
         </th>
-        <th>
+        <th style="font-size:17px">
             @Html.DisplayNameFor(model => model.Email)
         </th>
         <th></th>
@@ -22,19 +22,18 @@
     @foreach (var item in Model)
     {
         <tr class="Search">
-            <td>
+            <td style="font-size:17px">
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
-            <td>
+            <td style="font-size:17px">
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
-            <td>
+            <td style="font-size:17px">
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning", @style = "width:100px" }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary", @style = "width:100px" }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger", @style = "width:100px" })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning", style = "width:120px; height:35px" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger", style = "width:120px; height:35px" })
             </td>
         </tr>
     }

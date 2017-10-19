@@ -19,7 +19,6 @@
     /// Defines the <see cref="EmployeesController" />
     /// </summary>
     [Authorize]
-    [RoleAuthorize(Roles = "HR")]
     public class EmployeesController : Controller
     {
         /// <summary>
@@ -32,6 +31,7 @@
         /// The Index
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Index()
         {
             var ActionDictionary = db.ActionGroups.Include(x => x.ActionDictionary).Include(x => x.Event)
@@ -53,6 +53,7 @@
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpGet]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult GetEmployees()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -73,7 +74,7 @@
                            FirstName = e.GetString(1),
                            LastName = e.GetString(2),
                            Email = e.GetString(3)
-                       }).ToList();
+                       }).OrderBy(x=>x.LastName).ToList();
                     return PartialView("_EmployeesList", employees);
                 }
             }
@@ -98,6 +99,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -231,6 +233,7 @@
         /// The Create
         /// </summary>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Create()
         {
             return View();
@@ -246,6 +249,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
         {
             if (ModelState.IsValid)
@@ -264,6 +268,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -288,6 +293,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Email")] Employee employee)
         {
             if (ModelState.IsValid)
@@ -305,6 +311,7 @@
         /// </summary>
         /// <param name="id">The <see cref="int?"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -327,6 +334,7 @@
         /// <returns>The <see cref="ActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
         public ActionResult DeleteConfirmed(int id)
         {
             Employee employee = db.Employees.Find(id);
@@ -336,6 +344,14 @@
         }
 
         public ActionResult DeleteAll()
+        {
+            return View();
+        }
+
+        [HttpPost, ActionName("DeleteAll")]
+        [ValidateAntiForgeryToken]
+        [RoleAuthorize(Roles = "HR")]
+        public ActionResult DeleteAllConfirmed()
         {
             var employees = db.Employees;
             foreach(var item in employees)

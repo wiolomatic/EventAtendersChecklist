@@ -9,21 +9,23 @@
     <hr />
     @if (User.Identity.IsAuthenticated)
     {
-        if (User.IsInRole("HR"))
-        {
+        
             <p>
-                @Html.ActionLink("Add New Attendee", "AddToEvent", "Employees", new { id = Model.EventId }, new { @class = "btn btn-success" })
-                @Html.ActionLink("Add New Action", "AddActionToEvent", "ActionDictionaries", new { id = Model.EventId }, new { @class = "btn btn-success" })
-                @if (!Request.Browser.IsMobileDevice)
+                @Html.ActionLink("Add New Attendee", "AddToEvent", "Employees", new { id = Model.EventId }, new { @class = "btn btn-success", style = "width:140px; height:35px" })
+                @if (User.IsInRole("HR"))
                 {
-                @Html.ActionLink("Import from excel", "ImportExcelFile", "Events", new { id = Model.EventId }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Add New Action", "AddActionToEvent", "ActionDictionaries", new { id = Model.EventId }, new { @class = "btn btn-success", style = "width:140px; height:35px" })
+                if (!Request.Browser.IsMobileDevice)
+                {
+                @Html.ActionLink("Import from excel", "ImportExcelFile", "Events", new { id = Model.EventId }, new { @class = "btn btn-success", style = "width:140px; height:35px" })
                     if (Model != null)
                     {
-                       @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right" })
+                       @Html.ActionLink("Export to excel", "ExportToExcel", "Events", new { id = Model.EventId }, new { @class = "btn btn-primary pull-right", style = "width:140px; height:35px" })
                     }
                 }
+                }
             </p>
-        }
+        
     }
 </div>
 
@@ -34,12 +36,13 @@ if (User.IsInRole("HR"))
     columns.Add()
     .Encoded(false)
     .Sanitized(false)
-    .RenderValueAs(o => @<button class="btn-danger glyphicon glyphicon-trash"
+    .RenderValueAs(o => @<button style="zoom:1.5" class="btn-danger glyphicon glyphicon-trash"
                                      onclick="DeleteEmployee(@Model.EventId, @o.AttenderId)"></button>);
     }
-    columns.Add(x => x.FirstName).Titled("First Name");
-    columns.Add(x => x.LastName).Titled("Last Name");
-    columns.Add(x => x.Email).Titled("Email");
+
+    columns.Add(x => x.LastName).Titled("Last Name").Css("bolded");
+    columns.Add(x => x.FirstName).Titled("First Name").Css("bolded");
+    //columns.Add(x => x.Email).Titled("Email");
     foreach (var item in Model.ActionDictionaryList)
     {
         columns.Add()
@@ -48,9 +51,23 @@ if (User.IsInRole("HR"))
         .Sanitized(false)
         .RenderValueAs(o => Html.CheckBox(string.Format("checkbox|{0}|{1}|{2}", Model.EventId, o.AttenderId, item.Id), o.Actions
                         .Where(x => x.ActionId == item.Id)
-                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)", @style = "zoom:2" })).SetWidth(120);
+                        .Select(x => x.Value).First(), new { @onclick = "AsertClick(this.id)", @style = "zoom:2.5" })).SetWidth(120).Css("bolded");
     }
 }).SetRowCssClasses(item => item.IsSearched ? "Search" : "Search")
+
+<style>
+    .bolded {
+        font-size: 17px;
+    }
+    .home-icon {
+        padding: 20px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url("/Content/images/clear2.png");
+        
+    }
+</style>
 
 <p>
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
@@ -78,7 +95,7 @@ if (User.IsInRole("HR"))
             success: function (result) {
                getEvents();
             }
-        })   
+        })
     }
 
     var DeleteEmployee = function (EventId, employeeId) {
@@ -111,6 +128,4 @@ if (User.IsInRole("HR"))
                 }
             });
     });
-
-
 </script>

@@ -16,8 +16,8 @@
     @Html.AntiForgeryToken()
 
     <div class="form-actions no-color">
-        @Html.ActionLink("Delete", "UMdeleteUser", "Account", new { user = @ViewBag.UserId }, new { @class = "btn btn-success" }) |
-         @Html.ActionLink("Cancel", "UM", "Account", new { @class = "btn btn-danger" })
+        @Html.ActionLink("Delete", "UMdeleteUser", "Account", new { user = @ViewBag.UserId }, new { @class = "btn btn-success", style = "width:120px; height:35px" }) |
+         @Html.ActionLink("Cancel", "UM", "Account", new { @class = "btn btn-danger", style = "width:120px; height:35px" })
     </div>
 }
 
